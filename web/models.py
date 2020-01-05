@@ -53,7 +53,7 @@ class ProposalStatus(models.Model):
 class Proposal(models.Model):
     code = models.CharField(max_length=64, primary_key=True)
     submission_date = models.DateField()
-    title = models.CharField(max_length=256)
+    title = models.CharField(max_length=512)
     student1 = models.ForeignKey(PersonData, models.PROTECT, related_name='student1')
     student2 = models.ForeignKey(PersonData, models.PROTECT, null=True, blank=True, related_name='student2')
     academic_tutor = models.ForeignKey(PersonData, models.PROTECT, related_name='academic_tutor')
@@ -65,3 +65,62 @@ class HistoricProposalStatus(models.Model):
     date = models.DateField(auto_now=True)
     proposal = models.ForeignKey(Proposal, models.CASCADE)
     status = models.ForeignKey(ProposalStatus, models.PROTECT)
+
+    class Meta:
+        verbose_name_plural = 'Historic proposal statuses'
+
+
+class ThesisStatus(models.Model):
+    name = models.CharField(max_length=64)
+    description = models.CharField(max_length=512, null=True, blank=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name_plural = 'Thesis statuses'
+
+
+class Thesis(models.Model):
+    proposal = models.ForeignKey(Proposal, models.PROTECT)
+    code = models.CharField(max_length=66, primary_key=True)
+    title = models.CharField(max_length=512)
+    delivery_term = models.ForeignKey(Term, models.PROTECT)
+    NRC = models.CharField(max_length=32)
+    description = models.CharField(max_length=50)
+    thematic_category = models.CharField(max_length=50)
+    submission_date = models.DateField()
+    company_name = models.CharField(max_length=128, null=True, blank=True)
+
+    class Meta:
+        verbose_name_plural = 'Thesis'
+
+
+class HistoricThesisStatus(models.Model):
+    date = models.DateField(auto_now=True)
+    thesis = models.ForeignKey(Thesis, models.CASCADE)
+    status = models.ForeignKey(ThesisStatus, models.PROTECT)
+
+    class Meta:
+        verbose_name_plural = 'Historic thesis statuses'
+
+
+class Defence(models.Model):
+    thesis = models.ForeignKey(Thesis, models.PROTECT)
+    code = models.CharField(max_length=68, primary_key=True)
+    date_time = models.DateTimeField()
+    grade = models.PositiveSmallIntegerField()
+    is_publication_mention = models.BooleanField()
+    is_honorific_mention = models.BooleanField()
+    corrections_submission_date = models.DateField(null=True, blank=True)
+    was_grade_loaded = models.BooleanField()
+    observations = models.TextField()
+
+
+class Jury(models.Model):
+    person = models.ForeignKey(PersonData, models.PROTECT)
+    defence = models.ForeignKey(Defence, models.PROTECT)
+    confirmed_assistance = models.BooleanField(default=False)
+    is_backup_jury = models.BooleanField(default=False)
+    #  TODO: Field is_thesis_tutor which can be calculated with a query through the proposal's academic tutor (page 2-3)
+    #        Maybe it's only shown when seeing a defence details
