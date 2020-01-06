@@ -1,0 +1,18 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{% block page_title %}{% endblock %}</title>
+    <script src="{% static 'js/bootstrap.js' %}"></script>
+    <script src="{% static 'js/jquery-3.1.1.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+    <body>
+        <div class="container">
+            <!-- include web page navigation bar page -->
+            {# TODO: {% include "./base_menu_bar.html" %} #}
+            {% block page_content %}
+            {% endblock %}
+        </div>
+    </body>
+</html>
