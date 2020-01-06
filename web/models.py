@@ -63,6 +63,9 @@ class Proposal(models.Model):
     industry_tutor = models.ForeignKey(PersonData, models.PROTECT, null=True, blank=True, related_name='industry_tutor')
     term = models.ForeignKey(Term, models.PROTECT, related_name='term')
 
+    def __str__(self):
+        return '%s (%s)' % (self.title, self.code)
+
 
 class HistoricProposalStatus(models.Model):
     date = models.DateField(auto_now=True)
