@@ -26,6 +26,9 @@ class PersonData(models.Model):
     secondary_phone_number = PhoneNumberField(null=True, blank=True)
     observations = models.CharField(max_length=1_024, null=True, blank=True)
 
+    def __str__(self):
+        return '%s %s (%s)' % (self.name, self.last_name, self.id_card_number)
+
     class Meta:
         verbose_name_plural = 'Person data'
 
