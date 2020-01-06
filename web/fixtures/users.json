@@ -1,0 +1,13 @@
+[
+  {
+    "model": "web.User",
+    "pk": 1,
+    "fields": {
+      "username": "admin",
+      "email": "admin@ucab.com",
+      "password": "pbkdf2_sha256$180000$z3g4HdPhfhvx$LNg+RDfb3zNvdm2xEbyofuemqUyJ1DVXxez4S4S7HJQ=",
+      "is_staff": true,
+      "is_superuser": true
+    }
+  }
+]
