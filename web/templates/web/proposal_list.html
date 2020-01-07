@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 {% extends 'web/base.html' %}
 {% block page_content %}
     <div class="row wrapper border-bottom white-bg page-heading">
@@ -36,6 +35,27 @@
                                         </button>
                                     </span>
                                 </form>
+                    <div class="ibox-title">
+                        <h5>Custom responsive table </h5>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="row">
+                            <div class="col-sm-5 m-b-xs"><select class="form-control-sm form-control input-s-sm inline">
+                                <option value="0">Option 1</option>
+                                <option value="1">Option 2</option>
+                                <option value="2">Option 3</option>
+                                <option value="3">Option 4</option>
+                            </select>
+                            </div>
+                            <div class="col-sm-4 m-b-xs"></div>
+                            <div class="col-sm-3">
+                                <div class="input-group">
+                                    <input placeholder="Search" type="text"
+                                           class="form-control form-control-sm">
+                                    <span class="input-group-append">
+                                        <button type="button" class="btn btn-sm btn-primary">Go!</button>
+                                    </span>
+                                </div>
                             </div>
                         </div>
                         <div class="table-responsive">
@@ -77,6 +97,7 @@
                                                 <span class="glyphicon glyphicon-pencil"></span>
                                             </a>
                                         </td>
+                                        <th>{{ proposal.term.name }}</th>
                                     </tr>
                                 {% endfor %}
                                 </tbody>
@@ -113,15 +134,4 @@
         </div>
     </div>
 {% endblock %}
-=======
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
->>>>>>> added the proposal_index method retrive all the proposal data from the database and render the proposal list view
+
