@@ -1,15 +1,32 @@
 {% extends 'web/base.html' %}
 {% block page_content %}
-    <div class="row">
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <h2>Agregar persona</h2>
+            <ol class="breadcrumb">
+                {# TODO: Connect with Django correctly #}
+                <li class="breadcrumb-item">
+                    <a href="index-2.html">Home</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="{% url 'person_index' %}">Personas</a>
+                </li>
+                <li class="breadcrumb-item active">
+                    <strong>Agregar</strong>
+                </li>
+            </ol>
+        </div>
+        <div class="col-lg-2">
+        </div>
+    </div>
+
+    <div class="row" style="margin-top: 1%">
         <div class="col-lg-12">
-            <div class="ibox ">
-                <div class="ibox-title">
-                    <h3>Registrar datos de persona</h3>
-                </div>
+            <div class="ibox">
                 <div class="ibox-content">
                     <form method="post">
                         {% csrf_token %}
-                        <div class="form-group row">
+                        <div class="form-group row" style="margin-top: 1.5%">
                             <label class="col-sm-2 col-form-label" for="{{ form.id_card_number.name }}">
                                 {{ form.id_card_number.label }}
                             </label>
