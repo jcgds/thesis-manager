@@ -12,9 +12,9 @@ class PersonData(models.Model):
     STUDENT = 1
     EXTERNAL = 2
     TYPE_CHOICES = (
-        (TEACHER, 'Teacher'),
-        (STUDENT, 'Student'),
-        (EXTERNAL, 'External')
+        (TEACHER, 'Profesor'),
+        (STUDENT, 'Estudiante'),
+        (EXTERNAL, 'Externo')
     )
     type = models.PositiveSmallIntegerField(choices=TYPE_CHOICES)
     id_card_number = models.CharField(max_length=16, unique=True)  # Cédula
