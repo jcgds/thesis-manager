@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
 
 from .models import PersonData
+from .models import Proposal
 
 
 def index(request):
@@ -31,3 +32,14 @@ def person_index(request):
         'person_list': persons_by_page
     }
     return render(request, 'web/person_list.html', context)
+
+
+def proposal_index(request):
+    proposal_list = Proposal.objects.all().select_related()
+    paginator = Paginator(proposal_list, request.GET.get('page_length', 15))
+    page = request.GET.get('page')
+    proposal_by_page = paginator.get_page(page)
+    context = {
+        'proposal_list': proposal_by_page
+    }
+    return render(request, 'web/proposal_list.html', context)
