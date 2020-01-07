@@ -11,4 +11,6 @@ urlpatterns = [
     path('personas/agregar', views.PersonDataCreate.as_view(), name='create_person'),
     path('personas/<str:pk>', views.person_detail, name='person_detail'),
     path('personas/<str:pk>/editar', views.PersonDataUpdate.as_view(), name='edit_person'),
+    path('personas/<str:person_id_card_number>', views.person_detail, name='person_detail'),
+    path('propuestas', views.proposal_index, name='proposal_index'),
 ]
