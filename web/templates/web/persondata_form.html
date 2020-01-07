@@ -22,6 +22,25 @@
 
     <div class="row" style="margin-top: 1%">
         <div class="col-lg-12">
+            {% if messages %}
+                <ul class="col-lg-12 messages">
+                    {% for message in messages %}
+                        {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+                            <div class="alert alert-success alert-dismissable">
+                                <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                                {{ message }}
+                            </div>
+                        {% endif %}
+
+                        {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+                            <div class="alert alert-error alert-dismissable">
+                                <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                                {{ message }}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            {% endif %}
             <div class="ibox">
                 <div class="ibox-content">
                     <form method="post">

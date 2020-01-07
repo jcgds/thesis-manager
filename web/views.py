@@ -1,6 +1,7 @@
 import operator
 from functools import reduce
 
+from django.contrib.messages.views import SuccessMessageMixin
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.http import HttpResponse
@@ -53,9 +54,10 @@ def edit_person(request, person_id_card_number):
     return HttpResponse('Edit person %s' % person_id_card_number)
 
 
-class PersonDataCreate(CreateView):
+class PersonDataCreate(SuccessMessageMixin, CreateView):
     model = PersonData
     form_class = forms.PersonDataForm
+    success_message = "%(id_card_number)s was created successfully"
 
     def form_valid(self, form):
         print('Valid form.')
@@ -66,4 +68,10 @@ class PersonDataCreate(CreateView):
         return super().form_invalid(form)
 
     def get_success_url(self):
-        return reverse('person_detail', args=(self.object.id_card_number,))
+        return reverse('create_person')
+
+    def get_success_message(self, cleaned_data):
+        return self.success_message % dict(
+            cleaned_data,
+            id_card_number=self.object.id_card_number,
+        )
