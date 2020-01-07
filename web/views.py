@@ -34,7 +34,7 @@ def person_index(request):
         person_list = PersonData.objects.filter(reduce(operator.or_, search_args))
     else:
         # If we don't receive a search parameter, don't apply any filters
-        person_list = PersonData.objects.all()
+        person_list = PersonData.objects.all().order_by('id_card_number', 'name')
 
     paginator = Paginator(person_list, request.GET.get('page_length', 15))
     page = request.GET.get('page')
