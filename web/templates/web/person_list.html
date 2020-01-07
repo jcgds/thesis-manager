@@ -63,6 +63,11 @@
                                         <td>{{ person.primary_phone_number }}</td>
                                         <td>{{ person.secondary_phone_number|default:"-" }}</td>
                                         <td>{{ person.observations|default:"-" }}</td>
+                                        <td>
+                                            <button type="submit" class="btn btn-sm btn-outline-warning">
+                                                <span class="glyphicon glyphicon-pencil"></span>
+                                            </button>
+                                        </td>
                                     </tr>
                                 {% endfor %}
                                 </tbody>
