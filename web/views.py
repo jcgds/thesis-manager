@@ -45,3 +45,7 @@ def person_index(request):
         'search_param': search_param
     }
     return render(request, 'web/person_list.html', context)
+
+
+def edit_person(request, person_id_card_number):
+    return HttpResponse('Edit person %s' % person_id_card_number)

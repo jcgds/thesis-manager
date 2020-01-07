@@ -64,9 +64,10 @@
                                         <td>{{ person.secondary_phone_number|default:"-" }}</td>
                                         <td>{{ person.observations|default:"-" }}</td>
                                         <td>
-                                            <button type="submit" class="btn btn-sm btn-outline-warning">
+                                            <a href="{% url 'edit_person' person.id_card_number %}"
+                                               class="btn btn-sm btn-outline-warning">
                                                 <span class="glyphicon glyphicon-pencil"></span>
-                                            </button>
+                                            </a>
                                         </td>
                                     </tr>
                                 {% endfor %}
