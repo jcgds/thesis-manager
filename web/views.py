@@ -11,6 +11,9 @@ from django.views.generic.edit import CreateView, UpdateView
 
 from . import forms
 from .models import PersonData, PersonType
+from .models import PersonData
+from .models import Proposal
+
 
 
 def index(request):
@@ -133,3 +136,13 @@ class PersonTypeUpdate(SuccessMessageMixin, UpdateView):
             cleaned_data,
             name=self.object.name,
         )
+
+def proposal_index(request):
+    proposal_list = Proposal.objects.all().select_related()
+    paginator = Paginator(proposal_list, request.GET.get('page_length', 15))
+    page = request.GET.get('page')
+    proposal_by_page = paginator.get_page(page)
+    context = {
+        'proposal_list': proposal_by_page
+    }
+    return render(request, 'web/proposal_list.html', context)
