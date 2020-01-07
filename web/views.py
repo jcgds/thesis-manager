@@ -57,5 +57,13 @@ class PersonDataCreate(CreateView):
     model = PersonData
     form_class = forms.PersonDataForm
 
+    def form_valid(self, form):
+        print('Valid form.')
+        return super(PersonDataCreate, self).form_valid(form)
+
+    def form_invalid(self, form):
+        print('Invalid form.')
+        return super().form_invalid(form)
+
     def get_success_url(self):
-        return reverse('person_index')
+        return reverse('person_detail', args=(self.object.id_card_number,))

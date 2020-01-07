@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.urls import reverse
 from phonenumber_field.modelfields import PhoneNumberField
 
 
@@ -28,6 +29,9 @@ class PersonData(models.Model):
 
     def __str__(self):
         return '%s %s (%s)' % (self.name, self.last_name, self.id_card_number)
+
+    def get_absolute_url(self):
+        return reverse('person_detail', kwargs={'person_id_card_number': self.id_card_number})
 
     class Meta:
         verbose_name_plural = 'Person data'

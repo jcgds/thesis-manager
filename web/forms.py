@@ -52,6 +52,7 @@ class PersonDataForm(forms.ModelForm):
     )
     secondary_phone_number = forms.CharField(
         label='Teléfono secundario',
+        required=False,
         widget=forms.TextInput(attrs=form_control_attr)
     )
     email = forms.EmailField(
@@ -60,6 +61,7 @@ class PersonDataForm(forms.ModelForm):
     )
     ucab_email = forms.EmailField(
         label='Correo UCAB',
+        required=False,
         widget=forms.EmailInput(attrs=form_control_attr)
     )
     type = forms.ChoiceField(
@@ -69,5 +71,6 @@ class PersonDataForm(forms.ModelForm):
     observations = forms.CharField(
         label='Observaciones',
         max_length=1_024,
+        required=False,
         widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 3})
     )
