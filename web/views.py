@@ -5,8 +5,10 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
+from django.urls import reverse
+from django.views.generic.edit import CreateView
 
-from .forms import SearchForm
+from . import forms
 from .models import PersonData
 
 
@@ -41,7 +43,7 @@ def person_index(request):
     persons_by_page = paginator.get_page(page)
     context = {
         'person_list': persons_by_page,
-        'search_form': SearchForm(previous_search=search_param),
+        'search_form': forms.SearchForm(previous_search=search_param),
         'search_param': search_param
     }
     return render(request, 'web/person_list.html', context)
@@ -49,3 +51,11 @@ def person_index(request):
 
 def edit_person(request, person_id_card_number):
     return HttpResponse('Edit person %s' % person_id_card_number)
+
+
+class PersonDataCreate(CreateView):
+    model = PersonData
+    form_class = forms.PersonDataForm
+
+    def get_success_url(self):
+        return reverse('person_index')
