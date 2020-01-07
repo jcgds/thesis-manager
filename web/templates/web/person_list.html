@@ -1,0 +1,108 @@
+{% extends 'web/base.html' %}
+{% block page_content %}
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <h2>Personas</h2>
+            <ol class="breadcrumb">
+                {# TODO: Connect with Django correctly #}
+                <li class="breadcrumb-item">
+                    <a href="index-2.html">Home</a>
+                </li>
+                <li class="breadcrumb-item active">
+                    <strong>Personas</strong>
+                </li>
+            </ol>
+        </div>
+        <div class="col-lg-2">
+        </div>
+    </div>
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox ">
+                    <div class="ibox-title">
+                        <h5>Custom responsive table </h5>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="row">
+                            <div class="col-sm-5 m-b-xs"><select class="form-control-sm form-control input-s-sm inline">
+                                <option value="0">Option 1</option>
+                                <option value="1">Option 2</option>
+                                <option value="2">Option 3</option>
+                                <option value="3">Option 4</option>
+                            </select>
+                            </div>
+                            <div class="col-sm-4 m-b-xs"></div>
+                            <div class="col-sm-3">
+                                <div class="input-group">
+                                    <input placeholder="Search" type="text"
+                                           class="form-control form-control-sm">
+                                    <span class="input-group-append">
+                                        <button type="button" class="btn btn-sm btn-primary">Go!</button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                <tr>
+                                    <th>Cédula</th>
+                                    <th>Nombre</th>
+                                    <th>Apellido</th>
+                                    <th>Tipo</th>
+                                    <th>Correo UCAB</th>
+                                    <th>Correo personal</th>
+                                    <th>Teléfono Principal</th>
+                                    <th>Teléfono Secundario</th>
+                                    <th>Observaciones</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for person in person_list %}
+                                    <tr>
+                                        <td>{{ person.id_card_number }}</td>
+                                        <td>{{ person.name }}</td>
+                                        <td>{{ person.last_name }}</td>
+                                        <td>{{ person.get_type_display }}</td>
+                                        <td>{{ person.ucab_email }}</td>
+                                        <td>{{ person.email }}</td>
+                                        <td>{{ person.primary_phone_number }}</td>
+                                        <td>{{ person.secondary_phone_number|default:"-" }}</td>
+                                        <td>{{ person.observations|default:"-" }}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+
+                            <div class="pagination float-right">
+                                <span class="step-links ">
+                                    {% if person_list.has_previous %}
+                                        <a href="?page=1">&laquo; First</a>
+                                        <a href="?page={{ person_list.previous_page_number }}">previous</a>
+                                    {% endif %}
+                                    {% if person_list.has_next %}
+                                        <a href="?page={{ person_list.next_page_number }}">next</a>
+                                        <a href="?page={{ person_list.paginator.num_pages }}">last &raquo;</a>
+                                    {% endif %}
+                                </span>
+                                <span class="current">
+                                    Page {{ person_list.number }} of {{ person_list.paginator.num_pages }}.
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <div class="float-right">
+            10GB of <strong>250GB</strong> Free.
+        </div>
+        <div>
+            <strong>Copyright</strong> Example Company &copy; 2014-2018
+        </div>
+    </div>
+{% endblock %}

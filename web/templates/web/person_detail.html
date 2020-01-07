@@ -1,228 +1,131 @@
 {% extends 'web/base.html' %}
 {% block page_content %}
 
-        <div class="row wrapper border-bottom white-bg page-heading">
-            <div class="col-lg-10">
-                <h2>Datos de persona</h2>
-                <ol class="breadcrumb">
-                    {# TODO: Connect with Django correctly #}
-                    <li class="breadcrumb-item">
-                        <a href="index-2.html">Home</a>
-                    </li>
-                    <li class="breadcrumb-item">
-                        <a>Personas</a>
-                    </li>
-                    <li class="breadcrumb-item active">
-                        <strong>Datos</strong>
-                    </li>
-                </ol>
-            </div>
-            <div class="col-lg-2">
-            </div>
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <h2>Datos de persona</h2>
+            <ol class="breadcrumb">
+                {# TODO: Connect with Django correctly #}
+                <li class="breadcrumb-item">
+                    <a href="index-2.html">Home</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a>Personas</a>
+                </li>
+                <li class="breadcrumb-item active">
+                    <strong>Datos</strong>
+                </li>
+            </ol>
         </div>
-        <div class="wrapper wrapper-content animated fadeIn">
+        <div class="col-lg-2">
+        </div>
+    </div>
+    <div class="wrapper wrapper-content animated fadeIn">
 
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="ibox">
-                        <div class="ibox-title">
-                            <h5>Información de contacto </h5>
-                        </div>
-                        <div class="ibox-content">
-
-                            <div class="row">
-                                <div class="col-lg-4">
-                                    <div class="panel panel-default">
-                                        <div class="panel-heading">
-                                            Default Panel
-                                        </div>
-                                        <div class="panel-body">
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum
-                                                tincidunt est vitae ultrices accumsan. Aliquam ornare lacus adipiscing,
-                                                posuere lectus et, fringilla augue.</p>
-                                        </div>
-
-                                    </div>
-                                </div>
-                                <div class="col-lg-4">
-                                    <div class="panel panel-primary">
-                                        <div class="panel-heading">
-                                            Primary Panel
-                                        </div>
-                                        <div class="panel-body">
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum
-                                                tincidunt est vitae ultrices accumsan. Aliquam ornare lacus adipiscing,
-                                                posuere lectus et, fringilla augue.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4">
-                                    <div class="panel panel-success">
-                                        <div class="panel-heading">
-                                            Success Panel
-                                        </div>
-                                        <div class="panel-body">
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum
-                                                tincidunt est vitae ultrices accumsan. Aliquam ornare lacus adipiscing,
-                                                posuere lectus et, fringilla augue.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-4">
-                                    <div class="panel panel-info">
-                                        <div class="panel-heading">
-                                            <i class="fa fa-info-circle"></i> Info Panel
-                                        </div>
-                                        <div class="panel-body">
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum
-                                                tincidunt est vitae ultrices accumsan. Aliquam ornare lacus adipiscing,
-                                                posuere lectus et, fringilla augue.</p>
-                                        </div>
-
-                                    </div>
-                                </div>
-                                <div class="col-lg-4">
-                                    <div class="panel panel-warning">
-                                        <div class="panel-heading">
-                                            <i class="fa fa-warning"></i> Warning Panel
-                                        </div>
-                                        <div class="panel-body">
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum
-                                                tincidunt est vitae ultrices accumsan. Aliquam ornare lacus adipiscing,
-                                                posuere lectus et, fringilla augue.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4">
-                                    <div class="panel panel-danger">
-                                        <div class="panel-heading">
-                                            Danger Panel with Footer
-                                        </div>
-                                        <div class="panel-body">
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum
-                                                tincidunt est vitae ultrices accumsan. Aliquam ornare lacus adipiscing,
-                                                posuere lectus et, fringilla augue.</p>
-                                        </div>
-                                        <div class="panel-footer">
-                                            Panel Footer
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
+        <div class="row">
+            <div class="ibox">
+                <div class="ibox-title">
+                    <h3>{{ person_data.name }} {{ person_data.last_name }}
+                        <small>{{ person_data.id_card_number }}</small>
+                    </h3>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <i class="fa fa-wrench"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-user">
+                            <li><a href="#" class="dropdown-item">Config option 1</a>
+                            </li>
+                            <li><a href="#" class="dropdown-item">Config option 2</a>
+                            </li>
+                        </ul>
+                        <a class="close-link">
+                            <i class="fa fa-times"></i>
+                        </a>
                     </div>
                 </div>
-            </div>
-
-            <div class="row">
-                <div class="col-lg-6">
-                    <div class="ibox ">
-                        <div class="ibox-title">
-                            <h5>Collaps panels</h5>
-                            <div class="ibox-tools">
-                                <a class="collapse-link">
-                                    <i class="fa fa-chevron-up"></i>
-                                </a>
-                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                    <i class="fa fa-wrench"></i>
-                                </a>
-                                <ul class="dropdown-menu dropdown-user">
-                                    <li><a href="#" class="dropdown-item">Config option 1</a>
-                                    </li>
-                                    <li><a href="#" class="dropdown-item">Config option 2</a>
-                                    </li>
-                                </ul>
-                                <a class="close-link">
-                                    <i class="fa fa-times"></i>
-                                </a>
+                <div class="ibox-content">
+                    <h3>
+                        Input Mask
+                    </h3>
+                    <p>
+                        Input masks allows a user to more easily enter data where you would like them to enter the data
+                        in a certain format.
+                    </p>
+                    <form class="m-t-md" action="#">
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-sm-2 col-form-label">ISBN 1</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" data-mask="999-99-999-9999-9" placeholder="">
+                                <span class="form-text">999-99-999-9999-9</span>
                             </div>
                         </div>
-                        <div class="ibox-content">
-                            <div class="panel-body">
-                                <div class="panel-group" id="accordion">
-                                    <div class="panel panel-default">
-                                        <div class="panel-heading">
-                                            <h5 class="panel-title">
-                                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">Collapsible
-                                                    Group Item #1</a>
-                                            </h5>
-                                        </div>
-                                        <div id="collapseOne" class="panel-collapse collapse in">
-                                            <div class="panel-body">
-                                                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                                                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-                                                veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                                                commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-                                                velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
-                                                occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-                                                mollit anim id est laborum.
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="panel panel-default">
-                                        <div class="panel-heading">
-                                            <h4 class="panel-title">
-                                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">Collapsible
-                                                    Group Item #2</a>
-                                            </h4>
-                                        </div>
-                                        <div id="collapseTwo" class="panel-collapse collapse">
-                                            <div class="panel-body">
-                                                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                                                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-                                                veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                                                commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-                                                velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
-                                                occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-                                                mollit anim id est laborum.
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="panel panel-default">
-                                        <div class="panel-heading">
-                                            <h4 class="panel-title">
-                                                <a data-toggle="collapse" data-parent="#accordion"
-                                                   href="#collapseThree">Collapsible Group Item #3</a>
-                                            </h4>
-                                        </div>
-                                        <div id="collapseThree" class="panel-collapse collapse">
-                                            <div class="panel-body">
-                                                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                                                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-                                                veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                                                commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-                                                velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
-                                                occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-                                                mollit anim id est laborum.
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">ISBN 2</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" data-mask="999 99 999 9999 9" placeholder="">
+                                <span class="form-text">999 99 999 9999 9</span>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="jumbotron">
-                        <h1>Jumbotron</h1>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum tincidunt est vitae
-                            ultrices accumsan. Aliquam ornare lacus adipiscing, posuere lectus et, fringilla augue.
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                        <p><a href="#" role="button" class="btn btn-primary btn-lg">Learn more</a>
-                        </p>
-                    </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">ISBN 3</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" data-mask="999/99/999/9999/9" placeholder="">
+                                <span class="form-text">999/99/999/9999/9</span>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">IPV4</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" data-mask="999.999.999.9999" placeholder="">
+                                <span class="form-text">192.168.100.200</span>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Tax ID</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" data-mask="99-9999999" placeholder="">
+                                <span class="form-text">99-9999999</span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Phone</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" data-mask="(999) 999-9999" placeholder="">
+                                <span class="form-text">(999) 999-9999</span>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Currency</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" data-mask="$ 999,999,999.99" placeholder="">
+                                <span class="form-text">$ 999,999,999.99</span>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Date</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" data-mask="99/99/9999" placeholder="">
+                                <span class="form-text">dd/mm/yyyy</span>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
-        <div class="footer">
-            <div class="float-right">
-                10GB of <strong>250GB</strong> Free.
-            </div>
-            <div>
-                <strong>Copyright</strong> Example Company &copy; 2014-2018
-            </div>
+    </div>
+    <div class="footer">
+        <div class="float-right">
+            10GB of <strong>250GB</strong> Free.
         </div>
+        <div>
+            <strong>Copyright</strong> Example Company &copy; 2014-2018
+        </div>
+    </div>
 {% endblock %}
