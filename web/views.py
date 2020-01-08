@@ -83,8 +83,8 @@ class PersonDataUpdate(SuccessMessageMixin, UpdateView):
 def person_type_index(request):
     search_param = request.GET.get('search')
     if search_param:
-        # Append a query for each term received in the search parameters so that if we receive multiple
-        # parameters, we crosscheck every single one with the colums id_card_number, name and last_name
+        # Setup to search in multiple fields, currently in only has one but in the future
+        # it could have more searchable fields.
         search_args = []
         for term in search_param.split():
             for query in ('name__icontains',):
