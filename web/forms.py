@@ -2,6 +2,10 @@ import re
 
 from django import forms
 
+from dal import autocomplete
+
+from datetime import datetime
+
 from . import models
 
 
@@ -34,6 +38,17 @@ class PersonTypeForm(forms.ModelForm):
     name = forms.CharField(
         label='Nombre del rol',
         widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Profesor'})
+    )
+
+
+class ThesisStatusForm(forms.ModelForm):
+    class Meta:
+        model = models.ThesisStatus
+        fields = ['name']
+
+    name = forms.CharField(
+        label='Nombre del estado',
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Por entregar'})
     )
 
 
@@ -90,9 +105,9 @@ class PersonDataForm(forms.ModelForm):
     )
     type = forms.ModelChoiceField(
         label='Tipo',
-        initial=0,
+        initial=1,
         queryset=models.PersonType.objects.all(),
-        widget=forms.Select(attrs={'class': 'form-control m-b'}))
+        widget=autocomplete.ModelSelect2(url='person-type-autocomplete'))
     observations = forms.CharField(
         label='Observaciones',
         max_length=1_024,
@@ -122,3 +137,5 @@ class PersonDataForm(forms.ModelForm):
         data = self.cleaned_data['secondary_phone_number']
         _validate_phone_number(data)
         return data
+
+
