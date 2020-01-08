@@ -37,6 +37,17 @@ class PersonTypeForm(forms.ModelForm):
     )
 
 
+class ThesisStatusForm(forms.ModelForm):
+    class Meta:
+        model = models.ThesisStatus
+        fields = ['name']
+
+    name = forms.CharField(
+        label='Nombre del estado',
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Por entregar'})
+    )
+
+
 class PersonDataForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(PersonDataForm, self).__init__(*args, **kwargs)

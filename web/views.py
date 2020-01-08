@@ -10,7 +10,7 @@ from django.urls import reverse
 from django.views.generic.edit import CreateView, UpdateView
 
 from . import forms
-from .models import PersonData, PersonType
+from .models import PersonData, PersonType, ThesisStatus, Thesis
 
 
 def index(request):
@@ -123,6 +123,61 @@ class PersonTypeCreate(SuccessMessageMixin, CreateView):
 class PersonTypeUpdate(SuccessMessageMixin, UpdateView):
     model = PersonType
     form_class = forms.PersonTypeForm
+    success_message = "Tipo \"%(name)s\" editado correctamente."
+
+    def get_success_url(self):
+        return reverse('edit_person_type', args=(self.object.pk,))
+
+    def get_success_message(self, cleaned_data):
+        return self.success_message % dict(
+            cleaned_data,
+            name=self.object.name,
+        )
+
+
+def thesis_status_index(request):
+    search_param = request.GET.get('search')
+    if search_param:
+        # Setup to search in multiple fields, currently in only has one but in the future
+        # it could have more searchable fields.
+        search_args = []
+        for term in search_param.split():
+            for query in ('name__icontains',):
+                search_args.append(Q(**{query: term}))
+        thesis_status_list = ThesisStatus.objects.filter(reduce(operator.or_, search_args))
+    else:
+        # If we don't receive a search parameter, don't apply any filters
+        thesis_status_list = ThesisStatus.objects.all().order_by('name')
+
+    paginator = Paginator(thesis_status_list, request.GET.get('page_length', 15))
+    page = request.GET.get('page')
+    types_by_page = paginator.get_page(page)
+    context = {
+        'types': types_by_page,
+        'search_form': forms.SearchForm(previous_search=search_param),
+        'search_param': search_param,
+    }
+    return render(request, 'web/thesisstatus_list.html', context)
+
+
+class ThesisStatusCreate(SuccessMessageMixin, CreateView):
+    model = ThesisStatus
+    form_class = forms.ThesisStatusForm
+    success_message = "Estado \"%(name)s\" creado correctamente."
+
+    def get_success_url(self):
+        return reverse('thesis_status_index')
+
+    def get_success_message(self, cleaned_data):
+        return self.success_message % dict(
+            cleaned_data,
+            name=self.object.name,
+        )
+
+
+class ThesisStatusUpdate(SuccessMessageMixin, UpdateView):
+    model = ThesisStatus
+    form_class = forms.ThesisStatusForm
     success_message = "Tipo \"%(name)s\" editado correctamente."
 
     def get_success_url(self):
