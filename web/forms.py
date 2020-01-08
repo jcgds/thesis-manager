@@ -26,6 +26,17 @@ def _validate_phone_number(phone):
         raise forms.ValidationError('Número de teléfono inválido')
 
 
+class PersonTypeForm(forms.ModelForm):
+    class Meta:
+        model = models.PersonType
+        fields = ['name']
+
+    name = forms.CharField(
+        label='Nombre del rol',
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Profesor'})
+    )
+
+
 class PersonDataForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(PersonDataForm, self).__init__(*args, **kwargs)
