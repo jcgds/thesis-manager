@@ -89,17 +89,17 @@
                                 <div class="pagination float-right">
                                     <span class="step-links ">
                                         {# If the search_param attribute is not None, append it to the URL to maintain pagination in a filtered search #}
-                                        {% if person_list.has_previous %}
+                                        {% if thesis_list.has_previous %}
                                             <a href="?page=1{% if search_param %}&search={{ search_param }}{% endif %}">&laquo; First</a>
-                                            <a href="?page={{ person_list.previous_page_number }}{% if search_param %}&search={{ search_param }}{% endif %}">previous</a>
+                                            <a href="?page={{ thesis_list.previous_page_number }}{% if search_param %}&search={{ search_param }}{% endif %}">previous</a>
                                         {% endif %}
-                                        {% if person_list.has_next %}
-                                            <a href="?page={{ person_list.next_page_number }}{% if search_param %}&search={{ search_param }}{% endif %}">next</a>
-                                            <a href="?page={{ person_list.paginator.num_pages }}{% if search_param %}&search={{ search_param }}{% endif %}">last &raquo;</a>
+                                        {% if thesis_list.has_next %}
+                                            <a href="?page={{ thesis_list.next_page_number }}{% if search_param %}&search={{ search_param }}{% endif %}">next</a>
+                                            <a href="?page={{ thesis_list.paginator.num_pages }}{% if search_param %}&search={{ search_param }}{% endif %}">last &raquo;</a>
                                         {% endif %}
                                     </span>
                                     <span class="current">
-                                        Page {{ person_list.number }} of {{ person_list.paginator.num_pages }}.
+                                        Page {{ thesis_list.number }} of {{ thesis_list.paginator.num_pages }}.
                                     </span>
                                 </div>
                             </div>
