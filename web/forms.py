@@ -122,3 +122,32 @@ class PersonDataForm(forms.ModelForm):
         data = self.cleaned_data['secondary_phone_number']
         _validate_phone_number(data)
         return data
+
+class ProposalForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(ProposalForm, self).__init__(*args, **kwargs)
+        instance = getattr(self, 'instance', None)
+        if instance and instance.pk:
+            self.fields['code'].widget.attrs['readonly'] = True
+
+    class Meta:
+        model = models.Proposal
+        fields = [
+            'code',
+            'submission_date',
+            'title',
+        ]
+
+    code = forms.CharField(
+        label='Codigo',
+        widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
+    submission_date = forms.DateField(
+        label = 'Fecha de entrega',
+        widget=forms.DateInput(attrs={'class': 'form-control'})
+    )
+    title = forms.CharField(
+        label='Titulo',
+        widget=forms.TextInput(attrs={'class': 'form-control'})
+    )

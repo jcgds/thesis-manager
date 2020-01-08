@@ -68,6 +68,9 @@ class Proposal(models.Model):
     def __str__(self):
         return '%s (%s)' % (self.title, self.code)
 
+    def get_absolute_url(self):
+        return reverse('proposal_detail', kwargs={'proposal_code': self.code})
+
 
 class HistoricProposalStatus(models.Model):
     date = models.DateField(auto_now=True)
