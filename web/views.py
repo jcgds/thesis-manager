@@ -159,5 +159,5 @@ class ProposalEdit(SuccessMessageMixin, UpdateView):
     def get_success_message(self, cleaned_data):
         return self.success_message % dict(
             cleaned_data,
-            code=self.object.code,
+            id_card_number=self.object.code,
         )

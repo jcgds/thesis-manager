@@ -35,15 +35,6 @@ class PersonData(models.Model):
         verbose_name_plural = 'Person data'
 
 
-class Term(models.Model):
-    name = models.CharField(max_length=16)
-
-    # TODO: Make custom validator (201915 - 201925 etc) [Unit testable]
-
-    def __str__(self):
-        return self.name
-
-
 class ProposalStatus(models.Model):
     name = models.CharField(max_length=64)
     description = models.CharField(max_length=512, null=True, blank=True)
@@ -53,6 +44,15 @@ class ProposalStatus(models.Model):
 
     class Meta:
         verbose_name_plural = 'Proposal statuses'
+
+
+class Term(models.Model):
+    period = models.PositiveIntegerField(primary_key=True)
+
+    # TODO: Make custom validator (201915 - 201925 etc) [Unit testable]
+
+    def __str__(self):
+        return str(self.period)
 
 
 class Proposal(models.Model):

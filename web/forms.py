@@ -137,6 +137,11 @@ class ProposalForm(forms.ModelForm):
             'code',
             'submission_date',
             'title',
+            'student1',
+            'student2',
+            'academic_tutor',
+            'industry_tutor',
+            'term'
         ]
 
     code = forms.CharField(
@@ -144,10 +149,38 @@ class ProposalForm(forms.ModelForm):
         widget=forms.TextInput(attrs={'class': 'form-control'})
     )
     submission_date = forms.DateField(
-        label = 'Fecha de entrega',
-        widget=forms.DateInput(attrs={'class': 'form-control'})
+        label='Fecha de entrega',
+        widget=forms.DateInput(attrs={'class': 'form-control','type': 'date'})
     )
     title = forms.CharField(
         label='Titulo',
         widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
+    student1 = forms.ModelChoiceField(
+        label='Primer Estudiante',
+        queryset=models.PersonData.objects.filter(type=1),
+        widget=forms.Select(attrs={'class':'form-control'})
+    )
+    student2 = forms.ModelChoiceField(
+        label='Segundo Estudiante',
+        queryset=models.PersonData.objects.filter(type=1),
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+
+    academic_tutor = forms.ModelChoiceField(
+        label='Tutor Academico',
+        queryset=models.PersonData.objects.filter(type=0),
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+
+    industry_tutor = forms.ModelChoiceField(
+        label='Tutor Industrial',
+        queryset=models.PersonData.objects.filter(type=2),
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+
+    term = forms.ModelChoiceField(
+        label='Term',
+        queryset=models.Term.objects.all(),
+        widget=forms.Select(attrs={'class': 'form-control'})
     )
