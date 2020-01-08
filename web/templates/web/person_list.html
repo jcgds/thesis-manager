@@ -55,7 +55,7 @@
                                 <tbody>
                                 {% for person in person_list %}
                                     <tr>
-                                        <td>{{ person.id_card_number }}</td>
+                                        <td><a href="{% url 'person_detail' person.pk %}">{{ person.pk }}</a></td>
                                         <td>{{ person.name }}</td>
                                         <td>{{ person.last_name }}</td>
                                         <td>{{ person.get_type_display }}</td>

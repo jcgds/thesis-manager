@@ -10,10 +10,10 @@
                     <a href="index-2.html">Home</a>
                 </li>
                 <li class="breadcrumb-item">
-                    <a>Personas</a>
+                    <a href="{% url 'person_index' %}">Personas</a>
                 </li>
                 <li class="breadcrumb-item active">
-                    <strong>Datos</strong>
+                    <strong>{{ person_data.pk }}</strong>
                 </li>
             </ol>
         </div>
