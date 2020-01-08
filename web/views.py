@@ -146,3 +146,18 @@ def proposal_index(request):
         'proposal_list': proposal_by_page
     }
     return render(request, 'web/proposal_list.html', context)
+
+
+class ProposalEdit(SuccessMessageMixin, UpdateView):
+    model = Proposal
+    form_class = forms.ProposalForm
+    success_message = "%(code)s editado correctamente."
+
+    def get_success_url(self):
+        return reverse('edit_proposal', args=(self.object.code,))
+
+    def get_success_message(self, cleaned_data):
+        return self.success_message % dict(
+            cleaned_data,
+            code=self.object.code,
+        )
