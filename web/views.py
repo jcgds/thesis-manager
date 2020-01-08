@@ -188,3 +188,43 @@ class ThesisStatusUpdate(SuccessMessageMixin, UpdateView):
             cleaned_data,
             name=self.object.name,
         )
+
+
+def thesis_index(request):
+    search_param = request.GET.get('search')
+    if search_param:
+        # Append a query for each term received in the search parameters so that if we receive multiple
+        # parameters, we crosscheck every single one with the colums id_card_number, name and last_name
+        search_args = []
+        for term in search_param.split():
+            for query in ('code__icontains', 'NRC__icontains', 'title__icontains', 'status__name__icontains',
+                          'thematic_category__icontains', 'proposal__title__icontains',
+                          'proposal__student1__name__icontains', 'proposal__student1__last_name__icontains',
+                          'proposal__student1__id_card_number__icontains', 'proposal__student2__name__icontains',
+                          'proposal__student2__last_name__icontains', 'proposal__student2__id_card_number__icontains',
+                          'proposal__academic_tutor__name__icontains', 'proposal__academic_tutor__last_name__icontains',
+                          'proposal__academic_tutor__id_card_number__icontains',
+                          'proposal__industry_tutor__name__icontains', 'proposal__industry_tutor__last_name__icontains',
+                          'proposal__industry_tutor__id_card_number__icontains', 'delivery_term__name__icontains',):
+                search_args.append(Q(**{query: term}))
+            thesis_list = Thesis.objects.filter(reduce(operator.or_, search_args))
+    else:
+        # If we don't receive a search parameter, don't apply any filters
+        thesis_list = Thesis.objects.all()
+
+    for thesis in thesis_list:
+        thesis.proposal.academic_tutor.full_name = "{} {}".format(thesis.proposal.academic_tutor.name,
+                                                                  thesis.proposal.academic_tutor.last_name)
+        thesis.proposal.industry_tutor.full_name = "{} {}".format(thesis.proposal.industry_tutor.name,
+                                                                  thesis.proposal.industry_tutor.last_name)
+
+    paginator = Paginator(thesis_list, request.GET.get('page_length', 15))
+    page = request.GET.get('page')
+    thesis_by_page = paginator.get_page(page)
+    context = {
+        'thesis_list': thesis_by_page,
+        'search_form': forms.SearchForm(previous_search=search_param),
+        'search_param': search_param
+    }
+
+    return render(request, 'web/thesis_list.html', context)
