@@ -2,7 +2,11 @@
 {% block page_content %}
     <div class="row wrapper border-bottom white-bg page-heading">
         <div class="col-lg-10">
-            <h2>Agregar persona</h2>
+            {% if form.instance and form.instance.pk %}
+                <h2>Editar persona</h2>
+            {% else %}
+                <h2>Agregar persona</h2>
+            {% endif %}
             <ol class="breadcrumb">
                 {# TODO: Connect with Django correctly #}
                 <li class="breadcrumb-item">
@@ -11,9 +15,19 @@
                 <li class="breadcrumb-item">
                     <a href="{% url 'person_index' %}">Personas</a>
                 </li>
-                <li class="breadcrumb-item active">
-                    <strong>Agregar</strong>
-                </li>
+                {% if form.instance and form.instance.pk %}
+                    <li class="breadcrumb-item">
+                        <a href="{% url 'person_detail' form.instance.pk %}">{{ form.instance.pk }}</a>
+                    </li>
+                    <li class="breadcrumb-item active">
+                        <strong>Editar</strong>
+                    </li>
+                {% else %}
+                    <li class="breadcrumb-item active">
+                        <strong>Agregar</strong>
+                    </li>
+                {% endif %}
+
             </ol>
         </div>
         <div class="col-lg-2">
