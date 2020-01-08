@@ -1,3 +1,5 @@
+import re
+
 from django import forms
 
 from . import models
@@ -16,6 +18,12 @@ class SearchForm(forms.Form):
         self.fields['search'].widget = forms.TextInput(attrs=field_attrs)
 
     search = forms.CharField(required=False, label='')
+
+
+def _validate_phone_number(phone):
+    pattern = re.compile("^[+]*[(]?[0-9]{1,4}[)]?[-\s./0-9]*$")
+    if phone and not pattern.match(phone):
+        raise forms.ValidationError('Número de teléfono inválido')
 
 
 class PersonDataForm(forms.ModelForm):
@@ -80,3 +88,26 @@ class PersonDataForm(forms.ModelForm):
         required=False,
         widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 3})
     )
+
+    def clean_id_card_number(self):
+        data = self.cleaned_data['id_card_number']
+        pattern = re.compile("^[VE][0-9]+$")
+        if not pattern.match(data):
+            raise forms.ValidationError('La cédula debe comenzar por V o E seguida únicamente de dígitos')
+        return data
+
+    def clean_ucab_email(self):
+        data = self.cleaned_data['ucab_email']
+        if data and not data.endswith('ucab.edu.ve'):
+            raise forms.ValidationError('El correo UCAB debe pertenecer al dominio ucab.edu.ve')
+        return data
+
+    def clean_primary_phone_number(self):
+        data = self.cleaned_data['primary_phone_number']
+        _validate_phone_number(data)
+        return data
+
+    def clean_secondary_phone_number(self):
+        data = self.cleaned_data['secondary_phone_number']
+        _validate_phone_number(data)
+        return data
