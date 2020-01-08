@@ -37,61 +37,89 @@
                                 </form>
                             </div>
                         </div>
-                        <div class="table-responsive">
-                            <table class="table table-striped">
-                                <thead>
-                                <tr>
-                                    <th>Cédula</th>
-                                    <th>Nombre</th>
-                                    <th>Apellido</th>
-                                    <th>Tipo</th>
-                                    <th>Correo UCAB</th>
-                                    <th>Correo personal</th>
-                                    <th>Teléfono Principal</th>
-                                    <th>Teléfono Secundario</th>
-                                    <th>Observaciones</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% for person in person_list %}
+                        {% if not person_list %}
+                            <p style="margin-top: 2.5%">No hay datos disponibles.</p>
+                        {% else %}
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
                                     <tr>
-                                        <td><a href="{% url 'person_detail' person.pk %}">{{ person.pk }}</a></td>
-                                        <td>{{ person.name }}</td>
-                                        <td>{{ person.last_name }}</td>
-                                        <td>{{ person.get_type_display }}</td>
-                                        <td>{{ person.ucab_email }}</td>
-                                        <td>{{ person.email }}</td>
-                                        <td>{{ person.primary_phone_number }}</td>
-                                        <td>{{ person.secondary_phone_number|default:"-" }}</td>
-                                        <td>{{ person.observations|default:"-" }}</td>
-                                        <td>
-                                            <a href="{% url 'edit_person' person.id_card_number %}"
-                                               class="btn btn-sm btn-outline-warning">
-                                                <span class="glyphicon glyphicon-pencil"></span>
-                                            </a>
-                                        </td>
+                                        <th>Cédula</th>
+                                        <th>Nombre</th>
+                                        <th>Apellido</th>
+                                        <th>Tipo</th>
+                                        <th>Correo UCAB</th>
+                                        <th>Correo personal</th>
+                                        <th>Teléfono Principal</th>
+                                        <th>Teléfono Secundario</th>
+                                        <th>Observaciones</th>
                                     </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                    {% for person in person_list %}
+                                        <tr>
+                                            <td><a href="{% url 'person_detail' person.pk %}">{{ person.pk }}</a></td>
+                                            <td>{{ person.name }}</td>
+                                            <td>{{ person.last_name }}</td>
+                                            <td>{{ person.get_type_display }}</td>
+                                            <td>{{ person.ucab_email }}</td>
+                                            <td>{{ person.email }}</td>
+                                            <td>{{ person.primary_phone_number }}</td>
+                                            <td>{{ person.secondary_phone_number|default:"-" }}</td>
+                                            <td>{{ person.observations|default:"-" }}</td>
+                                            <td>
+                                                <a href="{% url 'edit_person' person.id_card_number %}"
+                                                   class="btn btn-sm btn-outline-warning">
+                                                    <span class="glyphicon glyphicon-pencil"></span>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
 
-                            <div class="pagination float-right">
+                                <div class="pagination float-right">
                                 <span class="step-links ">
                                 {# If the search_param attribute is not None, append it to the URL to maintain pagination in a filtered search #}
                                     {% if person_list.has_previous %}
                                         <a href="?page=1{% if search_param %}&search={{ search_param }}{% endif %}">&laquo; First</a>
-                                        <a href="?page={{ person_list.previous_page_number }}{% if search_param %}&search={{ search_param }}{% endif %}">previous</a>
+                                        <a href="?page=
+
+
+
+
+
+
+
+                                                {{ person_list.previous_page_number }}{% if search_param %}&search={{ search_param }}{% endif %}">previous</a>
                                     {% endif %}
                                     {% if person_list.has_next %}
-                                        <a href="?page={{ person_list.next_page_number }}{% if search_param %}&search={{ search_param }}{% endif %}">next</a>
-                                        <a href="?page={{ person_list.paginator.num_pages }}{% if search_param %}&search={{ search_param }}{% endif %}">last &raquo;</a>
+                                        <a href="?page=
+
+
+
+
+
+
+
+                                                {{ person_list.next_page_number }}{% if search_param %}&search={{ search_param }}{% endif %}">next</a>
+                                        <a href="?page=
+
+
+
+
+
+
+
+                                                {{ person_list.paginator.num_pages }}{% if search_param %}&search={{ search_param }}{% endif %}">last &raquo;</a>
                                     {% endif %}
                                 </span>
-                                <span class="current">
+                                    <span class="current">
                                     Page {{ person_list.number }} of {{ person_list.paginator.num_pages }}.
                                 </span>
+                                </div>
                             </div>
-                        </div>
+                        {% endif %}
                     </div>
                 </div>
 
