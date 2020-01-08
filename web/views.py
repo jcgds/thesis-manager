@@ -7,7 +7,7 @@ from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, UpdateView
 
 from . import forms
 from .models import PersonData
@@ -17,8 +17,8 @@ def index(request):
     return HttpResponse("Hello, world. You're at the web index.")
 
 
-def person_detail(request, person_id_card_number):
-    person = get_object_or_404(PersonData, id_card_number=person_id_card_number)
+def person_detail(request, pk):
+    person = get_object_or_404(PersonData, pk=pk)
     context = {
         'person_data': person
     }
@@ -50,14 +50,10 @@ def person_index(request):
     return render(request, 'web/person_list.html', context)
 
 
-def edit_person(request, person_id_card_number):
-    return HttpResponse('Edit person %s' % person_id_card_number)
-
-
 class PersonDataCreate(SuccessMessageMixin, CreateView):
     model = PersonData
     form_class = forms.PersonDataForm
-    success_message = "%(id_card_number)s was created successfully"
+    success_message = "%(id_card_number)s creado correctamente."
 
     def form_valid(self, form):
         print('Valid form.')
@@ -69,6 +65,21 @@ class PersonDataCreate(SuccessMessageMixin, CreateView):
 
     def get_success_url(self):
         return reverse('create_person')
+
+    def get_success_message(self, cleaned_data):
+        return self.success_message % dict(
+            cleaned_data,
+            id_card_number=self.object.id_card_number,
+        )
+
+
+class PersonDataUpdate(SuccessMessageMixin, UpdateView):
+    model = PersonData
+    form_class = forms.PersonDataForm
+    success_message = "%(id_card_number)s editado correctamente."
+
+    def get_success_url(self):
+        return reverse('edit_person', args=(self.object.id_card_number,))
 
     def get_success_message(self, cleaned_data):
         return self.success_message % dict(

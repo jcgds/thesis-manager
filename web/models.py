@@ -1,7 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.urls import reverse
-from phonenumber_field.modelfields import PhoneNumberField
 
 
 class User(AbstractUser):
@@ -18,13 +17,13 @@ class PersonData(models.Model):
         (EXTERNAL, 'Externo')
     )
     type = models.PositiveSmallIntegerField(choices=TYPE_CHOICES)
-    id_card_number = models.CharField(max_length=16, unique=True)  # Cédula
+    id_card_number = models.CharField(max_length=16, primary_key=True)  # Cédula
     name = models.CharField(max_length=128)
     last_name = models.CharField(max_length=128)
     ucab_email = models.EmailField(unique=True, null=True, blank=True)
     email = models.EmailField()
-    primary_phone_number = PhoneNumberField()
-    secondary_phone_number = PhoneNumberField(null=True, blank=True)
+    primary_phone_number = models.CharField(max_length=32)
+    secondary_phone_number = models.CharField(max_length=32, null=True, blank=True)
     observations = models.CharField(max_length=1_024, null=True, blank=True)
 
     def __str__(self):

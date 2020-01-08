@@ -19,6 +19,12 @@ class SearchForm(forms.Form):
 
 
 class PersonDataForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(PersonDataForm, self).__init__(*args, **kwargs)
+        instance = getattr(self, 'instance', None)
+        if instance and instance.pk:
+            self.fields['id_card_number'].widget.attrs['readonly'] = True
+
     class Meta:
         model = models.PersonData
         fields = [
