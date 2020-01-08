@@ -1,0 +1,192 @@
+{% extends 'web/base.html' %}
+{% block page_content %}
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            {% if form.instance and form.instance.pk %}
+                <h2>Editar persona</h2>
+            {% else %}
+                <h2>Agregar persona</h2>
+            {% endif %}
+            <ol class="breadcrumb">
+                {# TODO: Connect with Django correctly #}
+                <li class="breadcrumb-item">
+                    <a href="index-2.html">Home</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="{% url 'person_index' %}">Personas</a>
+                </li>
+                {% if form.instance and form.instance.pk %}
+                    <li class="breadcrumb-item">
+                        <a href="{% url 'person_detail' form.instance.pk %}">{{ form.instance.pk }}</a>
+                    </li>
+                    <li class="breadcrumb-item active">
+                        <strong>Editar</strong>
+                    </li>
+                {% else %}
+                    <li class="breadcrumb-item active">
+                        <strong>Agregar</strong>
+                    </li>
+                {% endif %}
+
+            </ol>
+        </div>
+        <div class="col-lg-2">
+        </div>
+    </div>
+
+    <div class="row" style="margin-top: 1%">
+        <div class="col-lg-12">
+            {% if messages %}
+                <ul class="col-lg-12 messages">
+                    {% for message in messages %}
+                        {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+                            <div class="alert alert-success alert-dismissable">
+                                <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                                {{ message }}
+                            </div>
+                        {% endif %}
+
+                        {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+                            <div class="alert alert-error alert-dismissable">
+                                <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                                {{ message }}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            <div class="ibox">
+                <div class="ibox-content">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="form-group row" style="margin-top: 1.5%">
+                            <label class="col-sm-2 col-form-label" for="{{ form.id_card_number.name }}">
+                                {{ form.id_card_number.label }}
+                            </label>
+                            <div class="col-sm-5 {% if form.id_card_number.errors %} has-error{% endif %}">
+                                {{ form.id_card_number }}
+                                {% for error in form.id_card_number.errors %}
+                                    <span class="form-text m-b-none text-danger">
+                                        {{ error|escape }}
+                                    </span>
+                                {% endfor %}
+                            </div>
+
+                            <label class="col-sm-1 col-form-label" for="{{ form.type.name }}">
+                                {{ form.type.label }}
+                            </label>
+                            <div class="col-sm-4 {% if form.type.errors %} has-error{% endif %}">
+                                {{ form.type }}
+                                {% for error in form.type.errors %}
+                                    <span class="form-text m-b-none text-danger">
+                                        {{ error|escape }}
+                                    </span>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label" for="{{ form.email.name }}">
+                                {{ form.email.label }}
+                            </label>
+                            <div class="col-sm-10 {% if form.email.errors %} has-error{% endif %}">
+                                {{ form.email }}
+                                {% for error in form.email.errors %}
+                                    <span class="form-text m-b-none text-danger">
+                                        {{ error|escape }}
+                                    </span>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label" for="{{ form.ucab_email.name }}">
+                                {{ form.ucab_email.label }}
+                            </label>
+                            <div class="col-sm-10 {% if form.ucab_email.errors %} has-error{% endif %}">
+                                {{ form.ucab_email }}
+                                {% for error in form.ucab_email.errors %}
+                                    <span class="form-text m-b-none text-danger">
+                                        {{ error|escape }}
+                                    </span>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label" for="{{ form.name.name }}">
+                                {{ form.name.label }}
+                            </label>
+                            <div class="col-sm-4 {% if form.name.errors %} has-error{% endif %}">
+                                {{ form.name }}
+                                {% for error in form.name.errors %}
+                                    <span class="form-text m-b-none text-danger">
+                                        {{ error|escape }}
+                                    </span>
+                                {% endfor %}
+                            </div>
+                            <label class="col-sm-2 col-form-label" for="{{ form.last_name.name }}">
+                                {{ form.last_name.label }}
+                            </label>
+                            <div class="col-sm-4 {% if form.last_name.errors %} has-error{% endif %}">
+                                {{ form.last_name }}
+                                {% for error in form.last_name.errors %}
+                                    <span class="form-text m-b-none text-danger">
+                                        {{ error|escape }}
+                                    </span>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label" for="{{ form.primary_phone_number.name }}">
+                                {{ form.primary_phone_number.label }}
+                            </label>
+                            <div class="col-sm-4  {% if form.primary_phone_number.errors %} has-error{% endif %}">
+                                {{ form.primary_phone_number }}
+                                {% for error in form.primary_phone_number.errors %}
+                                    <span class="form-text m-b-none text-danger">
+                                        {{ error|escape }}
+                                    </span>
+                                {% endfor %}
+                            </div>
+                            <label class="col-sm-2 col-form-label" for="{{ form.secondary_phone_number.name }}">
+                                {{ form.secondary_phone_number.label }}
+                            </label>
+                            <div class="col-sm-4  {% if form.secondary_phone_number.errors %} has-error{% endif %}">
+                                {{ form.secondary_phone_number }}
+                                {% for error in form.secondary_phone_number.errors %}
+                                    <span class="form-text m-b-none text-danger">
+                                        {{ error|escape }}
+                                    </span>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label" for="{{ form.observations.name }}">
+                                {{ form.observations.label }}
+                            </label>
+                            <div class="col-sm-10 {% if form.observations.errors %} has-error{% endif %}">
+                                {{ form.observations }}
+                                {% for error in form.observations.errors %}
+                                    <span class="form-text m-b-none text-danger">
+                                        {{ error|escape }}
+                                    </span>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group row">
+                            <div class="col-sm-11"></div>
+                            <div class="col-sm-1">
+                                <button class="btn btn-primary btn-sm" type="submit">Guardar</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

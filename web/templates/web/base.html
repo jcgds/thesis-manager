@@ -7,9 +7,11 @@
     <link href="{% static 'font-awesome/css/font-awesome.css' %}" rel="stylesheet">
     <link href="{% static 'css/animate.css' %}" rel="stylesheet">
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <link href="{% static 'css/plugins/dataTables/datatables.min.css' %}" rel="stylesheet">
+    <script src="{% static 'js/jquery-3.1.1.min.js' %}"></script>
 </head>
 <body>
- <div id="wrapper"><!-- include web page navigation bar page -->
+<div id="wrapper"><!-- include web page navigation bar page -->
     <nav class="navbar-default navbar-static-side" role="navigation">
         <div class="sidebar-collapse">
             <ul class="nav metismenu" id="side-menu">
@@ -79,19 +81,19 @@
                     </li>
                 </ul>
             </nav>
-        </div>
-            {# TODO: {% include "./base_menu_bar.html" %} #}
-            {% block page_content %}
-            {% endblock %}
     </div>
- </div>
-
-         <script src="{% static 'js/jquery-3.1.1.min.js' %}"></script>
-         <script src="{% static 'js/popper.min.js' %}"></script>
-         <script src="{% static 'js/bootstrap.js' %}"></script>
-         <script src="{% static 'js/plugins/metisMenu/jquery.metisMenu.js' %}"></script>
-         <script src="{% static 'js/plugins/slimscroll/jquery.slimscroll.min.js' %}"></script>
-         <script src="{% static 'js/inspinia.js' %}"></script>
-         <script src="{% static 'js/plugins/pace/pace.min.js' %}"></script>
-    </body>
+        {# TODO: {% include "./base_menu_bar.html" %} #}
+        {% block page_content %}
+        {% endblock %}
+    </div>
+</div>
+<script src="{% static 'js/popper.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.js' %}"></script>
+<script src="{% static 'js/plugins/metisMenu/jquery.metisMenu.js' %}"></script>
+<script src="{% static 'js/plugins/slimscroll/jquery.slimscroll.min.js' %}"></script>
+<script src="{% static 'js/inspinia.js' %}"></script>
+<script src="{% static 'js/plugins/pace/pace.min.js' %}"></script>
+<script src="{% static 'js/plugins/dataTables/datatables.min.js' %}"></script>
+<script src="{% static 'js/plugins/dataTables/dataTables.bootstrap4.min.js' %}"></script>
+</body>
 </html>

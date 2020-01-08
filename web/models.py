@@ -1,33 +1,35 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from phonenumber_field.modelfields import PhoneNumberField
+from django.urls import reverse
 
 
 class User(AbstractUser):
     is_manager = models.BooleanField(default=False)
 
 
+class PersonType(models.Model):
+    name = models.CharField(max_length=64)
+
+    def __str__(self):
+        return self.name
+
+
 class PersonData(models.Model):
-    TEACHER = 0
-    STUDENT = 1
-    EXTERNAL = 2
-    TYPE_CHOICES = (
-        (TEACHER, 'Teacher'),
-        (STUDENT, 'Student'),
-        (EXTERNAL, 'External')
-    )
-    type = models.PositiveSmallIntegerField(choices=TYPE_CHOICES)
-    id_card_number = models.CharField(max_length=16, unique=True)  # Cédula
+    type = models.ForeignKey(PersonType, models.PROTECT)
+    id_card_number = models.CharField(max_length=16, primary_key=True)  # Cédula
     name = models.CharField(max_length=128)
     last_name = models.CharField(max_length=128)
     ucab_email = models.EmailField(unique=True, null=True, blank=True)
     email = models.EmailField()
-    primary_phone_number = PhoneNumberField()
-    secondary_phone_number = PhoneNumberField(null=True, blank=True)
+    primary_phone_number = models.CharField(max_length=32)
+    secondary_phone_number = models.CharField(max_length=32, null=True, blank=True)
     observations = models.CharField(max_length=1_024, null=True, blank=True)
 
     def __str__(self):
         return '%s %s (%s)' % (self.name, self.last_name, self.id_card_number)
+
+    def get_absolute_url(self):
+        return reverse('person_detail', kwargs={'person_id_card_number': self.id_card_number})
 
     class Meta:
         verbose_name_plural = 'Person data'
