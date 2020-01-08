@@ -20,27 +20,21 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="ibox ">
-                    <div class="ibox-title">
-                        <h5>Custom responsive table </h5>
-                    </div>
                     <div class="ibox-content">
-                        <div class="row">
-                            <div class="col-sm-5 m-b-xs"><select class="form-control-sm form-control input-s-sm inline">
-                                <option value="0">Option 1</option>
-                                <option value="1">Option 2</option>
-                                <option value="2">Option 3</option>
-                                <option value="3">Option 4</option>
-                            </select>
+                        <div class="row border-bottom">
+                            <div class="col-sm-5 m-b-xs">
+                                <a href="{% url 'create_person' %}" class="btn btn-primary">Agregar</a>
                             </div>
                             <div class="col-sm-4 m-b-xs"></div>
                             <div class="col-sm-3">
-                                <div class="input-group">
-                                    <input placeholder="Search" type="text"
-                                           class="form-control form-control-sm">
+                                <form class="input-group" style="margin-bottom: 14px">
+                                    {{ search_form }}
                                     <span class="input-group-append">
-                                        <button type="button" class="btn btn-sm btn-primary">Go!</button>
+                                        <button type="submit" class="btn btn-sm btn-primary">
+                                            <span class="glyphicon glyphicon-search"></span>
+                                        </button>
                                     </span>
-                                </div>
+                                </form>
                             </div>
                         </div>
                         <div class="table-responsive">
@@ -76,6 +70,12 @@
                                             <td>--</td>
                                         {% endif %}
                                         <th>{{ proposal.term.name }}</th>
+                                        <td>
+                                            <a href="{% url 'edit_proposal' proposal.code %}"
+                                               class="btn btn-sm btn-outline-warning">
+                                                <span class="glyphicon glyphicon-pencil"></span>
+                                            </a>
+                                        </td>
                                     </tr>
                                 {% endfor %}
                                 </tbody>
