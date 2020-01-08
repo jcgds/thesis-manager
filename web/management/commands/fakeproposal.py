@@ -17,7 +17,7 @@ class Command(BaseCommand):
         for i in range(6):
             Proposal(
                 code=loc_faker.random_int(),
-                submission_date=loc_faker.date_time_between(start_date='-6m', end_date='now'),
+                submission_date=loc_faker.date_time_between(start_date='-1y', end_date='now'),
                 title=loc_faker.sentence(nb_words=6),
                 student1=faker.random.choice(PersonData.objects.filter(type=PersonType.objects.get(name='Estudiante').id)),
                 academic_tutor=faker.random.choice(PersonData.objects.filter(type=PersonType.objects.get(name='Profesor').id)),
