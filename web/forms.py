@@ -33,36 +33,35 @@ class PersonDataForm(forms.ModelForm):
             'observations',
         ]
 
-    form_control_attr = {'class': 'form-control'}
     id_card_number = forms.CharField(
         label='Cédula',
-        widget=forms.TextInput(attrs=form_control_attr)
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'V26691598'})
     )
     name = forms.CharField(
         label='Nombres',
-        widget=forms.TextInput(attrs=form_control_attr)
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Steph Meck'})
     )
     last_name = forms.CharField(
         label='Apellidos',
-        widget=forms.TextInput(attrs=form_control_attr)
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Collier Reese'})
     )
     primary_phone_number = forms.CharField(
         label='Teléfono principal',
-        widget=forms.TextInput(attrs=form_control_attr)
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': '+58 212 532 6912'})
     )
     secondary_phone_number = forms.CharField(
         label='Teléfono secundario',
         required=False,
-        widget=forms.TextInput(attrs=form_control_attr)
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': '+58 424 582 1902'})
     )
     email = forms.EmailField(
         label='Correo personal',
-        widget=forms.EmailInput(attrs=form_control_attr)
+        widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'steph.collier@gmail.com'})
     )
     ucab_email = forms.EmailField(
         label='Correo UCAB',
         required=False,
-        widget=forms.EmailInput(attrs=form_control_attr)
+        widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'sc.collier16@ucab.edu.ve'})
     )
     type = forms.ChoiceField(
         label='Tipo',
