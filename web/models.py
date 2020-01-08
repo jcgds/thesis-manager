@@ -7,16 +7,15 @@ class User(AbstractUser):
     is_manager = models.BooleanField(default=False)
 
 
+class PersonType(models.Model):
+    name = models.CharField(max_length=64)
+
+    def __str__(self):
+        return self.name
+
+
 class PersonData(models.Model):
-    TEACHER = 0
-    STUDENT = 1
-    EXTERNAL = 2
-    TYPE_CHOICES = (
-        (TEACHER, 'Profesor'),
-        (STUDENT, 'Estudiante'),
-        (EXTERNAL, 'Externo')
-    )
-    type = models.PositiveSmallIntegerField(choices=TYPE_CHOICES)
+    type = models.ForeignKey(PersonType, models.PROTECT)
     id_card_number = models.CharField(max_length=16, primary_key=True)  # Cédula
     name = models.CharField(max_length=128)
     last_name = models.CharField(max_length=128)

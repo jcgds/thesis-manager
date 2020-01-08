@@ -69,9 +69,10 @@ class PersonDataForm(forms.ModelForm):
         required=False,
         widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'sc.collier16@ucab.edu.ve'})
     )
-    type = forms.ChoiceField(
+    type = forms.ModelChoiceField(
         label='Tipo',
-        choices=models.PersonData.TYPE_CHOICES,
+        initial=0,
+        queryset=models.PersonType.objects.all(),
         widget=forms.Select(attrs={'class': 'form-control m-b'}))
     observations = forms.CharField(
         label='Observaciones',
