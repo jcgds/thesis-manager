@@ -1,5 +1,6 @@
 import operator
 from functools import reduce
+from dal import autocomplete
 
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.paginator import Paginator
@@ -228,3 +229,15 @@ def thesis_index(request):
     }
 
     return render(request, 'web/thesis_list.html', context)
+
+
+class PersonTypeAutoComplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        qs = PersonType.objects.all()
+
+        if self.q:
+            qs = qs.filter(name__icontains=self.q)
+        return qs
+
+# class ThesisCreate(SuccessMessageMixin, CreateView):
+#

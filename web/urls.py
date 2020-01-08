@@ -15,4 +15,5 @@ urlpatterns = [
     path('tg/estados', views.thesis_status_index, name='thesis_status_index'),
     path('tg/estados/agregar', views.ThesisStatusCreate.as_view(), name='create_thesis_status'),
     path('tg/estados/<int:pk>/editar', views.ThesisStatusUpdate.as_view(), name='edit_thesis_status'),
+    path(r'^person-type-autocomplete', views.PersonTypeAutoComplete.as_view(), name='person-type-autocomplete')
 ]
