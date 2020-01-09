@@ -73,6 +73,7 @@ class PersonDataCreate(SuccessMessageMixin, CreateView):
         )
 
 
+@method_decorator([login_required, manager_required], name='dispatch')
 class PersonDataUpdate(SuccessMessageMixin, UpdateView):
     model = PersonData
     form_class = forms.PersonDataForm
@@ -113,6 +114,7 @@ def person_type_index(request):
     return render(request, 'web/persontype_list.html', context)
 
 
+@method_decorator([login_required, manager_required], name='dispatch')
 class PersonTypeCreate(SuccessMessageMixin, CreateView):
     model = PersonType
     form_class = forms.PersonTypeForm
@@ -128,6 +130,7 @@ class PersonTypeCreate(SuccessMessageMixin, CreateView):
         )
 
 
+@method_decorator([login_required, manager_required], name='dispatch')
 class PersonTypeUpdate(SuccessMessageMixin, UpdateView):
     model = PersonType
     form_class = forms.PersonTypeForm
@@ -169,6 +172,7 @@ def thesis_status_index(request):
     return render(request, 'web/thesisstatus_list.html', context)
 
 
+@method_decorator([login_required, manager_required], name='dispatch')
 class ThesisStatusCreate(SuccessMessageMixin, CreateView):
     model = ThesisStatus
     form_class = forms.ThesisStatusForm
@@ -184,6 +188,7 @@ class ThesisStatusCreate(SuccessMessageMixin, CreateView):
         )
 
 
+@method_decorator([login_required, manager_required], name='dispatch')
 class ThesisStatusUpdate(SuccessMessageMixin, UpdateView):
     model = ThesisStatus
     form_class = forms.ThesisStatusForm
@@ -238,6 +243,7 @@ def thesis_index(request):
     return render(request, 'web/thesis_list.html', context)
 
 
+@method_decorator([login_required, manager_required], name='dispatch')
 class PersonTypeAutoComplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
         qs = PersonType.objects.all()
@@ -247,6 +253,7 @@ class PersonTypeAutoComplete(autocomplete.Select2QuerySetView):
         return qs
 
 
+@method_decorator([login_required, manager_required], name='dispatch')
 class ProposalAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
         qs = Proposal.objects.all()
@@ -259,6 +266,7 @@ class ProposalAutocomplete(autocomplete.Select2QuerySetView):
         return qs
 
 
+@method_decorator([login_required, manager_required], name='dispatch')
 class TermAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
         qs = Term.objects.all()
@@ -268,6 +276,7 @@ class TermAutocomplete(autocomplete.Select2QuerySetView):
         return qs
 
 
+@method_decorator([login_required, manager_required], name='dispatch')
 class ThesisCreate(SuccessMessageMixin, CreateView):
     model = Thesis
     form_class = forms.ThesisForm
@@ -283,6 +292,7 @@ class ThesisCreate(SuccessMessageMixin, CreateView):
         )
 
 
+@method_decorator([login_required, manager_required], name='dispatch')
 class ThesisUpdate(SuccessMessageMixin, UpdateView):
     model = Thesis
     form_class = forms.ThesisForm
@@ -403,6 +413,7 @@ def proposal_index(request):
     return render(request, 'web/proposal_list.html', context)
 
 
+@method_decorator([login_required, manager_required], name='dispatch')
 class ProposalCreate(SuccessMessageMixin, CreateView):
     model = Proposal
     form_class = forms.ProposalForm
@@ -418,6 +429,7 @@ class ProposalCreate(SuccessMessageMixin, CreateView):
         )
 
 
+@method_decorator([login_required, manager_required], name='dispatch')
 class ProposalEdit(SuccessMessageMixin, UpdateView):
     model = Proposal
     form_class = forms.ProposalForm
@@ -444,6 +456,7 @@ def term_index(request):
     return render(request, 'web/term_list.html', context)
 
 
+@method_decorator([login_required, manager_required], name='dispatch')
 class TermCreate(SuccessMessageMixin, CreateView):
     model = Term
     form_class = forms.TermForm
@@ -459,6 +472,7 @@ class TermCreate(SuccessMessageMixin, CreateView):
         )
 
 
+@method_decorator([login_required, manager_required], name='dispatch')
 class TermUpdate(SuccessMessageMixin, UpdateView):
     model = Term
     form_class = forms.TermForm
@@ -485,6 +499,7 @@ def proposal_status_index(request):
     return render(request, 'web/proposal_status_list.html', context)
 
 
+@method_decorator([login_required, manager_required], name='dispatch')
 class ProposalStatusCreate(SuccessMessageMixin, CreateView):
     model = ProposalStatus
     form_class = forms.ProposalStatusForm
@@ -500,6 +515,7 @@ class ProposalStatusCreate(SuccessMessageMixin, CreateView):
         )
 
 
+@method_decorator([login_required, manager_required], name='dispatch')
 class ProposalStatusUpdate(SuccessMessageMixin, UpdateView):
     model = ProposalStatus
     form_class = forms.ProposalStatusForm
