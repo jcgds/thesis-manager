@@ -158,7 +158,10 @@ class Defence(models.Model):
         backup_juries = Jury.objects.filter(defence=self, is_backup_jury=True)
         if len(backup_juries) > 1:
             print('More than one backup jury for defence %s.' % self.code)
-        return backup_juries[0]
+        elif len(backup_juries) == 0:
+            return None
+        else:
+            return backup_juries[0]
 
     def current_status(self):
         return HistoricThesisStatus.objects.filter(thesis=self.thesis).order_by('-date').first()
