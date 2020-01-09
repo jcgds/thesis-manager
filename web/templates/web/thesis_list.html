@@ -48,8 +48,8 @@
                                         <th>NRC</th>
                                         <th>Titulo</th>
                                         <th>Estatus</th>
-                                        <th>Estudiante 1</th>
-                                        <th>Estudiante 2</th>
+                                        <th>Tesista</th>
+                                        <th>Segundo Tesista</th>
                                         <th>Tutor Académico</th>
                                         <th>Tutor Empresarial</th>
                                         <th>Compañia</th>
@@ -64,11 +64,11 @@
                                             <td>{{ thesis.NRC }}</td>
                                             <td>{{ thesis.title }}</td>
                                             <td>{{ thesis.status.name }}</td>
-                                            <td><a href="{% url 'person_detail' thesis.proposal.student1.id_card_number %}">{{ thesis.proposal.student1.id_card_number}}</a></td>
+                                            <td><a href="{% url 'person_detail' thesis.proposal.student1.id_card_number %}">{{ thesis.proposal.student1.full_name }} ({{ thesis.proposal.student1.id_card_number }})</a></td>
                                             {% if not thesis.proposal.student2 %}
                                                 <td>{{ "-" }}</td>
                                             {% else %}
-                                                <td><a href="{% url 'person_detail' thesis.proposal.student2.id_card_number %}">{{ thesis.proposal.student2.id_card_number|default:"-" }}</a> </td>
+                                                <td><a href="{% url 'person_detail' thesis.proposal.student2.id_card_number %}">{{ thesis.proposal.student2.full_name }} ({{ thesis.proposal.student2.id_card_number }})</a> </td>
                                             {% endif %}
                                             <td><a href="{% url 'person_detail' thesis.proposal.academic_tutor.id_card_number %}">{{ thesis.proposal.academic_tutor.full_name }}</a> </td>
                                             <td><a href="{% url 'person_detail' thesis.proposal.industry_tutor.id_card_number %}">{{ thesis.proposal.industry_tutor.full_name|default:"-"}}</a> </td>

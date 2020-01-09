@@ -208,17 +208,15 @@ def thesis_index(request):
                           'proposal__industry_tutor__name__icontains', 'proposal__industry_tutor__last_name__icontains',
                           'proposal__industry_tutor__id_card_number__icontains', 'delivery_term__name__icontains',):
                 search_args.append(Q(**{query: term}))
-            thesis_list = Thesis.objects.filter(reduce(operator.or_, search_args))
+            thesis_list = Thesis.objects.filter(reduce(operator.or_, search_args)).order_by(
+                'proposal__student1__id_card_number').exclude(status=ThesisStatus.objects.get(name='Aprobado'))
     else:
         # If we don't receive a search parameter, don't apply any filters
-        thesis_list = Thesis.objects.all()
+        thesis_list = Thesis.objects.all().order_by('proposal__student1__id_card_number').exclude(
+            status=ThesisStatus.objects.get(name='Aprobado'))
 
     for thesis in thesis_list:
-        thesis.proposal.academic_tutor.full_name = "{} {}".format(thesis.proposal.academic_tutor.name,
-                                                                  thesis.proposal.academic_tutor.last_name)
-        if thesis.proposal.industry_tutor:
-            thesis.proposal.industry_tutor.full_name = "{} {}".format(thesis.proposal.industry_tutor.name,
-                                                                  thesis.proposal.industry_tutor.last_name)
+        thesis = add_full_names(thesis)
 
     paginator = Paginator(thesis_list, request.GET.get('page_length', 15))
     page = request.GET.get('page')
@@ -294,6 +292,15 @@ class ThesisUpdate(SuccessMessageMixin, UpdateView):
 
 def thesis_detail(request, pk):
     thesis = get_object_or_404(Thesis, pk=pk)
+    thesis = add_full_names(thesis)
+
+    context = {
+        'thesis_data': thesis
+    }
+    return render(request, 'web/thesis_detail.html', context)
+
+
+def add_full_names(thesis):
     thesis.proposal.academic_tutor.full_name = "{} {}".format(thesis.proposal.academic_tutor.name,
                                                               thesis.proposal.academic_tutor.last_name)
     if thesis.proposal.industry_tutor:
@@ -303,9 +310,5 @@ def thesis_detail(request, pk):
                                                         thesis.proposal.student1.last_name)
     if thesis.proposal.student2:
         thesis.proposal.student2.full_name = "{} {}".format(thesis.proposal.student2.name,
-                                                        thesis.proposal.student2.last_name)
-
-    context = {
-        'thesis_data': thesis
-    }
-    return render(request, 'web/thesis_detail.html', context)
+                                                            thesis.proposal.student2.last_name)
+    return thesis
