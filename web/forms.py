@@ -207,7 +207,7 @@ class ThesisForm(forms.ModelForm):
     thematic_category = forms.CharField(
         label='Categoria temática',
         required=False,
-        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Inteligencia Artificial'})
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Inteligencia de negocios'})
     )
     submission_date = forms.DateField(
         label='Fecha de Inicio',
@@ -217,5 +217,5 @@ class ThesisForm(forms.ModelForm):
     company_name = forms.CharField(
         label='Compañia',
         required=False,
-        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'DaycoHost'})
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Estudio Chaloupka'})
     )
