@@ -1,8 +1,22 @@
 import re
+from datetime import datetime
 
+from dal import autocomplete
 from django import forms
+from django.contrib.auth.forms import AuthenticationForm
 
 from . import models
+
+
+class UserLoginForm(AuthenticationForm):
+    username = forms.CharField(
+        label='Nombre de usuario',
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingresa tu nombre de usuario'})
+    )
+    password = forms.CharField(
+        label='Contraseña',
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Contraseña'})
+    )
 
 
 class SearchForm(forms.Form):
@@ -34,6 +48,17 @@ class PersonTypeForm(forms.ModelForm):
     name = forms.CharField(
         label='Nombre del rol',
         widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Profesor'})
+    )
+
+
+class ThesisStatusForm(forms.ModelForm):
+    class Meta:
+        model = models.ThesisStatus
+        fields = ['name']
+
+    name = forms.CharField(
+        label='Nombre del estado',
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Por entregar'})
     )
 
 

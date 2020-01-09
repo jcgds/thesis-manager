@@ -1,20 +1,21 @@
 import operator
 from functools import reduce
 
+from dal import autocomplete
+from django.contrib.auth import views as auth_views
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.paginator import Paginator
 from django.db.models import Q
-from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.views.generic.edit import CreateView, UpdateView
 
 from . import forms
-from .models import PersonData, PersonType, ThesisStatus, Thesis, Proposal, Term, Defence
+from .models import PersonData, PersonType, ThesisStatus, Thesis, Proposal, Term, Defence, ProposalStatus
+
 
 login_view = auth_views.LoginView.as_view(authentication_form=forms.UserLoginForm)
 logout_view = auth_views.LogoutView.as_view()
-from .models import PersonData, PersonType, Proposal, Term, ProposalStatus
 
 
 def index(request):
