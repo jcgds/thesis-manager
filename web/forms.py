@@ -260,7 +260,7 @@ class ProposalForm(forms.ModelForm):
     )
     submission_date = forms.DateField(
         label='Fecha de entrega',
-        widget=forms.DateInput(attrs={'class': 'form-control','type': 'date'})
+        widget=forms.DateInput(attrs={'class': 'form-control', 'type': 'date'})
     )
     title = forms.CharField(
         label='Titulo',
@@ -269,7 +269,7 @@ class ProposalForm(forms.ModelForm):
     student1 = forms.ModelChoiceField(
         label='Primer Estudiante',
         queryset=models.PersonData.objects.filter(type__name='Estudiante'),
-        widget=forms.Select(attrs={'class':'form-control'})
+        widget=forms.Select(attrs={'class': 'form-control'})
     )
     student2 = forms.ModelChoiceField(
         label='Segundo Estudiante',
@@ -305,7 +305,6 @@ class ProposalForm(forms.ModelForm):
 
 
 class TermForm(forms.ModelForm):
-
     class Meta:
         model = models.Term
         fields = [
@@ -319,7 +318,6 @@ class TermForm(forms.ModelForm):
 
 
 class ProposalStatusForm(forms.ModelForm):
-
     class Meta:
         model = models.ProposalStatus
         fields = [
@@ -335,4 +333,13 @@ class ProposalStatusForm(forms.ModelForm):
     description = forms.CharField(
         label='Descripcion',
         widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
+
+
+class StatsForm(forms.Form):
+    terms = forms.ModelMultipleChoiceField(
+        required=True,
+        label='',
+        queryset=models.Term.objects.all(),
+        widget=forms.SelectMultiple(attrs={'class': 'form-control m-b'})
     )
