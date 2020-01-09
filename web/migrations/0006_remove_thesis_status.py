@@ -5,7 +5,7 @@ from django.db import migrations
 
 class Migration(migrations.Migration):
     dependencies = [
-        ('web', '0005_auto_20200108_2301'),
+        ('web', '0002_default_data'),
     ]
 
     operations = [

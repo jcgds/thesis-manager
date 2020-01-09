@@ -21,11 +21,11 @@
                 <div class="ibox ">
                     <div class="ibox-content">
                         <div class="row border-bottom">
-                            {% if user.is_authenticated and user.is_manager_or_admin %}
-                                <div class="col-sm-5 m-b-xs">
+                            <div class="col-sm-5 m-b-xs">
+                                {% if user.is_authenticated and user.is_manager_or_admin %}
                                     <a class="btn btn-primary" href="{% url 'create_thesis_status' %}">Agregar</a>
-                                </div>
-                            {% endif %}
+                                {% endif %}
+                            </div>
                             <div class="col-sm-4 m-b-xs"></div>
                             <div class="col-sm-3">
                                 <form class="input-group" style="margin-bottom: 14px">
