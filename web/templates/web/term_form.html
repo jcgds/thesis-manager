@@ -3,17 +3,16 @@
     <div class="row wrapper border-bottom white-bg page-heading">
         <div class="col-lg-10">
             {% if form.instance and form.instance.pk %}
-                <h2>Editar persona</h2>
+                <h2>Editar TERM</h2>
             {% else %}
-                <h2>Agregar persona</h2>
+                <h2>TERM</h2>
             {% endif %}
             <ol class="breadcrumb">
-                {# TODO: Connect with Django correctly #}
                 <li class="breadcrumb-item">
-                    <a href="index-2.html">Home</a>
+                    <a href="{% url 'index' %}">Home</a>
                 </li>
                 <li class="breadcrumb-item">
-                    <a href="{% url 'person_index' %}">TERM</a>
+                    <a href="{% url 'term_index' %}">TERM</a>
                 </li>
                 {% if form.instance and form.instance.pk %}
                     <li class="breadcrumb-item">
@@ -27,7 +26,6 @@
                         <strong>Agregar</strong>
                     </li>
                 {% endif %}
-
             </ol>
         </div>
         <div class="col-lg-2">

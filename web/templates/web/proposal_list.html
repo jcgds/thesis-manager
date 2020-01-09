@@ -4,9 +4,8 @@
         <div class="col-lg-10">
             <h2>Propuestas</h2>
             <ol class="breadcrumb">
-                {# TODO: Connect with Django correctly #}
                 <li class="breadcrumb-item">
-                    <a href="index-2.html">Home</a>
+                    <a href="{% url 'index' %}">Home</a>
                 </li>
                 <li class="breadcrumb-item active">
                     <strong>Propuestas</strong>
@@ -76,7 +75,6 @@
                                             <td>--</td>
                                         {% endif %}
                                         <th>{{ proposal.term.period }}</th>
-                                        <th>{{ proposal.term.name }}</th>
                                         <th>{{ proposal.proposal_status.name }}</th>
                                         <td>
                                             <a href="{% url 'edit_proposal' proposal.code %}"

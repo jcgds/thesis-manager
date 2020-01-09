@@ -4,9 +4,8 @@
         <div class="col-lg-10">
             <h2>TERM</h2>
             <ol class="breadcrumb">
-                {# TODO: Connect with Django correctly #}
                 <li class="breadcrumb-item">
-                    <a href="index-2.html">Home</a>
+                    <a href="{% url 'index' %}">Home</a>
                 </li>
                 <li class="breadcrumb-item active">
                     <strong>Term</strong>
@@ -26,16 +25,6 @@
                                 <a href="{% url 'create_term' %}" class="btn btn-primary">Agregar</a>
                             </div>
                             <div class="col-sm-4 m-b-xs"></div>
-                            <div class="col-sm-3">
-                                <form class="input-group" style="margin-bottom: 14px">
-                                    {{ search_form }}
-                                    <span class="input-group-append">
-                                        <button type="submit" class="btn btn-sm btn-primary">
-                                            <span class="glyphicon glyphicon-search"></span>
-                                        </button>
-                                    </span>
-                                </form>
-                            </div>
                         </div>
                         {% if not term_list %}
                             <p style="margin-top: 2.5%">No hay datos disponibles.</p>
@@ -51,7 +40,7 @@
                                     {% for term in term_list %}
                                         <tr>
                                             <td>{{ term.period }}</td>
-                                            <td>
+                                            <td class="text-right">
                                                 <a href="{% url 'edit_term' term.id %}"
                                                    class="btn btn-sm btn-outline-warning">
                                                     <span class="glyphicon glyphicon-pencil"></span>
@@ -64,17 +53,17 @@
                                 <div class="pagination float-right">
                                     <span class="step-links ">
                                         {# If the search_param attribute is not None, append it to the URL to maintain pagination in a filtered search #}
-                                        {% if person_list.has_previous %}
+                                        {% if term_list.has_previous %}
                                             <a href="?page=1{% if search_param %}&search={{ search_param }}{% endif %}">&laquo; First</a>
-                                            <a href="?page={{ person_list.previous_page_number }}{% if search_param %}&search={{ search_param }}{% endif %}">previous</a>
+                                            <a href="?page={{ term_list.previous_page_number }}{% if search_param %}&search={{ search_param }}{% endif %}">previous</a>
                                         {% endif %}
                                         {% if person_list.has_next %}
-                                            <a href="?page={{ person_list.next_page_number }}{% if search_param %}&search={{ search_param }}{% endif %}">next</a>
-                                            <a href="?page={{ person_list.paginator.num_pages }}{% if search_param %}&search={{ search_param }}{% endif %}">last &raquo;</a>
+                                            <a href="?page={{ term_list.next_page_number }}{% if search_param %}&search={{ search_param }}{% endif %}">next</a>
+                                            <a href="?page={{ term_list.paginator.num_pages }}{% if search_param %}&search={{ search_param }}{% endif %}">last &raquo;</a>
                                         {% endif %}
                                     </span>
                                     <span class="current">
-                                        Page {{ person_list.number }} of {{ person_list.paginator.num_pages }}.
+                                        Page {{ term_list.number }} of {{ term_list.paginator.num_pages }}.
                                     </span>
                                 </div>
                             </div>

@@ -3,17 +3,17 @@
     <div class="row wrapper border-bottom white-bg page-heading">
         <div class="col-lg-10">
             {% if form.instance and form.instance.pk %}
-                <h2>Editar persona</h2>
+                <h2>Editar Propuesta</h2>
             {% else %}
-                <h2>Agregar persona</h2>
+                <h2>Agregar propuesta</h2>
             {% endif %}
             <ol class="breadcrumb">
                 {# TODO: Connect with Django correctly #}
                 <li class="breadcrumb-item">
-                    <a href="index-2.html">Home</a>
+                    <a href="{% url 'index' %}">Home</a>
                 </li>
                 <li class="breadcrumb-item">
-                    <a href="{% url 'person_index' %}">Propuestas</a>
+                    <a href="{% url 'proposal_index' %}">Propuestas</a>
                 </li>
                 {% if form.instance and form.instance.pk %}
                     <li class="breadcrumb-item">
