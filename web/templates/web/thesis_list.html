@@ -53,7 +53,6 @@
                                         <th>Tutor Académico</th>
                                         <th>Tutor Empresarial</th>
                                         <th>Compañia</th>
-                                        <th>Propuesta</th>
                                         <th>Fecha Inicio</th>
                                         <th>Semestre de Entrega</th>
                                     </tr>
@@ -74,7 +73,6 @@
                                             <td><a href="{% url 'person_detail' thesis.proposal.academic_tutor.id_card_number %}">{{ thesis.proposal.academic_tutor.full_name }}</a> </td>
                                             <td><a href="{% url 'person_detail' thesis.proposal.industry_tutor.id_card_number %}">{{ thesis.proposal.industry_tutor.full_name|default:"-"}}</a> </td>
                                             <td>{{ thesis.company_name|default:"-"}}</td>
-                                            <td>{{ thesis.proposal.title }}</td>
                                             <td>{{ thesis.submission_date}}</td>
                                             <td>{{ thesis.delivery_term.name }}</td>
                                             <td>
