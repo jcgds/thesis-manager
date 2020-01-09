@@ -1,4 +1,5 @@
 import operator
+import statistics
 from functools import reduce
 
 from dal import autocomplete
@@ -538,3 +539,28 @@ class ProposalStatusUpdate(SuccessMessageMixin, UpdateView):
             cleaned_data,
             name=self.object.name,
         )
+
+
+def stats_view(request):
+    if request.method == 'POST':
+        form = forms.StatsForm(request.POST)
+        if form.is_valid():
+            term_list = form.cleaned_data['terms']
+            thesis_for_terms = Thesis.objects.filter(delivery_term__in=term_list)
+            defences_for_thesis = Defence.objects.filter(thesis__in=thesis_for_terms).filter(grade__isnull=False)
+            grades = list(map(lambda defence: defence.grade, defences_for_thesis))
+            context = {
+                'term_form': forms.StatsForm(),
+                'term_list': term_list,
+                'defence_list': defences_for_thesis,
+                'grade_mean': statistics.mean(grades) if len(grades) > 0 else '-',
+                'median_grade': statistics.median(grades) if len(grades) > 0 else '-',
+                'mode': statistics.mode(grades) if len(grades) > 0 else '-',
+                'standard_deviation': statistics.stdev(grades) if len(grades) > 1 else '-',
+            }
+            return render(request, 'web/stats/stats.html', context)
+    else:
+        context = {
+            'term_form': forms.StatsForm(),
+        }
+        return render(request, 'web/stats/stats.html', context)

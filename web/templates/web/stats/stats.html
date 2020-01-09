@@ -1,0 +1,137 @@
+{% extends 'web/base.html' %}
+{% block page_content %}
+
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <h2>Estadísticas</h2>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="{% url 'index' %}">Home</a>
+                </li>
+                <li class="breadcrumb-item active">
+                    <strong>Estadísticas</strong>
+                </li>
+            </ol>
+        </div>
+        <div class="col-lg-2">
+        </div>
+    </div>
+
+    <div class="row" style="margin-top: 1%">
+        <div class="col-lg-2">
+            {% if messages %}
+                <ul class="col-lg-12 messages">
+                    {% for message in messages %}
+                        {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+                            <div class="alert alert-success alert-dismissable">
+                                <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                                {{ message }}
+                            </div>
+                        {% endif %}
+
+                        {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+                            <div class="alert alert-error alert-dismissable">
+                                <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                                {{ message }}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            <div class="ibox">
+                <div class="ibox-content">
+                    <form method="post" style="margin-bottom: 14px">
+                        {% csrf_token %}
+                        {{ term_form }}
+                        <button class="btn btn-primary btn-sm" type="submit">Buscar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-10">
+            <div class="ibox">
+                <div class="ibox-content">
+                    {% if term_list %}
+                        <p><strong>Terms seleccionados:</strong>
+                            {% for term in term_list %}
+                                {{ term }}{% if not forloop.last %},{% endif %}
+                            {% endfor %}
+                        </p>
+                        {% if not defence_list %}
+                            <p class="m-t-md">No hay datos disponibles.</p>
+                        {% else %}
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th>Trabajo de grado</th>
+                                        <th>Term</th>
+                                        <th>Nota</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for defence in defence_list %}
+                                        <tr>
+                                            <td><a href="{% url 'thesis_detail' defence.thesis.pk %}">{{ defence.thesis.title }}</a></td>
+                                            <td>{{ defence.thesis.delivery_term }}</td>
+                                            <td>{{ defence.grade }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="table-responsive col-lg-4 m-t-md">
+                                <table class="table table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th>Estadística</th>
+                                        <th class="text-center">Valor</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>
+                                            Media aritmética
+                                        </td>
+                                        <td class="text-center">
+                                            {{ grade_mean }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Mediana
+                                        </td>
+                                        <td class="text-center">
+                                            {{ median_grade }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Moda
+                                        </td>
+                                        <td class="text-center">
+                                            {{ mode }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Desviación estándar
+                                        </td>
+                                        <td class="text-center">
+                                            {{ standard_deviation }}
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        <h4>Selecciona TERMs para ver las estadísticas.</h4>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
