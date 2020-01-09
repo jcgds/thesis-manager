@@ -264,7 +264,8 @@ class PersonTypeAutoComplete(autocomplete.Select2QuerySetView):
 @method_decorator([login_required, manager_required], name='dispatch')
 class ProposalAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
-        qs = Proposal.objects.all()
+        proposals_with_thesis = list(map(lambda thesis: thesis.proposal.code, Thesis.objects.all()))
+        qs = Proposal.objects.exclude(code__in=proposals_with_thesis)
 
         if self.q:
             qs = qs.filter(title__icontains=self.q, code__icontains=self.q, student1__name__icontains=self.q,

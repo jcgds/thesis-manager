@@ -179,9 +179,10 @@ class ThesisForm(forms.ModelForm):
         required=False,
         widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'This Is It'})
     )
+
     proposal = forms.ModelChoiceField(
         label='Propuesta',
-        initial=1,
+        initial=0,
         queryset=models.Proposal.objects.all(),
         widget=autocomplete.ModelSelect2(url='proposal-autocomplete')
     )
