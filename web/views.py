@@ -3,16 +3,18 @@ from functools import reduce
 
 from dal import autocomplete
 from django.contrib.auth import views as auth_views
+from django.contrib.auth.decorators import login_required
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
+from django.utils.decorators import method_decorator
 from django.views.generic.edit import CreateView, UpdateView
 
 from . import forms
-from .models import PersonData, PersonType, ThesisStatus, Thesis, Proposal, Term, Defence, ProposalStatus
-
+from .decorators import manager_required
+from .models import PersonData, PersonType, ThesisStatus, Thesis, Proposal, Term, Defence, ProposalStatus, HistoricThesisStatus
 
 login_view = auth_views.LoginView.as_view(authentication_form=forms.UserLoginForm)
 logout_view = auth_views.LogoutView.as_view()
@@ -27,7 +29,7 @@ def person_detail(request, pk):
     context = {
         'person_data': person
     }
-    return render(request, 'web/person_detail.html', context)
+    return render(request, 'web/persons/person_detail.html', context)
 
 
 def person_index(request):
@@ -52,12 +54,14 @@ def person_index(request):
         'search_form': forms.SearchForm(previous_search=search_param),
         'search_param': search_param
     }
-    return render(request, 'web/person_list.html', context)
+    return render(request, 'web/persons/person_list.html', context)
 
 
+@method_decorator([login_required, manager_required], name='dispatch')
 class PersonDataCreate(SuccessMessageMixin, CreateView):
     model = PersonData
     form_class = forms.PersonDataForm
+    template_name = 'web/persons/persondata_form.html'
     success_message = "%(id_card_number)s creado correctamente."
 
     def get_success_url(self):
@@ -70,9 +74,11 @@ class PersonDataCreate(SuccessMessageMixin, CreateView):
         )
 
 
+@method_decorator([login_required, manager_required], name='dispatch')
 class PersonDataUpdate(SuccessMessageMixin, UpdateView):
     model = PersonData
     form_class = forms.PersonDataForm
+    template_name = 'web/persons/persondata_form.html'
     success_message = "%(id_card_number)s editado correctamente."
 
     def get_success_url(self):
@@ -107,12 +113,14 @@ def person_type_index(request):
         'search_form': forms.SearchForm(previous_search=search_param),
         'search_param': search_param,
     }
-    return render(request, 'web/persontype_list.html', context)
+    return render(request, 'web/person_types/persontype_list.html', context)
 
 
+@method_decorator([login_required, manager_required], name='dispatch')
 class PersonTypeCreate(SuccessMessageMixin, CreateView):
     model = PersonType
     form_class = forms.PersonTypeForm
+    template_name = 'web/person_types/persontype_form.html'
     success_message = "Tipo \"%(name)s\" creado correctamente."
 
     def get_success_url(self):
@@ -125,9 +133,11 @@ class PersonTypeCreate(SuccessMessageMixin, CreateView):
         )
 
 
+@method_decorator([login_required, manager_required], name='dispatch')
 class PersonTypeUpdate(SuccessMessageMixin, UpdateView):
     model = PersonType
     form_class = forms.PersonTypeForm
+    template_name = 'web/person_types/persontype_form.html'
     success_message = "Tipo \"%(name)s\" editado correctamente."
 
     def get_success_url(self):
@@ -163,12 +173,14 @@ def thesis_status_index(request):
         'search_form': forms.SearchForm(previous_search=search_param),
         'search_param': search_param,
     }
-    return render(request, 'web/thesisstatus_list.html', context)
+    return render(request, 'web/thesis_statuses/thesisstatus_list.html', context)
 
 
+@method_decorator([login_required, manager_required], name='dispatch')
 class ThesisStatusCreate(SuccessMessageMixin, CreateView):
     model = ThesisStatus
     form_class = forms.ThesisStatusForm
+    template_name = 'web/thesis_statuses/thesisstatus_form.html'
     success_message = "Estado \"%(name)s\" creado correctamente."
 
     def get_success_url(self):
@@ -181,9 +193,11 @@ class ThesisStatusCreate(SuccessMessageMixin, CreateView):
         )
 
 
+@method_decorator([login_required, manager_required], name='dispatch')
 class ThesisStatusUpdate(SuccessMessageMixin, UpdateView):
     model = ThesisStatus
     form_class = forms.ThesisStatusForm
+    template_name = 'web/thesis_statuses/thesisstatus_form.html'
     success_message = "Estado \"%(name)s\" editado correctamente."
 
     def get_success_url(self):
@@ -214,11 +228,12 @@ def thesis_index(request):
                           'proposal__industry_tutor__id_card_number__icontains', 'delivery_term__name__icontains',):
                 search_args.append(Q(**{query: term}))
             thesis_list = Thesis.objects.filter(reduce(operator.or_, search_args)).order_by(
-                'proposal__student1__id_card_number').exclude(status=ThesisStatus.objects.get(name='Aprobado'))
+                'proposal__student1__id_card_number').exclude(
+                code__in=HistoricThesisStatus.objects.filter(status__name='Aprobado'))
     else:
         # If we don't receive a search parameter, don't apply any filters
         thesis_list = Thesis.objects.all().order_by('proposal__student1__id_card_number').exclude(
-            status=ThesisStatus.objects.get(name='Aprobado'))
+            code__in=HistoricThesisStatus.objects.filter(status__name='Aprobado').values('thesis__code'))
 
     for thesis in thesis_list:
         thesis = add_full_names(thesis)
@@ -232,9 +247,10 @@ def thesis_index(request):
         'search_param': search_param
     }
 
-    return render(request, 'web/thesis_list.html', context)
+    return render(request, 'web/thesis/thesis_list.html', context)
 
 
+@method_decorator([login_required, manager_required], name='dispatch')
 class PersonTypeAutoComplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
         qs = PersonType.objects.all()
@@ -244,6 +260,7 @@ class PersonTypeAutoComplete(autocomplete.Select2QuerySetView):
         return qs
 
 
+@method_decorator([login_required, manager_required], name='dispatch')
 class ProposalAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
         qs = Proposal.objects.all()
@@ -256,6 +273,7 @@ class ProposalAutocomplete(autocomplete.Select2QuerySetView):
         return qs
 
 
+@method_decorator([login_required, manager_required], name='dispatch')
 class TermAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
         qs = Term.objects.all()
@@ -265,9 +283,11 @@ class TermAutocomplete(autocomplete.Select2QuerySetView):
         return qs
 
 
+@method_decorator([login_required, manager_required], name='dispatch')
 class ThesisCreate(SuccessMessageMixin, CreateView):
     model = Thesis
     form_class = forms.ThesisForm
+    template_name = 'web/thesis/thesis_form.html'
     success_message = "%(code)s creado correctamente."
 
     def get_success_url(self):
@@ -280,9 +300,11 @@ class ThesisCreate(SuccessMessageMixin, CreateView):
         )
 
 
+@method_decorator([login_required, manager_required], name='dispatch')
 class ThesisUpdate(SuccessMessageMixin, UpdateView):
     model = Thesis
     form_class = forms.ThesisForm
+    template_name = 'web/thesis/thesis_form.html'
     success_message = "%(code)s editado correctamente."
 
     def get_success_url(self):
@@ -302,10 +324,11 @@ def thesis_detail(request, pk):
     context = {
         'thesis_data': thesis
     }
-    return render(request, 'web/thesis_detail.html', context)
+    return render(request, 'web/thesis/thesis_detail.html', context)
 
 
 def add_full_names(thesis):
+    thesis.status = HistoricThesisStatus.objects.filter(thesis__code=thesis.code).order_by('-date')[0].status
     thesis.proposal.academic_tutor.full_name = "{} {}".format(thesis.proposal.academic_tutor.name,
                                                               thesis.proposal.academic_tutor.last_name)
     if thesis.proposal.industry_tutor:
@@ -375,14 +398,13 @@ def pending_defence_index(request):
 
 
 def proposal_index(request):
-
     search_param = request.GET.get('search')
     if search_param:
         # Append a query for each term received in the search parameters so that if we receive multiple
         # parameters, we crosscheck every single one with the colums id_card_number, name and last_name
         search_args = []
         for term in search_param.split():
-            for query in ('code__icontains','title__icontains',):
+            for query in ('code__icontains', 'title__icontains',):
                 search_args.append(Q(**{query: term}))
         proposal_list = Proposal.objects.filter(reduce(operator.or_, search_args))
     else:
@@ -400,6 +422,7 @@ def proposal_index(request):
     return render(request, 'web/proposal_list.html', context)
 
 
+@method_decorator([login_required, manager_required], name='dispatch')
 class ProposalCreate(SuccessMessageMixin, CreateView):
     model = Proposal
     form_class = forms.ProposalForm
@@ -415,6 +438,7 @@ class ProposalCreate(SuccessMessageMixin, CreateView):
         )
 
 
+@method_decorator([login_required, manager_required], name='dispatch')
 class ProposalEdit(SuccessMessageMixin, UpdateView):
     model = Proposal
     form_class = forms.ProposalForm
@@ -441,6 +465,7 @@ def term_index(request):
     return render(request, 'web/term_list.html', context)
 
 
+@method_decorator([login_required, manager_required], name='dispatch')
 class TermCreate(SuccessMessageMixin, CreateView):
     model = Term
     form_class = forms.TermForm
@@ -456,6 +481,7 @@ class TermCreate(SuccessMessageMixin, CreateView):
         )
 
 
+@method_decorator([login_required, manager_required], name='dispatch')
 class TermUpdate(SuccessMessageMixin, UpdateView):
     model = Term
     form_class = forms.TermForm
@@ -482,6 +508,7 @@ def proposal_status_index(request):
     return render(request, 'web/proposal_status_list.html', context)
 
 
+@method_decorator([login_required, manager_required], name='dispatch')
 class ProposalStatusCreate(SuccessMessageMixin, CreateView):
     model = ProposalStatus
     form_class = forms.ProposalStatusForm
@@ -497,6 +524,7 @@ class ProposalStatusCreate(SuccessMessageMixin, CreateView):
         )
 
 
+@method_decorator([login_required, manager_required], name='dispatch')
 class ProposalStatusUpdate(SuccessMessageMixin, UpdateView):
     model = ProposalStatus
     form_class = forms.ProposalStatusForm
@@ -510,6 +538,7 @@ class ProposalStatusUpdate(SuccessMessageMixin, UpdateView):
             cleaned_data,
             name=self.object.name,
         )
+
 
 
 def proposal_not_approved_list(request):

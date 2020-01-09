@@ -22,7 +22,9 @@
                     <div class="ibox-content">
                         <div class="row border-bottom">
                             <div class="col-sm-5 m-b-xs">
-                                <a class="btn btn-primary" href="{% url 'create_thesis_status' %}">Agregar</a>
+                                {% if user.is_authenticated and user.is_manager_or_admin %}
+                                    <a class="btn btn-primary" href="{% url 'create_thesis_status' %}">Agregar</a>
+                                {% endif %}
                             </div>
                             <div class="col-sm-4 m-b-xs"></div>
                             <div class="col-sm-3">
@@ -50,12 +52,14 @@
                                     {% for type in types %}
                                         <tr>
                                             <td>{{ type.name }}</td>
-                                            <td class="text-right">
-                                                <a href="{% url 'edit_thesis_status' type.pk %}"
-                                                   class="btn btn-sm btn-outline-warning">
-                                                    <span class="glyphicon glyphicon-pencil"></span>
-                                                </a>
-                                            </td>
+                                            {% if user.is_authenticated and user.is_manager_or_admin %}
+                                                <td class="text-right">
+                                                    <a href="{% url 'edit_thesis_status' type.pk %}"
+                                                       class="btn btn-sm btn-outline-warning">
+                                                        <span class="glyphicon glyphicon-pencil"></span>
+                                                    </a>
+                                                </td>
+                                            {% endif %}
                                         </tr>
                                     {% endfor %}
                                     </tbody>

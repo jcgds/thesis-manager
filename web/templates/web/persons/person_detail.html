@@ -98,12 +98,14 @@
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-lg-11"></div>
-            <div class="col-lg-1">
-                <a href="{% url 'edit_person' person_data.pk %}" class="btn btn-info m-t-xl">Editar</a>
+        {% if user.is_authenticated and user.is_manager_or_admin %}
+            <div class="row">
+                <div class="col-lg-11"></div>
+                <div class="col-lg-1">
+                    <a href="{% url 'edit_person' person_data.pk %}" class="btn btn-info m-t-xl">Editar</a>
+                </div>
             </div>
-        </div>
+        {% endif %}
     </div>
 
     <div class="footer">

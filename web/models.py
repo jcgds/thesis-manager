@@ -6,6 +6,9 @@ from django.urls import reverse
 class User(AbstractUser):
     is_manager = models.BooleanField(default=False)
 
+    def is_manager_or_admin(self):
+        return self.is_manager or self.is_superuser
+
 
 class PersonType(models.Model):
     name = models.CharField(max_length=64)
@@ -98,7 +101,6 @@ class ThesisStatus(models.Model):
 class Thesis(models.Model):
     proposal = models.ForeignKey(Proposal, models.PROTECT)
     code = models.CharField(max_length=66, primary_key=True)
-    status = models.ForeignKey(ThesisStatus, models.PROTECT)
     title = models.CharField(max_length=512)
     delivery_term = models.ForeignKey(Term, models.PROTECT)
     NRC = models.CharField(max_length=32)
