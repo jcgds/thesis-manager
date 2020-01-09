@@ -10,10 +10,7 @@ from django.urls import reverse
 from django.views.generic.edit import CreateView, UpdateView
 
 from . import forms
-from .models import PersonData, PersonType
-from .models import PersonData
-from .models import Proposal
-
+from .models import PersonData, PersonType , Proposal, Term
 
 
 def index(request):
@@ -176,4 +173,19 @@ class ProposalEdit(SuccessMessageMixin, UpdateView):
         return self.success_message % dict(
             cleaned_data,
             code=self.object.code,
+        )
+
+
+class TermCreate(SuccessMessageMixin, CreateView):
+    model = Term
+    form_class = forms.TermForm
+    success_message = "periodo %(period)s creado correctamente."
+
+    def get_success_url(self):
+        return reverse('proposal_index')
+
+    def get_success_message(self, cleaned_data):
+        return self.success_message % dict(
+            cleaned_data,
+            period=self.object.period,
         )

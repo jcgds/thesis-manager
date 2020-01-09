@@ -3,6 +3,7 @@ import re
 from django import forms
 
 from . import models
+from django.core.validators import MinValueValidator
 
 
 class SearchForm(forms.Form):
@@ -184,4 +185,24 @@ class ProposalForm(forms.ModelForm):
         label='Term',
         queryset=models.Term.objects.all(),
         widget=forms.Select(attrs={'class': 'form-control'})
+    )
+
+
+class TermForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(TermForm, self).__init__(*args, **kwargs)
+        instance = getattr(self, 'instance', None)
+        if instance and instance.pk:
+            self.fields['period'].widget.attrs['readonly'] = True
+
+    class Meta:
+        model = models.Term
+        fields = [
+            'period',
+        ]
+
+    period = forms.IntegerField(
+        label='Periodo',
+        widget=forms.NumberInput(attrs={'class': 'form-control', 'require': 'false','min': '1','max':'999999'})
     )

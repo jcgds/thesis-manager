@@ -14,5 +14,6 @@ urlpatterns = [
     path('personas/<str:person_id_card_number>', views.person_detail, name='person_detail'),
     path('propuestas', views.proposal_index, name='proposal_index'),
     path('propuestas/agregar', views.ProposalCreate.as_view(), name='create_proposal'),
-    path('propuestas/<str:pk>/editar', views.ProposalEdit.as_view(), name='edit_proposal')
+    path('propuestas/<str:pk>/editar', views.ProposalEdit.as_view(), name='edit_proposal'),
+    path('term/agregar', views.TermCreate.as_view(), name='term_create')
 ]
