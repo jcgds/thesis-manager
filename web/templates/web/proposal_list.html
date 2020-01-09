@@ -20,6 +20,7 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="ibox ">
+<<<<<<< HEAD
                     <div class="ibox-content">
                         <div class="ibox-content">
                         <div class="row border-bottom">
@@ -41,6 +42,31 @@
                         {% if not proposal_list %}
                             <p style="margin-top: 2.5%">No hay datos disponibles.</p>
                         {% else %}
+=======
+                    <div class="ibox-title">
+                        <h5>Custom responsive table </h5>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="row">
+                            <div class="col-sm-5 m-b-xs"><select class="form-control-sm form-control input-s-sm inline">
+                                <option value="0">Option 1</option>
+                                <option value="1">Option 2</option>
+                                <option value="2">Option 3</option>
+                                <option value="3">Option 4</option>
+                            </select>
+                            </div>
+                            <div class="col-sm-4 m-b-xs"></div>
+                            <div class="col-sm-3">
+                                <div class="input-group">
+                                    <input placeholder="Search" type="text"
+                                           class="form-control form-control-sm">
+                                    <span class="input-group-append">
+                                        <button type="button" class="btn btn-sm btn-primary">Go!</button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+>>>>>>> b584e64d1584e253f184d1eb556bd00815be817c
                         <div class="table-responsive">
                             <table class="table table-striped">
                                 <thead>
@@ -73,6 +99,7 @@
                                         {% else %}
                                             <td>--</td>
                                         {% endif %}
+<<<<<<< HEAD
                                         <th>{{ proposal.term.period }}</th>
                                         <td>
                                             <a href="{% url 'edit_proposal' proposal.code %}"
@@ -80,6 +107,8 @@
                                                 <span class="glyphicon glyphicon-pencil"></span>
                                             </a>
                                         </td>
+=======
+>>>>>>> b584e64d1584e253f184d1eb556bd00815be817c
                                         <th>{{ proposal.term.name }}</th>
                                     </tr>
                                 {% endfor %}
@@ -102,7 +131,10 @@
                                 </span>
                             </div>
                         </div>
+<<<<<<< HEAD
                         {% endif %}
+=======
+>>>>>>> b584e64d1584e253f184d1eb556bd00815be817c
                     </div>
                 </div>
 
@@ -117,5 +149,9 @@
             <strong>Copyright</strong> Example Company &copy; 2014-2018
         </div>
     </div>
+<<<<<<< HEAD
 {% endblock %}
 
+=======
+{% endblock %}
+>>>>>>> b584e64d1584e253f184d1eb556bd00815be817c
