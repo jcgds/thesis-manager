@@ -107,7 +107,7 @@ class PersonDataForm(forms.ModelForm):
         label='Tipo',
         initial=1,
         queryset=models.PersonType.objects.all(),
-        widget=autocomplete.ModelSelect2(url='person-type-autocomplete'))
+        widget=forms.Select(attrs={'class': 'form-control m-b'}))
     observations = forms.CharField(
         label='Observaciones',
         max_length=1_048,

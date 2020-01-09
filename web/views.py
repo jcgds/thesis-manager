@@ -182,7 +182,7 @@ class ThesisStatusUpdate(SuccessMessageMixin, UpdateView):
     success_message = "Estado \"%(name)s\" editado correctamente."
 
     def get_success_url(self):
-        return reverse('edit_person_type', args=(self.object.pk,))
+        return reverse('edit_thesis_status', args=(self.object.pk,))
 
     def get_success_message(self, cleaned_data):
         return self.success_message % dict(

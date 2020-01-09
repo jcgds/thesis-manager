@@ -10,14 +10,14 @@
             <ol class="breadcrumb">
                 {# TODO: Connect with Django correctly #}
                 <li class="breadcrumb-item">
-                    <a href="index-2.html">Home</a>
+                    <a href="{% url 'index' %}">Home</a>
                 </li>
                 <li class="breadcrumb-item">
                     <a href="{% url 'thesis_index' %}">TG</a>
                 </li>
                 {% if form.instance and form.instance.pk %}
                     <li class="breadcrumb-item">
-                        <a href="{% url 'person_detail' form.instance.pk %}">{{ form.instance.pk }}</a>
+                        <a href="{% url 'thesis_detail' form.instance.pk %}">{{ form.instance.pk }}</a>
                     </li>
                     <li class="breadcrumb-item active">
                         <strong>Editar</strong>
