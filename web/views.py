@@ -29,7 +29,7 @@ def person_detail(request, pk):
     context = {
         'person_data': person
     }
-    return render(request, 'web/person_detail.html', context)
+    return render(request, 'web/persons/person_detail.html', context)
 
 
 def person_index(request):
@@ -54,7 +54,7 @@ def person_index(request):
         'search_form': forms.SearchForm(previous_search=search_param),
         'search_param': search_param
     }
-    return render(request, 'web/person_list.html', context)
+    return render(request, 'web/persons/person_list.html', context)
 
 
 @method_decorator([login_required, manager_required], name='dispatch')
@@ -111,7 +111,7 @@ def person_type_index(request):
         'search_form': forms.SearchForm(previous_search=search_param),
         'search_param': search_param,
     }
-    return render(request, 'web/persontype_list.html', context)
+    return render(request, 'web/person_types/persontype_list.html', context)
 
 
 @method_decorator([login_required, manager_required], name='dispatch')
