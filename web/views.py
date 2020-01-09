@@ -173,13 +173,14 @@ def thesis_status_index(request):
         'search_form': forms.SearchForm(previous_search=search_param),
         'search_param': search_param,
     }
-    return render(request, 'web/thesisstatus_list.html', context)
+    return render(request, 'web/thesis_statuses/thesisstatus_list.html', context)
 
 
 @method_decorator([login_required, manager_required], name='dispatch')
 class ThesisStatusCreate(SuccessMessageMixin, CreateView):
     model = ThesisStatus
     form_class = forms.ThesisStatusForm
+    template_name = 'web/thesis_statuses/thesisstatus_form.html'
     success_message = "Estado \"%(name)s\" creado correctamente."
 
     def get_success_url(self):
@@ -196,6 +197,7 @@ class ThesisStatusCreate(SuccessMessageMixin, CreateView):
 class ThesisStatusUpdate(SuccessMessageMixin, UpdateView):
     model = ThesisStatus
     form_class = forms.ThesisStatusForm
+    template_name = 'web/thesis_statuses/thesisstatus_form.html'
     success_message = "Estado \"%(name)s\" editado correctamente."
 
     def get_success_url(self):
@@ -244,7 +246,7 @@ def thesis_index(request):
         'search_param': search_param
     }
 
-    return render(request, 'web/thesis_list.html', context)
+    return render(request, 'web/thesis/thesis_list.html', context)
 
 
 @method_decorator([login_required, manager_required], name='dispatch')
@@ -284,6 +286,7 @@ class TermAutocomplete(autocomplete.Select2QuerySetView):
 class ThesisCreate(SuccessMessageMixin, CreateView):
     model = Thesis
     form_class = forms.ThesisForm
+    template_name = 'web/thesis/thesis_form.html'
     success_message = "%(code)s creado correctamente."
 
     def get_success_url(self):
@@ -300,6 +303,7 @@ class ThesisCreate(SuccessMessageMixin, CreateView):
 class ThesisUpdate(SuccessMessageMixin, UpdateView):
     model = Thesis
     form_class = forms.ThesisForm
+    template_name = 'web/thesis/thesis_form.html'
     success_message = "%(code)s editado correctamente."
 
     def get_success_url(self):
@@ -319,7 +323,7 @@ def thesis_detail(request, pk):
     context = {
         'thesis_data': thesis
     }
-    return render(request, 'web/thesis_detail.html', context)
+    return render(request, 'web/thesis/thesis_detail.html', context)
 
 
 def add_full_names(thesis):
