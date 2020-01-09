@@ -510,3 +510,14 @@ class ProposalStatusUpdate(SuccessMessageMixin, UpdateView):
             cleaned_data,
             name=self.object.name,
         )
+
+
+def proposal_not_approved_list(request):
+    proposal_list = Proposal.objects.select_related().exclude(proposal_status__name="Aprobado").order_by('student1__id_card_number')
+    paginator = Paginator(proposal_list, request.GET.get('page_length', 15))
+    page = request.GET.get('page')
+    proposal_by_page = paginator.get_page(page)
+    context = {
+        'proposal_list': proposal_by_page
+    }
+    return render(request, 'web/proposal_not_approved_list.html', context)

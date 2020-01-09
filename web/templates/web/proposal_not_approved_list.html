@@ -1,0 +1,98 @@
+{% extends 'web/base.html' %}
+{% block page_content %}
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <h2>Propuestas</h2>
+            <ol class="breadcrumb">
+                {# TODO: Connect with Django correctly #}
+                <li class="breadcrumb-item">
+                    <a href="index-2.html">Home</a>
+                </li>
+                <li class="breadcrumb-item active">
+                    <strong>Propuestas</strong>
+                </li>
+            </ol>
+        </div>
+        <div class="col-lg-2">
+        </div>
+    </div>
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox ">
+                    <div class="ibox-content">
+                        <div class="ibox-content">
+                        <div class="row border-bottom">
+                            <h1>Propuestas no aprobadas</h1>
+                        </div>
+                        {% if not proposal_list %}
+                            <p style="margin-top: 2.5%">No hay datos disponibles.</p>
+                        {% else %}
+                    <div class="ibox-content">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                <tr>
+                                    <th>Codigo</th>
+                                    <th>Estatus</th>
+                                    <th>Titulo</th>
+                                    <th>Estudiante</th>
+                                    <th>Cedula</th>
+                                    <th>Estudiante</th>
+                                    <th>Cedula</th>
+                                    <th>TERM</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for proposal in proposal_list %}
+                                    <tr>
+                                        <td>{{ proposal.code }}</td>
+                                        <th>{{ proposal.proposal_status.name }}</th>
+                                        <td>{{ proposal.title }}</td>
+                                        <td>{{ proposal.student1.name|add:" "|add:proposal.student1.last_name }}</td>
+                                        <th>{{ proposal.student1.id_card_number }}</th>
+                                        {% if proposal.student2 %}
+                                            <td>{{ proposal.student2.name|add:" "|add:proposal.student2.last_name}}</td>
+                                            <th>{{ proposal.student2.id_card_number }}</th>
+                                        {% else %}
+                                            <td>--</td>
+                                            <td>--</td>
+                                        {% endif %}
+                                        <th>{{ proposal.term.period }}</th>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+
+                            <div class="pagination float-right">
+                                <span class="step-links ">
+                                    {% if proposal_list.has_previous %}
+                                        <a href="?page=1">&laquo; First</a>
+                                        <a href="?page={{ proposal_list.previous_page_number }}">previous</a>
+                                    {% endif %}
+                                    {% if person_list.has_next %}
+                                        <a href="?page={{ proposal_list.next_page_number }}">next</a>
+                                        <a href="?page={{ proposal_list.paginator.num_pages }}">last &raquo;</a>
+                                    {% endif %}
+                                </span>
+                                <span class="current">
+                                    Page {{ proposal_list.number }} of {{ proposal_list.paginator.num_pages }}.
+                                </span>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <div class="float-right">
+            10GB of <strong>250GB</strong> Free.
+        </div>
+        <div>
+            <strong>Copyright</strong> Example Company &copy; 2014-2018
+        </div>
+    </div>
+{% endblock %}
