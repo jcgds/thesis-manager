@@ -123,6 +123,7 @@ class PersonDataForm(forms.ModelForm):
         _validate_phone_number(data)
         return data
 
+
 class ProposalForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
@@ -158,24 +159,24 @@ class ProposalForm(forms.ModelForm):
     )
     student1 = forms.ModelChoiceField(
         label='Primer Estudiante',
-        queryset=models.PersonData.objects.filter(type=1),
+        queryset=models.PersonData.objects.filter(type__name='Estudiante'),
         widget=forms.Select(attrs={'class':'form-control'})
     )
     student2 = forms.ModelChoiceField(
         label='Segundo Estudiante',
-        queryset=models.PersonData.objects.filter(type=1),
+        queryset=models.PersonData.objects.filter(type__name='Estudiante'),
         widget=forms.Select(attrs={'class': 'form-control'})
     )
 
     academic_tutor = forms.ModelChoiceField(
         label='Tutor Academico',
-        queryset=models.PersonData.objects.filter(type=0),
+        queryset=models.PersonData.objects.filter(type__name='Profesor'),
         widget=forms.Select(attrs={'class': 'form-control'})
     )
 
     industry_tutor = forms.ModelChoiceField(
         label='Tutor Industrial',
-        queryset=models.PersonData.objects.filter(type=2),
+        queryset=models.PersonData.objects.filter(type__name='Externo'),
         widget=forms.Select(attrs={'class': 'form-control'})
     )
 

@@ -138,6 +138,7 @@ class PersonTypeUpdate(SuccessMessageMixin, UpdateView):
             name=self.object.name,
         )
 
+
 def proposal_index(request):
     proposal_list = Proposal.objects.all().select_related()
     paginator = Paginator(proposal_list, request.GET.get('page_length', 15))
@@ -147,6 +148,21 @@ def proposal_index(request):
         'proposal_list': proposal_by_page
     }
     return render(request, 'web/proposal_list.html', context)
+
+
+class ProposalCreate(SuccessMessageMixin, CreateView):
+    model = Proposal
+    form_class = forms.ProposalForm
+    success_message = "%(code)s Creado correctamente."
+
+    def get_success_url(self):
+        return reverse('proposal_index')
+
+    def get_success_message(self, cleaned_data):
+        return self.success_message % dict(
+            cleaned_data,
+            code=self.object.code,
+        )
 
 
 class ProposalEdit(SuccessMessageMixin, UpdateView):
@@ -160,5 +176,5 @@ class ProposalEdit(SuccessMessageMixin, UpdateView):
     def get_success_message(self, cleaned_data):
         return self.success_message % dict(
             cleaned_data,
-            id_card_number=self.object.code,
+            code=self.object.code,
         )

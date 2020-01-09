@@ -13,5 +13,6 @@ urlpatterns = [
     path('personas/<str:pk>/editar', views.PersonDataUpdate.as_view(), name='edit_person'),
     path('personas/<str:person_id_card_number>', views.person_detail, name='person_detail'),
     path('propuestas', views.proposal_index, name='proposal_index'),
+    path('propuestas/agregar', views.ProposalCreate.as_view(), name='create_proposal'),
     path('propuestas/<str:pk>/editar', views.ProposalEdit.as_view(), name='edit_proposal')
 ]
