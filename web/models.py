@@ -38,15 +38,6 @@ class PersonData(models.Model):
         verbose_name_plural = 'Person data'
 
 
-class Term(models.Model):
-    name = models.CharField(max_length=16)
-
-    # TODO: Make custom validator (201915 - 201925 etc) [Unit testable]
-
-    def __str__(self):
-        return self.name
-
-
 class ProposalStatus(models.Model):
     name = models.CharField(max_length=64)
     description = models.CharField(max_length=512, null=True, blank=True)
@@ -58,6 +49,15 @@ class ProposalStatus(models.Model):
         verbose_name_plural = 'Proposal statuses'
 
 
+class Term(models.Model):
+    period = models.PositiveIntegerField(unique=True)
+
+    # TODO: Make custom validator (201915 - 201925 etc) [Unit testable]
+
+    def __str__(self):
+        return str(self.period)
+
+
 class Proposal(models.Model):
     code = models.CharField(max_length=64, primary_key=True)
     submission_date = models.DateField()
@@ -67,9 +67,13 @@ class Proposal(models.Model):
     academic_tutor = models.ForeignKey(PersonData, models.PROTECT, related_name='academic_tutor')
     industry_tutor = models.ForeignKey(PersonData, models.PROTECT, null=True, blank=True, related_name='industry_tutor')
     term = models.ForeignKey(Term, models.PROTECT, related_name='term')
+    proposal_status = models.ForeignKey(ProposalStatus, models.PROTECT, related_name='proposal_status')
 
     def __str__(self):
         return '%s (%s)' % (self.title, self.code)
+
+    def get_absolute_url(self):
+        return reverse('proposal_detail', kwargs={'proposal_code': self.code})
 
 
 class HistoricProposalStatus(models.Model):
@@ -94,7 +98,7 @@ class ThesisStatus(models.Model):
 class Thesis(models.Model):
     proposal = models.ForeignKey(Proposal, models.PROTECT)
     code = models.CharField(max_length=66, primary_key=True)
-    status = models.ForeignKey(ThesisStatus, models.PROTECT, default=ThesisStatus.objects.get(name='Por entregar').id)
+    status = models.ForeignKey(ThesisStatus, models.PROTECT)
     title = models.CharField(max_length=512)
     delivery_term = models.ForeignKey(Term, models.PROTECT)
     NRC = models.CharField(max_length=32)

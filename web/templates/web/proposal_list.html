@@ -1,0 +1,123 @@
+{% extends 'web/base.html' %}
+{% block page_content %}
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <h2>Propuestas</h2>
+            <ol class="breadcrumb">
+                {# TODO: Connect with Django correctly #}
+                <li class="breadcrumb-item">
+                    <a href="index-2.html">Home</a>
+                </li>
+                <li class="breadcrumb-item active">
+                    <strong>Propuestas</strong>
+                </li>
+            </ol>
+        </div>
+        <div class="col-lg-2">
+        </div>
+    </div>
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox ">
+                    <div class="ibox-content">
+                        <div class="ibox-content">
+                        <div class="row border-bottom">
+                            <div class="col-sm-5 m-b-xs">
+                                <a href="{% url 'create_proposal' %}" class="btn btn-primary">Agregar</a>
+                            </div>
+                            <div class="col-sm-4 m-b-xs"></div>
+                            <div class="col-sm-3">
+                                <form class="input-group" style="margin-bottom: 14px">
+                                    {{ search_form }}
+                                    <span class="input-group-append">
+                                        <button type="submit" class="btn btn-sm btn-primary">
+                                            <span class="glyphicon glyphicon-search"></span>
+                                        </button>
+                                    </span>
+                                </form>
+                            </div>
+                        </div>
+                        {% if not proposal_list %}
+                            <p style="margin-top: 2.5%">No hay datos disponibles.</p>
+                        {% else %}
+                    <div class="ibox-content">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                <tr>
+                                    <th>Codigo</th>
+                                    <th>Fecha de entrega</th>
+                                    <th>Titulo</th>
+                                    <th>Estudiante</th>
+                                    <th>Estudiante</th>
+                                    <th>Tutor Academico</th>
+                                    <th>Tutor Empresarial</th>
+                                    <th>TERM</th>
+                                    <th>Estatus</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for proposal in proposal_list %}
+                                    <tr>
+                                        <td>{{ proposal.code }}</td>
+                                        <td>{{ proposal.submission_date }}</td>
+                                        <td>{{ proposal.title }}</td>
+                                        <td>{{ proposal.student1.name|add:" "|add:proposal.student1.last_name }}</td>
+                                        {% if proposal.student2 %}
+                                            <td>{{ proposal.student2.name|add:" "|add:proposal.student2.last_name}}</td>
+                                        {% else %}
+                                            <td>--</td>
+                                        {% endif %}
+                                        <td>{{ proposal.academic_tutor.name|add:" "|add:proposal.academic_tutor.last_name}}</td>
+                                        {% if proposal.industry_tutor %}
+                                            <td>{{ proposal.industry_tutor.name|add:" "|add:proposal.industry_tutor.last_name}}</td>
+                                        {% else %}
+                                            <td>--</td>
+                                        {% endif %}
+                                        <th>{{ proposal.term.period }}</th>
+                                        <th>{{ proposal.term.name }}</th>
+                                        <th>{{ proposal.proposal_status.name }}</th>
+                                        <td>
+                                            <a href="{% url 'edit_proposal' proposal.code %}"
+                                               class="btn btn-sm btn-outline-warning">
+                                                <span class="glyphicon glyphicon-pencil"></span>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+
+                            <div class="pagination float-right">
+                                <span class="step-links ">
+                                    {% if proposal_list.has_previous %}
+                                        <a href="?page=1">&laquo; First</a>
+                                        <a href="?page={{ proposal_list.previous_page_number }}">previous</a>
+                                    {% endif %}
+                                    {% if person_list.has_next %}
+                                        <a href="?page={{ proposal_list.next_page_number }}">next</a>
+                                        <a href="?page={{ proposal_list.paginator.num_pages }}">last &raquo;</a>
+                                    {% endif %}
+                                </span>
+                                <span class="current">
+                                    Page {{ proposal_list.number }} of {{ proposal_list.paginator.num_pages }}.
+                                </span>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <div class="float-right">
+            10GB of <strong>250GB</strong> Free.
+        </div>
+        <div>
+            <strong>Copyright</strong> Example Company &copy; 2014-2018
+        </div>
+    </div>
+{% endblock %}

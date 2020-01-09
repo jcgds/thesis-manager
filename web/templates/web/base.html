@@ -47,6 +47,17 @@
                     </ul>
                 </li>
                 <li>
+                    <a href="#"><i class="fa fa-book"></i> <span class="nav-label">Propuestas</span><span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level collapse">
+                        <li class="{% if request.resolver_match.url_name == 'proposal_index' %}active{% endif %}">
+                            <a href="{% url 'proposal_index' %}">Datos de las Propuestas</a>
+                        </li>
+                        <li class="{% if request.resolver_match.url_name == 'proposal_status_index' %}active{% endif %}">
+                            <a href="{% url 'proposal_status_index' %}">Estatus de las Propuestas</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
                     <a href="#"><i class="fa fa-book"></i> <span class="nav-label">Trabajos de grado</span><span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level collapse">
                         <li class="{% if request.resolver_match.url_name == 'thesis_index' %}active{% endif %}">
@@ -67,6 +78,9 @@
                             <a href="{% url 'pending_defence_index' %}">Defensas no realizadas</a>
                         </li>
                     </ul>
+                </li>
+                <li class="{% if request.resolver_match.url_name == 'term_index' %}active{% endif %}">
+                    <a href="{% url 'term_index' %}"><i class="fa fa-book"></i> <span class="nav-label">TERM</span></a>
                 </li>
                 <li>
                     <a href="metrics.html"><i class="fa fa-pie-chart"></i> <span class="nav-label">Metrics</span> </a>

@@ -219,3 +219,109 @@ class ThesisForm(forms.ModelForm):
         required=False,
         widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Estudio Chaloupka'})
     )
+
+
+class ProposalForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(ProposalForm, self).__init__(*args, **kwargs)
+        instance = getattr(self, 'instance', None)
+        if instance and instance.pk:
+            self.fields['code'].widget.attrs['readonly'] = True
+
+    class Meta:
+        model = models.Proposal
+        fields = [
+            'code',
+            'submission_date',
+            'title',
+            'student1',
+            'student2',
+            'academic_tutor',
+            'industry_tutor',
+            'term',
+            'proposal_status'
+        ]
+
+    code = forms.CharField(
+        label='Codigo',
+        widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
+    submission_date = forms.DateField(
+        label='Fecha de entrega',
+        widget=forms.DateInput(attrs={'class': 'form-control','type': 'date'})
+    )
+    title = forms.CharField(
+        label='Titulo',
+        widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
+    student1 = forms.ModelChoiceField(
+        label='Primer Estudiante',
+        queryset=models.PersonData.objects.filter(type__name='Estudiante'),
+        widget=forms.Select(attrs={'class':'form-control'})
+    )
+    student2 = forms.ModelChoiceField(
+        label='Segundo Estudiante',
+        queryset=models.PersonData.objects.filter(type__name='Estudiante'),
+        widget=forms.Select(attrs={'class': 'form-control'}),
+        required=False
+    )
+
+    academic_tutor = forms.ModelChoiceField(
+        label='Tutor Academico',
+        queryset=models.PersonData.objects.filter(type__name='Profesor'),
+        widget=forms.Select(attrs={'class': 'form-control'}),
+    )
+
+    industry_tutor = forms.ModelChoiceField(
+        label='Tutor Industrial',
+        queryset=models.PersonData.objects.filter(type__name='Externo'),
+        widget=forms.Select(attrs={'class': 'form-control'}),
+        required=False
+    )
+
+    term = forms.ModelChoiceField(
+        label='Term',
+        queryset=models.Term.objects.all(),
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+
+    proposal_status = forms.ModelChoiceField(
+        label='Status de la propuesta',
+        queryset=models.ProposalStatus.objects.all(),
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+
+
+class TermForm(forms.ModelForm):
+
+    class Meta:
+        model = models.Term
+        fields = [
+            'period',
+        ]
+
+    period = forms.IntegerField(
+        label='Periodo',
+        widget=forms.NumberInput(attrs={'class': 'form-control', 'min': '1', 'max': '999999'})
+    )
+
+
+class ProposalStatusForm(forms.ModelForm):
+
+    class Meta:
+        model = models.ProposalStatus
+        fields = [
+            'name',
+            'description',
+        ]
+
+    name = forms.CharField(
+        label='Nombre',
+        widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
+
+    description = forms.CharField(
+        label='Descripcion',
+        widget=forms.TextInput(attrs={'class': 'form-control'})
+    )

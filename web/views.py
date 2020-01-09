@@ -11,7 +11,8 @@ from django.urls import reverse
 from django.views.generic.edit import CreateView, UpdateView
 
 from . import forms
-from .models import PersonData, PersonType, ThesisStatus, Thesis, Proposal, Term, Defence
+from .models import PersonData, PersonType, ThesisStatus, Thesis, Proposal, Term, Defence, ProposalStatus
+
 
 login_view = auth_views.LoginView.as_view(authentication_form=forms.UserLoginForm)
 logout_view = auth_views.LogoutView.as_view()
@@ -371,3 +372,141 @@ def pending_defence_index(request):
     page = request.GET.get('page')
     context = _generate_defence_index_context(defence_list, request.GET.get('page_length', 15), page, search_param)
     return render(request, 'web/defences/defence_list.html', context)
+
+
+def proposal_index(request):
+
+    search_param = request.GET.get('search')
+    if search_param:
+        # Append a query for each term received in the search parameters so that if we receive multiple
+        # parameters, we crosscheck every single one with the colums id_card_number, name and last_name
+        search_args = []
+        for term in search_param.split():
+            for query in ('code__icontains','title__icontains',):
+                search_args.append(Q(**{query: term}))
+        proposal_list = Proposal.objects.filter(reduce(operator.or_, search_args))
+    else:
+        # If we don't receive a search parameter, don't apply any filters
+        proposal_list = Proposal.objects.all().select_related().order_by('code')
+
+    paginator = Paginator(proposal_list, request.GET.get('page_length', 15))
+    page = request.GET.get('page')
+    proposal_by_page = paginator.get_page(page)
+    context = {
+        'proposal_list': proposal_by_page,
+        'search_form': forms.SearchForm(previous_search=search_param),
+        'search_param': search_param
+    }
+    return render(request, 'web/proposal_list.html', context)
+
+
+class ProposalCreate(SuccessMessageMixin, CreateView):
+    model = Proposal
+    form_class = forms.ProposalForm
+    success_message = "%(code)s Creado correctamente."
+
+    def get_success_url(self):
+        return reverse('proposal_index')
+
+    def get_success_message(self, cleaned_data):
+        return self.success_message % dict(
+            cleaned_data,
+            code=self.object.code,
+        )
+
+
+class ProposalEdit(SuccessMessageMixin, UpdateView):
+    model = Proposal
+    form_class = forms.ProposalForm
+    success_message = "%(code)s editado correctamente."
+
+    def get_success_url(self):
+        return reverse('edit_proposal', args=(self.object.code,))
+
+    def get_success_message(self, cleaned_data):
+        return self.success_message % dict(
+            cleaned_data,
+            code=self.object.code,
+        )
+
+
+def term_index(request):
+    term_list = Term.objects.all()
+    paginator = Paginator(term_list, request.GET.get('page_length', 15))
+    page = request.GET.get('page')
+    terms_by_page = paginator.get_page(page)
+    context = {
+        'term_list': terms_by_page
+    }
+    return render(request, 'web/term_list.html', context)
+
+
+class TermCreate(SuccessMessageMixin, CreateView):
+    model = Term
+    form_class = forms.TermForm
+    success_message = "periodo %(period)s creado correctamente."
+
+    def get_success_url(self):
+        return reverse('term_index')
+
+    def get_success_message(self, cleaned_data):
+        return self.success_message % dict(
+            cleaned_data,
+            period=self.object.period,
+        )
+
+
+class TermUpdate(SuccessMessageMixin, UpdateView):
+    model = Term
+    form_class = forms.TermForm
+    success_message = "Periodo %(period)s editado correctamente."
+
+    def get_success_url(self):
+        return reverse('term_index')
+
+    def get_success_message(self, cleaned_data):
+        return self.success_message % dict(
+            cleaned_data,
+            code=self.object.period,
+        )
+
+
+def proposal_status_index(request):
+    proposal_status_list = ProposalStatus.objects.all()
+    paginator = Paginator(proposal_status_list, request.GET.get('page_length', 15))
+    page = request.GET.get('page')
+    proposal_status_by_page = paginator.get_page(page)
+    context = {
+        'proposal_status_list': proposal_status_by_page
+    }
+    return render(request, 'web/proposal_status_list.html', context)
+
+
+class ProposalStatusCreate(SuccessMessageMixin, CreateView):
+    model = ProposalStatus
+    form_class = forms.ProposalStatusForm
+    success_message = "Estatus %(name)s creado correctamente."
+
+    def get_success_url(self):
+        return reverse('proposal_status_index')
+
+    def get_success_message(self, cleaned_data):
+        return self.success_message % dict(
+            cleaned_data,
+            period=self.object.name,
+        )
+
+
+class ProposalStatusUpdate(SuccessMessageMixin, UpdateView):
+    model = ProposalStatus
+    form_class = forms.ProposalStatusForm
+    success_message = "Estatus %(name)s editado correctamente."
+
+    def get_success_url(self):
+        return reverse('proposal_status_index')
+
+    def get_success_message(self, cleaned_data):
+        return self.success_message % dict(
+            cleaned_data,
+            name=self.object.name,
+        )
