@@ -204,5 +204,5 @@ class TermForm(forms.ModelForm):
 
     period = forms.IntegerField(
         label='Periodo',
-        widget=forms.NumberInput(attrs={'class': 'form-control', 'require': 'false','min': '1','max':'999999'})
+        widget=forms.NumberInput(attrs={'class': 'form-control', 'min': '1', 'max': '999999'})
     )

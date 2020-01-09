@@ -176,16 +176,42 @@ class ProposalEdit(SuccessMessageMixin, UpdateView):
         )
 
 
+def term_index(request):
+    term_list = Term.objects.all()
+    paginator = Paginator(term_list, request.GET.get('page_length', 15))
+    page = request.GET.get('page')
+    terms_by_page = paginator.get_page(page)
+    context = {
+        'term_list': terms_by_page
+    }
+    return render(request, 'web/term_list.html', context)
+
+
 class TermCreate(SuccessMessageMixin, CreateView):
     model = Term
     form_class = forms.TermForm
     success_message = "periodo %(period)s creado correctamente."
 
     def get_success_url(self):
-        return reverse('proposal_index')
+        return reverse('term_index')
 
     def get_success_message(self, cleaned_data):
         return self.success_message % dict(
             cleaned_data,
             period=self.object.period,
+        )
+
+
+class TermUpdate(SuccessMessageMixin, UpdateView):
+    model = Term
+    form_class = forms.TermForm
+    success_message = "Periodo %(period)s editado correctamente."
+
+    def get_success_url(self):
+        return reverse('edit_term', args=(self.object.period,))
+
+    def get_success_message(self, cleaned_data):
+        return self.success_message % dict(
+            cleaned_data,
+            code=self.object.period,
         )

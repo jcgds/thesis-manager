@@ -15,5 +15,7 @@ urlpatterns = [
     path('propuestas', views.proposal_index, name='proposal_index'),
     path('propuestas/agregar', views.ProposalCreate.as_view(), name='create_proposal'),
     path('propuestas/<str:pk>/editar', views.ProposalEdit.as_view(), name='edit_proposal'),
-    path('term/agregar', views.TermCreate.as_view(), name='term_create')
+    path('term', views.term_index, name='term_index'),
+    path('term/agregar', views.TermCreate.as_view(), name='create_term'),
+    path('term/<int:pk>/editar', views.TermUpdate.as_view(), name='edit_term')
 ]

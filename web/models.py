@@ -47,7 +47,7 @@ class ProposalStatus(models.Model):
 
 
 class Term(models.Model):
-    period = models.PositiveIntegerField(primary_key=True)
+    period = models.PositiveIntegerField(unique=True)
 
     # TODO: Make custom validator (201915 - 201925 etc) [Unit testable]
 
