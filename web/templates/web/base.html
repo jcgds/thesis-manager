@@ -44,7 +44,7 @@
                 <li>
                     <a href="#"><i class="fa-hand-paper-o"></i> <span class="nav-label">Trabajos de grado</span><span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level collapse">
-                         <li class="{% if request.resolver_match.url_name == 'thesis_index' %}active{% endif %}">
+                        <li class="{% if request.resolver_match.url_name == 'thesis_index' %}active{% endif %}">
                             <a href="{% url 'thesis_index' %}">Datos de TG</a>
                         </li>
                         <li class="{% if request.resolver_match.url_name == 'thesis_status_index' %}active{% endif %}">
@@ -71,10 +71,16 @@
                         <span class="m-r-sm text-muted welcome-message">Escuela de Ingeniería Informática</span>
                     </li>
                     <li>
-                        {# TODO: Connect with Django correctly #}
-                        <a href="login.html">
-                            <i class="fa fa-sign-out"></i> Salir
-                        </a>
+                        {% if user.is_authenticated %}
+                            <a href="{% url 'logout' %}">
+                                <i class="fa fa-sign-out"></i> Salir
+                            </a>
+                        {% else %}
+                            <a href="{% url 'login' %}">
+                                <i class="fa fa-sign-out"></i> Ingresar
+                            </a>
+                        {% endif %}
+
                     </li>
                 </ul>
             </nav>

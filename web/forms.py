@@ -1,12 +1,22 @@
 import re
-
-from django import forms
-
-from dal import autocomplete
-
 from datetime import datetime
 
+from dal import autocomplete
+from django import forms
+from django.contrib.auth.forms import AuthenticationForm
+
 from . import models
+
+
+class UserLoginForm(AuthenticationForm):
+    username = forms.CharField(
+        label='Nombre de usuario',
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingresa tu nombre de usuario'})
+    )
+    password = forms.CharField(
+        label='Contraseña',
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Contraseña'})
+    )
 
 
 class SearchForm(forms.Form):

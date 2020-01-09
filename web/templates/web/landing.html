@@ -1,0 +1,21 @@
+{% extends 'web/base.html' %}
+{% block page_content %}
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="ibox ">
+                    <div class="ibox-content">
+                        <div class="row">
+                            {% if user.is_authenticated %}
+                                <h3 class="m-t-none m-b">Bienvenido {{ user.username }}!</h3>
+                            {% else %}
+                                <h3 class="m-t-none m-b">
+                                    Bienvenido! No haz <a href="{% url 'login' %}">iniciado sesión</a>
+                                </h3>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+{% endblock %}
