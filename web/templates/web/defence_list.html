@@ -2,13 +2,13 @@
 {% block page_content %}
     <div class="row wrapper border-bottom white-bg page-heading">
         <div class="col-lg-10">
-            <h2>Defensas</h2>
+            <h2>Defensas {% if request.resolver_match.url_name == 'pending_defence_index' %}no realizadas{% endif %}</h2>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item">
                     <a href="{% url 'index' %}">Home</a>
                 </li>
                 <li class="breadcrumb-item active">
-                    <strong>Defensas</strong>
+                    <strong>Defensas {% if request.resolver_match.url_name == 'pending_defence_index' %}no realizadas{% endif %}</strong>
                 </li>
             </ol>
         </div>
@@ -70,13 +70,18 @@
                                                 {{ defence.thesis.delivery_term }}
                                             </td>
                                             <td style="width: 30%;">
-                                                <a href="{% url 'person_detail' defence.get_students.0.id_card_number %}">
-                                                    - {{ defence.get_students.0.last_name }} {{ defence.get_students.0.name }}
+                                                <a href="{% url 'person_detail' defence.get_students.0.pk %}">
+                                                    {{ defence.get_students.0.last_name }} {{ defence.get_students.0.name }}
+                                                    <br>
+                                                    ({{ defence.get_students.0.id_card_number }})
                                                 </a>
                                                 <br>
+                                                <br>
                                                 {% if defence.get_students.1 %}
-                                                    <a href="{% url 'person_detail' defence.get_students.1.id_card_number %}">
-                                                        - {{ defence.get_students.1.last_name }} {{ defence.get_students.1.name }}
+                                                    <a href="{% url 'person_detail' defence.get_students.1.pk %}">
+                                                        {{ defence.get_students.1.last_name }} {{ defence.get_students.1.name }}
+                                                        <br>
+                                                        ({{ defence.get_students.1.id_card_number }})
                                                     </a>
                                                 {% endif %}
                                             </td>
@@ -89,7 +94,7 @@
                                                 {% for judge in defence.get_jury_members %}
                                                     <span>
                                                         <a href="{% url 'person_detail' judge.person.pk %}">
-                                                            - {{ judge.person.get_short_name }}
+                                                            {{ judge.person.get_short_name }}
                                                         </a>
                                                         <br>
                                                         {% if judge.confirmed_assistance %}

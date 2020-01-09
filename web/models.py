@@ -126,12 +126,12 @@ class Defence(models.Model):
     thesis = models.ForeignKey(Thesis, models.PROTECT)
     code = models.CharField(max_length=68, primary_key=True)
     date_time = models.DateTimeField()
-    grade = models.PositiveSmallIntegerField()
+    grade = models.PositiveSmallIntegerField(null=True, blank=True)
     is_publication_mention = models.BooleanField()
     is_honorific_mention = models.BooleanField()
     corrections_submission_date = models.DateField(null=True, blank=True)
     was_grade_loaded = models.BooleanField()
-    observations = models.TextField()
+    observations = models.TextField(null=True, blank=True)
 
     def get_students(self):
         return self.thesis.proposal.student1, self.thesis.proposal.student2
@@ -153,6 +153,9 @@ class Defence(models.Model):
         if len(backup_juries) > 1:
             print('More than one backup jury for defence %s.' % self.code)
         return backup_juries[0]
+
+    def current_status(self):
+        return HistoricThesisStatus.objects.filter(thesis=self.thesis).order_by('-date').first()
 
 
 class Jury(models.Model):

@@ -318,32 +318,51 @@ def add_full_names(thesis):
     return thesis
 
 
-def defence_index(request):
-    search_param = request.GET.get('search')
-    if search_param:
+def _get_defence_queryset(filter_completed, search):
+    order_params = [
+        'thesis__proposal__student1__id_card_number',
+        'thesis__proposal__student2__id_card_number',
+        'date_time',
+    ]
+    if search:
         # Append a query for each term received in the search parameters so that if we receive multiple
         # parameters, we crosscheck every single one with the colums id_card_number, name and last_name
         search_args = []
-        for term in search_param.split():
+        for term in search.split():
             for query in ('code__icontains', 'grade__icontains', 'date_time__date'):
                 search_args.append(Q(**{query: term}))
-        defence_list = Defence.objects.filter(reduce(operator.or_, search_args)).order_by(
-            'thesis__proposal__student1__id_card_number',
-            'thesis__proposal__student2__id_card_number',
-        )
+        queryset = Defence.objects.filter(reduce(operator.or_, search_args))
     else:
         # If we don't receive a search parameter, don't apply any filters
-        defence_list = Defence.objects.all().order_by(
-            'thesis__proposal__student1__id_card_number',
-            'thesis__proposal__student2__id_card_number',
-        )
+        queryset = Defence.objects.all()
 
-    paginator = Paginator(defence_list, request.GET.get('page_length', 15))
-    page = request.GET.get('page')
-    defences_for_page = paginator.get_page(page)
-    context = {
+    if filter_completed:
+        queryset = queryset.filter(grade__isnull=True)
+
+    return queryset.order_by(*order_params)
+
+
+def _generate_defence_index_context(defence_queryset, page_length, desired_page, search):
+    paginator = Paginator(defence_queryset, page_length)
+    defences_for_page = paginator.get_page(desired_page)
+    return {
         'defences': defences_for_page,
-        'search_form': forms.SearchForm(previous_search=search_param),
-        'search_param': search_param
+        'search_form': forms.SearchForm(previous_search=search),
+        'search_param': search
     }
+
+
+def defence_index(request):
+    search_param = request.GET.get('search')
+    defence_list = _get_defence_queryset(False, search_param)
+    page = request.GET.get('page')
+    context = _generate_defence_index_context(defence_list, request.GET.get('page_length', 15), page, search_param)
+    return render(request, 'web/defence_list.html', context)
+
+
+def pending_defence_index(request):
+    search_param = request.GET.get('search')
+    defence_list = _get_defence_queryset(True, search_param)
+    page = request.GET.get('page')
+    context = _generate_defence_index_context(defence_list, request.GET.get('page_length', 15), page, search_param)
     return render(request, 'web/defence_list.html', context)
