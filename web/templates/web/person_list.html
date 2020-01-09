@@ -22,7 +22,9 @@
                     <div class="ibox-content">
                         <div class="row border-bottom">
                             <div class="col-sm-5 m-b-xs">
-                                <a href="{% url 'create_person' %}" class="btn btn-primary">Agregar</a>
+                                {% if user.is_authenticated and user.is_manager_or_admin %}
+                                    <a href="{% url 'create_person' %}" class="btn btn-primary">Agregar</a>
+                                {% endif %}
                             </div>
                             <div class="col-sm-4 m-b-xs"></div>
                             <div class="col-sm-3">
@@ -66,12 +68,14 @@
                                             <td>{{ person.primary_phone_number }}</td>
                                             <td>{{ person.secondary_phone_number|default:"-" }}</td>
                                             <td>{{ person.observations|default:"-" }}</td>
-                                            <td>
-                                                <a href="{% url 'edit_person' person.id_card_number %}"
-                                                   class="btn btn-sm btn-outline-warning">
-                                                    <span class="glyphicon glyphicon-pencil"></span>
-                                                </a>
-                                            </td>
+                                            {% if user.is_authenticated and user.is_manager_or_admin %}
+                                                <td>
+                                                    <a href="{% url 'edit_person' person.id_card_number %}"
+                                                       class="btn btn-sm btn-outline-warning">
+                                                        <span class="glyphicon glyphicon-pencil"></span>
+                                                    </a>
+                                                </td>
+                                            {% endif %}
                                         </tr>
                                     {% endfor %}
                                     </tbody>

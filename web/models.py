@@ -6,6 +6,9 @@ from django.urls import reverse
 class User(AbstractUser):
     is_manager = models.BooleanField(default=False)
 
+    def is_manager_or_admin(self):
+        return self.is_manager or self.is_superuser
+
 
 class PersonType(models.Model):
     name = models.CharField(max_length=64)
