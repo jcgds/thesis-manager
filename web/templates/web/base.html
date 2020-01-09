@@ -83,6 +83,14 @@
                     <a href="{% url 'term_index' %}"><i class="fa fa-book"></i> <span class="nav-label">TERM</span></a>
                 </li>
                 <li>
+                    <a href="#"><i class="fa fa-book"></i> <span class="nav-label">Consultas</span><span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level collapse">
+                        <li class="{% if request.resolver_match.url_name == 'proposal_not_approved_list' %}active{% endif %}">
+                            <a href="{% url 'proposal_not_approved_list' %}">Propuestas no aprobadas</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
                     <a href="metrics.html"><i class="fa fa-pie-chart"></i> <span class="nav-label">Metrics</span> </a>
                 </li>
             </ul>
