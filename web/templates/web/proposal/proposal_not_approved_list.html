@@ -50,10 +50,10 @@
                                         <td>{{ proposal.proposal_status.name }}</td>
                                         <td><a href="{% url 'proposal_detail' proposal.pk %}">{{ proposal.title }}</a></td>
                                         <td>{{ proposal.student1.name|add:" "|add:proposal.student1.last_name }}</td>
-                                        <th>{{ proposal.student1.id_card_number }}</th>
+                                        <td><a href="{% url 'person_detail' proposal.student1.pk %}">{{ proposal.student1.pk }}</a></td>
                                         {% if proposal.student2 %}
                                             <td>{{ proposal.student2.name|add:" "|add:proposal.student2.last_name}}</td>
-                                            <td>{{ proposal.student2.id_card_number }}</td>
+                                            <td><a href="{% url 'person_detail' proposal.student2.pk %}">{{ proposal.student2.pk }}</a></td>
                                         {% else %}
                                             <td>--</td>
                                             <td>--</td>
