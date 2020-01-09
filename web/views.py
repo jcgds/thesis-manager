@@ -3,16 +3,18 @@ from functools import reduce
 
 from dal import autocomplete
 from django.contrib.auth import views as auth_views
+from django.contrib.auth.decorators import login_required
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
+from django.utils.decorators import method_decorator
 from django.views.generic.edit import CreateView, UpdateView
 
 from . import forms
+from .decorators import manager_required
 from .models import PersonData, PersonType, ThesisStatus, Thesis, Proposal, Term, Defence, ProposalStatus
-
 
 login_view = auth_views.LoginView.as_view(authentication_form=forms.UserLoginForm)
 logout_view = auth_views.LogoutView.as_view()
@@ -55,6 +57,7 @@ def person_index(request):
     return render(request, 'web/person_list.html', context)
 
 
+@method_decorator([login_required, manager_required], name='dispatch')
 class PersonDataCreate(SuccessMessageMixin, CreateView):
     model = PersonData
     form_class = forms.PersonDataForm

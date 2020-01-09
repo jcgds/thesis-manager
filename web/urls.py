@@ -4,8 +4,8 @@ from . import views
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('login/', views.login_view, name='login'),
-    path('logout/', views.logout_view, name='logout'),
+    path('accounts/login/', views.login_view, name='login'),
+    path('accounts/logout/', views.logout_view, name='logout'),
     path('personas', views.person_index, name='person_index'),
     path('personas/agregar', views.PersonDataCreate.as_view(), name='create_person'),
     path('personas/tipos', views.person_type_index, name='person_type_index'),
