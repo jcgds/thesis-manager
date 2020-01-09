@@ -256,3 +256,18 @@ class ProposalStatusCreate(SuccessMessageMixin, CreateView):
             cleaned_data,
             period=self.object.name,
         )
+
+
+class ProposalStatusUpdate(SuccessMessageMixin, UpdateView):
+    model = ProposalStatus
+    form_class = forms.ProposalStatusForm
+    success_message = "Estatus %(name)s editado correctamente."
+
+    def get_success_url(self):
+        return reverse('proposal_status_index')
+
+    def get_success_message(self, cleaned_data):
+        return self.success_message % dict(
+            cleaned_data,
+            name=self.object.name,
+        )

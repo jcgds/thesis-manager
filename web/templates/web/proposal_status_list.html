@@ -54,7 +54,7 @@
                                             <td>{{ proposal_status.name}}</td>
                                             <td>{{ proposal_status.description|default:"--"}}</td>
                                             <td>
-                                                <a href="{% url 'edit_term' proposal_status.id %}"
+                                                <a href="{% url 'edit_proposal_status' proposal_status.id %}"
                                                    class="btn btn-sm btn-outline-warning">
                                                     <span class="glyphicon glyphicon-pencil"></span>
                                                 </a>

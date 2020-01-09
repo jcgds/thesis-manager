@@ -20,4 +20,5 @@ urlpatterns = [
     path('term/<int:pk>/editar', views.TermUpdate.as_view(), name='edit_term'),
     path('estatus_propuestas', views.proposal_status_index, name='proposal_status_index'),
     path('estatus_propuestas/agregar', views.ProposalStatusCreate.as_view(), name='create_proposal_status'),
+    path('estatus_propuestas/<str:pk>/editar', views.ProposalStatusUpdate.as_view(), name='edit_proposal_status'),
 ]
