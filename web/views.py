@@ -322,14 +322,13 @@ def _get_defence_queryset(filter_completed, search):
     order_params = [
         'thesis__proposal__student1__id_card_number',
         'thesis__proposal__student2__id_card_number',
-        'date_time',
     ]
     if search:
         # Append a query for each term received in the search parameters so that if we receive multiple
         # parameters, we crosscheck every single one with the colums id_card_number, name and last_name
         search_args = []
         for term in search.split():
-            for query in ('code__icontains', 'grade__icontains', 'date_time__date'):
+            for query in ('code__icontains', 'grade__icontains', 'thesis__title__icontains'):
                 search_args.append(Q(**{query: term}))
         queryset = Defence.objects.filter(reduce(operator.or_, search_args))
     else:
