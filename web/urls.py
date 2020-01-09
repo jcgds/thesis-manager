@@ -36,6 +36,7 @@ urlpatterns = [
     path('estatus_propuestas', views.proposal_status_index, name='proposal_status_index'),
     path('estatus_propuestas/agregar', views.ProposalStatusCreate.as_view(), name='create_proposal_status'),
     path('estatus_propuestas/<str:pk>/editar', views.ProposalStatusUpdate.as_view(), name='edit_proposal_status'),
+    path('estadisticas', views.stats_view, name='stats_view'),
     path('propuestas_no_aprobadas', views.proposal_not_approved_list, name='proposal_not_approved_list'),
     path('propuestas/<str:pk>', views.proposal_detail, name='proposal_detail'),
 ]
