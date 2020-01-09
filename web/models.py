@@ -64,6 +64,7 @@ class Proposal(models.Model):
     academic_tutor = models.ForeignKey(PersonData, models.PROTECT, related_name='academic_tutor')
     industry_tutor = models.ForeignKey(PersonData, models.PROTECT, null=True, blank=True, related_name='industry_tutor')
     term = models.ForeignKey(Term, models.PROTECT, related_name='term')
+    proposal_status = models.ForeignKey(ProposalStatus, models.PROTECT, related_name='proposal_status')
 
     def __str__(self):
         return '%s (%s)' % (self.title, self.code)

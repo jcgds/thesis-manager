@@ -10,7 +10,7 @@ from django.urls import reverse
 from django.views.generic.edit import CreateView, UpdateView
 
 from . import forms
-from .models import PersonData, PersonType , Proposal, Term
+from .models import PersonData, PersonType, Proposal, Term, ProposalStatus
 
 
 def index(request):
@@ -208,10 +208,21 @@ class TermUpdate(SuccessMessageMixin, UpdateView):
     success_message = "Periodo %(period)s editado correctamente."
 
     def get_success_url(self):
-        return reverse('edit_term', args=(self.object.period,))
+        return reverse('term_index')
 
     def get_success_message(self, cleaned_data):
         return self.success_message % dict(
             cleaned_data,
             code=self.object.period,
         )
+
+
+def proposal_status_index(request):
+    proposal_status_list = ProposalStatus.objects.all()
+    paginator = Paginator(proposal_status_list, request.GET.get('page_length', 15))
+    page = request.GET.get('page')
+    proposal_status_by_page = paginator.get_page(page)
+    context = {
+        'term_list': proposal_status_by_page
+    }
+    return render(request, 'web/proposal_status_list.html', context)

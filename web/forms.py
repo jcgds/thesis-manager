@@ -143,7 +143,8 @@ class ProposalForm(forms.ModelForm):
             'student2',
             'academic_tutor',
             'industry_tutor',
-            'term'
+            'term',
+            'proposal_status'
         ]
 
     code = forms.CharField(
@@ -187,14 +188,14 @@ class ProposalForm(forms.ModelForm):
         widget=forms.Select(attrs={'class': 'form-control'})
     )
 
+    proposal_status = forms.ModelChoiceField(
+        label='Status de la propuesta',
+        queryset=models.ProposalStatus.objects.all(),
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+
 
 class TermForm(forms.ModelForm):
-
-    def __init__(self, *args, **kwargs):
-        super(TermForm, self).__init__(*args, **kwargs)
-        instance = getattr(self, 'instance', None)
-        if instance and instance.pk:
-            self.fields['period'].widget.attrs['readonly'] = True
 
     class Meta:
         model = models.Term
