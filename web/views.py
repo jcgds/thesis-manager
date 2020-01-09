@@ -11,7 +11,7 @@ from django.urls import reverse
 from django.views.generic.edit import CreateView, UpdateView
 
 from . import forms
-from .models import PersonData, PersonType, ThesisStatus, Thesis
+from .models import PersonData, PersonType, ThesisStatus, Thesis, Proposal, Term
 
 
 def index(request):
@@ -179,7 +179,7 @@ class ThesisStatusCreate(SuccessMessageMixin, CreateView):
 class ThesisStatusUpdate(SuccessMessageMixin, UpdateView):
     model = ThesisStatus
     form_class = forms.ThesisStatusForm
-    success_message = "Tipo \"%(name)s\" editado correctamente."
+    success_message = "Estado \"%(name)s\" editado correctamente."
 
     def get_success_url(self):
         return reverse('edit_person_type', args=(self.object.pk,))
@@ -216,7 +216,8 @@ def thesis_index(request):
     for thesis in thesis_list:
         thesis.proposal.academic_tutor.full_name = "{} {}".format(thesis.proposal.academic_tutor.name,
                                                                   thesis.proposal.academic_tutor.last_name)
-        thesis.proposal.industry_tutor.full_name = "{} {}".format(thesis.proposal.industry_tutor.name,
+        if thesis.proposal.industry_tutor:
+            thesis.proposal.industry_tutor.full_name = "{} {}".format(thesis.proposal.industry_tutor.name,
                                                                   thesis.proposal.industry_tutor.last_name)
 
     paginator = Paginator(thesis_list, request.GET.get('page_length', 15))
@@ -239,5 +240,72 @@ class PersonTypeAutoComplete(autocomplete.Select2QuerySetView):
             qs = qs.filter(name__icontains=self.q)
         return qs
 
-# class ThesisCreate(SuccessMessageMixin, CreateView):
-#
+
+class ProposalAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        qs = Proposal.objects.all()
+
+        if self.q:
+            qs = qs.filter(title__icontains=self.q, code__icontains=self.q, student1__name__icontains=self.q,
+                           student1__last_name__icontains=self.q, student1__id_card_number__icontains=self.q,
+                           student2__name__icontains=self.q, student2__last_name__icontains=self.q,
+                           student2__id_card_number__icontains=self.q)
+        return qs
+
+
+class TermAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        qs = Term.objects.all()
+
+        if self.q:
+            qs = qs.filter(name__icontains=self.q)
+        return qs
+
+
+class ThesisCreate(SuccessMessageMixin, CreateView):
+    model = Thesis
+    form_class = forms.ThesisForm
+    success_message = "%(code)s creado correctamente."
+
+    def get_success_url(self):
+        return reverse('create_thesis')
+
+    def get_success_message(self, cleaned_data):
+        return self.success_message % dict(
+            cleaned_data,
+            code=self.object.code,
+        )
+
+
+class ThesisUpdate(SuccessMessageMixin, UpdateView):
+    model = Thesis
+    form_class = forms.ThesisForm
+    success_message = "%(code)s editado correctamente."
+
+    def get_success_url(self):
+        return reverse('edit_thesis', args=(self.object.code,))
+
+    def get_success_message(self, cleaned_data):
+        return self.success_message % dict(
+            cleaned_data,
+            code=self.object.code,
+        )
+
+
+def thesis_detail(request, pk):
+    thesis = get_object_or_404(Thesis, pk=pk)
+    thesis.proposal.academic_tutor.full_name = "{} {}".format(thesis.proposal.academic_tutor.name,
+                                                              thesis.proposal.academic_tutor.last_name)
+    if thesis.proposal.industry_tutor:
+        thesis.proposal.industry_tutor.full_name = "{} {}".format(thesis.proposal.industry_tutor.name,
+                                                                  thesis.proposal.industry_tutor.last_name)
+    thesis.proposal.student1.full_name = "{} {}".format(thesis.proposal.student1.name,
+                                                        thesis.proposal.student1.last_name)
+    if thesis.proposal.student2:
+        thesis.proposal.student2.full_name = "{} {}".format(thesis.proposal.student2.name,
+                                                        thesis.proposal.student2.last_name)
+
+    context = {
+        'thesis_data': thesis
+    }
+    return render(request, 'web/thesis_detail.html', context)

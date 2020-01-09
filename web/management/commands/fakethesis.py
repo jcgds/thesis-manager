@@ -19,7 +19,6 @@ class Command(BaseCommand):
             Thesis(
                 # If the types are modified in the PersonData model, it should be updated here too
                 title=proposal.title,
-                code=loc_faker.random_int(),
                 status=faker.random.choice(list(thesis_statuses)),
                 proposal=proposal,
                 delivery_term=faker.random.choice(Term.objects.all()),

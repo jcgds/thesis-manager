@@ -110,7 +110,7 @@ class PersonDataForm(forms.ModelForm):
         widget=autocomplete.ModelSelect2(url='person-type-autocomplete'))
     observations = forms.CharField(
         label='Observaciones',
-        max_length=1_024,
+        max_length=1_048,
         required=False,
         widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 3})
     )
@@ -139,3 +139,71 @@ class PersonDataForm(forms.ModelForm):
         return data
 
 
+class ThesisForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(ThesisForm, self).__init__(*args, **kwargs)
+        instance = getattr(self, 'instance', None)
+
+    class Meta:
+        model = models.Thesis
+        fields = [
+            'NRC',
+            'title',
+            'proposal',
+            'status',
+            'delivery_term',
+            'description',
+            'thematic_category',
+            'submission_date',
+            'company_name'
+        ]
+
+    NRC = forms.CharField(
+        label='NRC',
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': '25960'})
+    )
+    title = forms.CharField(
+        label='Título',
+        required=False,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'This Is It'})
+    )
+    proposal = forms.ModelChoiceField(
+        label='Propuesta',
+        initial=1,
+        queryset=models.Proposal.objects.all(),
+        widget=autocomplete.ModelSelect2(url='proposal-autocomplete')
+    )
+    status = forms.ModelChoiceField(
+        label='Estado',
+        initial=0,
+        queryset=models.ThesisStatus.objects.all(),
+        widget=forms.Select(attrs={'class': 'form-control m-b'})
+    )
+    delivery_term = forms.ModelChoiceField(
+        label='Semestre de Entrega',
+        initial=1,
+        queryset=models.Term.objects.all(),
+        widget=autocomplete.ModelSelect2(url='term-autocomplete')
+    )
+    description = forms.CharField(
+        label='Descripción',
+        max_length=1_024,
+        widget=forms.Textarea(
+            attrs={'class': 'form-control', 'placeholder': 'Software de registro de marcas', 'rows': 3})
+    )
+
+    thematic_category = forms.CharField(
+        label='Categoria temática',
+        required=False,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Inteligencia Artificial'})
+    )
+    submission_date = forms.DateField(
+        label='Fecha de Inicio',
+        widget=forms.SelectDateWidget(attrs={'twelve_hr': True}),
+        initial=datetime.now()
+    )
+    company_name = forms.CharField(
+        label='Compañia',
+        required=False,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'DaycoHost'})
+    )
