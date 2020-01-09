@@ -1,11 +1,11 @@
 import operator
 from functools import reduce
-from dal import autocomplete
 
+from dal import autocomplete
+from django.contrib.auth import views as auth_views
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.paginator import Paginator
 from django.db.models import Q
-from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.views.generic.edit import CreateView, UpdateView
@@ -13,9 +13,12 @@ from django.views.generic.edit import CreateView, UpdateView
 from . import forms
 from .models import PersonData, PersonType, ThesisStatus, Thesis, Proposal, Term
 
+login_view = auth_views.LoginView.as_view(authentication_form=forms.UserLoginForm)
+logout_view = auth_views.LogoutView.as_view()
+
 
 def index(request):
-    return HttpResponse("Hello, world. You're at the web index.")
+    return render(request, 'web/landing.html')
 
 
 def person_detail(request, pk):
@@ -136,6 +139,7 @@ class PersonTypeUpdate(SuccessMessageMixin, UpdateView):
         )
 
 
+# TODO: Fix name variables to fit the context
 def thesis_status_index(request):
     search_param = request.GET.get('search')
     if search_param:
