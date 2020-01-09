@@ -47,13 +47,13 @@
                                 {% for proposal in proposal_list %}
                                     <tr>
                                         <td>{{ proposal.code }}</td>
-                                        <th>{{ proposal.proposal_status.name }}</th>
-                                        <td>{{ proposal.title }}</td>
+                                        <td>{{ proposal.proposal_status.name }}</td>
+                                        <td><a href="{% url 'proposal_detail' proposal.pk %}">{{ proposal.title }}</a></td>
                                         <td>{{ proposal.student1.name|add:" "|add:proposal.student1.last_name }}</td>
                                         <th>{{ proposal.student1.id_card_number }}</th>
                                         {% if proposal.student2 %}
                                             <td>{{ proposal.student2.name|add:" "|add:proposal.student2.last_name}}</td>
-                                            <th>{{ proposal.student2.id_card_number }}</th>
+                                            <td>{{ proposal.student2.id_card_number }}</td>
                                         {% else %}
                                             <td>--</td>
                                             <td>--</td>

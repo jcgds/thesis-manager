@@ -1,0 +1,74 @@
+{% extends 'web/base.html' %}
+{% block page_content %}
+
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <h2>Datos de la propuesta</h2>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="{% url 'index' %}">Home</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="{% url 'proposal_index' %}">Propuestas</a>
+                </li>
+                <li class="breadcrumb-item active">
+                    <strong>{{ proposal_data.pk }}</strong>
+                </li>
+            </ol>
+        </div>
+        <div class="col-lg-2">
+        </div>
+    </div>
+    <div class="wrapper wrapper-content animated fadeIn">
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="widget lazur-bg no-padding">
+                    <div class="p-m">
+                        <h1 class="m-xs">{{ proposal_data.title }}</h1>
+                        <div class="m-t-lg">
+                            <h3 class="font-bold">
+                                Estado: {{ proposal_data.proposal_status.name }}
+                            </h3>
+                        </div>
+                        <div class="m-t-sm">
+                            <strong>Estudiante: {{proposal_data.student1.name|add:" "|add:proposal_data.student1.last_name}}</strong>
+                        </div>
+                        {% if proposal.student2 %}
+                            <div class="m-t-sm">
+                                <strong>Estudiante: {{proposal_data.student2.name|add:" "|add:proposal_data.student2.last_name}}</strong>
+                            </div>
+                        {% endif %}
+                        <div class="m-t-sm">
+                            <strong>Tutor academico: {{proposal_data.academic_tutor.name|add:" "|add:proposal_data.academic_tutor.last_name}}</strong>
+                        </div>
+                        {% if proposal.student2 %}
+                        <div class="m-t-sm">
+                            <strong>Tutor industrial: {{proposal_data.industry_tutor.name|add:" "|add:proposal_data.industry_tutor.last_name}}</strong>
+                        </div>
+                        {% endif %}
+                        <div class="m-t-sm">
+                            <strong>Term: {{proposal_data.term.period}}</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% if user.is_authenticated and user.is_manager_or_admin %}
+            <div class="row">
+                <div class="col-lg-11"></div>
+                <div class="col-lg-1">
+                    <a href="{% url 'edit_proposal' proposal_data.pk %}" class="btn btn-info m-t-xl">Editar</a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="footer">
+        <div class="float-right">
+            10GB of <strong>250GB</strong> Free.
+        </div>
+        <div>
+            <strong>Copyright</strong> Example Company &copy; 2014-2018
+        </div>
+    </div>
+{% endblock %}

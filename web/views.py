@@ -397,6 +397,14 @@ def pending_defence_index(request):
     return render(request, 'web/defences/defence_list.html', context)
 
 
+def proposal_detail(request, pk):
+    proposal = get_object_or_404(Proposal, pk=pk)
+    context = {
+        'proposal_data': proposal
+    }
+    return render(request, 'web/proposal/proposal_detail.html', context)
+
+
 def proposal_index(request):
     search_param = request.GET.get('search')
     if search_param:
@@ -419,13 +427,14 @@ def proposal_index(request):
         'search_form': forms.SearchForm(previous_search=search_param),
         'search_param': search_param
     }
-    return render(request, 'web/proposal_list.html', context)
+    return render(request, 'web/proposal/proposal_list.html', context)
 
 
 @method_decorator([login_required, manager_required], name='dispatch')
 class ProposalCreate(SuccessMessageMixin, CreateView):
     model = Proposal
     form_class = forms.ProposalForm
+    template_name = 'web/proposal/proposal_form.html'
     success_message = "%(code)s Creado correctamente."
 
     def get_success_url(self):
@@ -442,6 +451,7 @@ class ProposalCreate(SuccessMessageMixin, CreateView):
 class ProposalEdit(SuccessMessageMixin, UpdateView):
     model = Proposal
     form_class = forms.ProposalForm
+    template_name = 'web/proposal/proposal_form.html'
     success_message = "%(code)s editado correctamente."
 
     def get_success_url(self):
@@ -462,13 +472,14 @@ def term_index(request):
     context = {
         'term_list': terms_by_page
     }
-    return render(request, 'web/term_list.html', context)
+    return render(request, 'web/term/term_list.html', context)
 
 
 @method_decorator([login_required, manager_required], name='dispatch')
 class TermCreate(SuccessMessageMixin, CreateView):
     model = Term
     form_class = forms.TermForm
+    template_name = 'web/term/term_form.html'
     success_message = "periodo %(period)s creado correctamente."
 
     def get_success_url(self):
@@ -485,6 +496,7 @@ class TermCreate(SuccessMessageMixin, CreateView):
 class TermUpdate(SuccessMessageMixin, UpdateView):
     model = Term
     form_class = forms.TermForm
+    template_name = 'web/term/term_form.html'
     success_message = "Periodo %(period)s editado correctamente."
 
     def get_success_url(self):
@@ -505,13 +517,14 @@ def proposal_status_index(request):
     context = {
         'proposal_status_list': proposal_status_by_page
     }
-    return render(request, 'web/proposal_status_list.html', context)
+    return render(request, 'web/proposal/proposal_status_list.html', context)
 
 
 @method_decorator([login_required, manager_required], name='dispatch')
 class ProposalStatusCreate(SuccessMessageMixin, CreateView):
     model = ProposalStatus
     form_class = forms.ProposalStatusForm
+    template_name = 'web/proposal/proposalstatus_form.html'
     success_message = "Estatus %(name)s creado correctamente."
 
     def get_success_url(self):
@@ -528,6 +541,7 @@ class ProposalStatusCreate(SuccessMessageMixin, CreateView):
 class ProposalStatusUpdate(SuccessMessageMixin, UpdateView):
     model = ProposalStatus
     form_class = forms.ProposalStatusForm
+    template_name = 'web/proposal/proposalstatus_form.html'
     success_message = "Estatus %(name)s editado correctamente."
 
     def get_success_url(self):
@@ -540,7 +554,6 @@ class ProposalStatusUpdate(SuccessMessageMixin, UpdateView):
         )
 
 
-
 def proposal_not_approved_list(request):
     proposal_list = Proposal.objects.select_related().exclude(proposal_status__name="Aprobado").order_by('student1__id_card_number')
     paginator = Paginator(proposal_list, request.GET.get('page_length', 15))
@@ -549,4 +562,5 @@ def proposal_not_approved_list(request):
     context = {
         'proposal_list': proposal_by_page
     }
-    return render(request, 'web/proposal_not_approved_list.html', context)
+    return render(request, 'web/proposal/proposal_not_approved_list.html', context)
+

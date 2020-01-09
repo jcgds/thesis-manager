@@ -61,7 +61,7 @@
                                     <tr>
                                         <td>{{ proposal.code }}</td>
                                         <td>{{ proposal.submission_date }}</td>
-                                        <td>{{ proposal.title }}</td>
+                                        <td><a href="{% url 'proposal_detail' proposal.pk %}">{{ proposal.title }}</a></td>
                                         <td>{{ proposal.student1.name|add:" "|add:proposal.student1.last_name }}</td>
                                         {% if proposal.student2 %}
                                             <td>{{ proposal.student2.name|add:" "|add:proposal.student2.last_name}}</td>
