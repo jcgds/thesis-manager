@@ -18,9 +18,14 @@
             <ul class="nav metismenu" id="side-menu">
                 <li class="nav-header">
                     <div class="dropdown profile-element">
-                        {# TODO: Update by the currently logged user / guest #}
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                            <span class="block m-t-xs font-bold">Admin</span>
+                            <span class="block m-t-xs font-bold">
+                                {% if user.is_authenticated %}
+                                    {{ user.username }}
+                                {% else %}
+                                    Invitado
+                                {% endif %}
+                            </span>
                         </a>
                     </div>
                     <div class="profile-element">
@@ -70,18 +75,20 @@
                         {# TODO: Make the title customizable? #}
                         <span class="m-r-sm text-muted welcome-message">Escuela de Ingeniería Informática</span>
                     </li>
-                    <li>
-                        {% if user.is_authenticated %}
-                            <a href="{% url 'logout' %}">
-                                <i class="fa fa-sign-out"></i> Salir
-                            </a>
-                        {% else %}
-                            <a href="{% url 'login' %}">
-                                <i class="fa fa-sign-out"></i> Ingresar
-                            </a>
-                        {% endif %}
+                    {% if request.resolver_match.url_name != 'login' %}
+                        <li>
+                            {% if user.is_authenticated %}
+                                <a href="{% url 'logout' %}">
+                                    <i class="fa fa-sign-out"></i> Salir
+                                </a>
+                            {% else %}
+                                <a href="{% url 'login' %}">
+                                    <i class="fa fa-sign-out"></i> Ingresar
+                                </a>
+                            {% endif %}
 
-                    </li>
+                        </li>
+                    {% endif %}
                 </ul>
             </nav>
         </div>
