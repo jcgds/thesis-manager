@@ -98,7 +98,7 @@ class ThesisStatus(models.Model):
 class Thesis(models.Model):
     proposal = models.ForeignKey(Proposal, models.PROTECT)
     code = models.CharField(max_length=66, primary_key=True)
-    status = models.ForeignKey(ThesisStatus, models.PROTECT, default=ThesisStatus.objects.get(name='Por entregar').id)
+    status = models.ForeignKey(ThesisStatus, models.PROTECT)
     title = models.CharField(max_length=512)
     delivery_term = models.ForeignKey(Term, models.PROTECT)
     NRC = models.CharField(max_length=32)
