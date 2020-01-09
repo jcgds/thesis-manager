@@ -11,7 +11,7 @@ from django.urls import reverse
 from django.views.generic.edit import CreateView, UpdateView
 
 from . import forms
-from .models import PersonData, PersonType, ThesisStatus, Thesis, Proposal, Term
+from .models import PersonData, PersonType, ThesisStatus, Thesis, Proposal, Term, Defence
 
 login_view = auth_views.LoginView.as_view(authentication_form=forms.UserLoginForm)
 logout_view = auth_views.LogoutView.as_view()
@@ -316,3 +316,34 @@ def add_full_names(thesis):
         thesis.proposal.student2.full_name = "{} {}".format(thesis.proposal.student2.name,
                                                             thesis.proposal.student2.last_name)
     return thesis
+
+
+def defence_index(request):
+    search_param = request.GET.get('search')
+    if search_param:
+        # Append a query for each term received in the search parameters so that if we receive multiple
+        # parameters, we crosscheck every single one with the colums id_card_number, name and last_name
+        search_args = []
+        for term in search_param.split():
+            for query in ('code__icontains', 'grade__icontains', 'date_time__date'):
+                search_args.append(Q(**{query: term}))
+        defence_list = Defence.objects.filter(reduce(operator.or_, search_args)).order_by(
+            'thesis__proposal__student1__id_card_number',
+            'thesis__proposal__student2__id_card_number',
+        )
+    else:
+        # If we don't receive a search parameter, don't apply any filters
+        defence_list = Defence.objects.all().order_by(
+            'thesis__proposal__student1__id_card_number',
+            'thesis__proposal__student2__id_card_number',
+        )
+
+    paginator = Paginator(defence_list, request.GET.get('page_length', 15))
+    page = request.GET.get('page')
+    defences_for_page = paginator.get_page(page)
+    context = {
+        'defences': defences_for_page,
+        'search_form': forms.SearchForm(previous_search=search_param),
+        'search_param': search_param
+    }
+    return render(request, 'web/defence_list.html', context)

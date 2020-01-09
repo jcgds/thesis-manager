@@ -28,6 +28,9 @@ class PersonData(models.Model):
     def __str__(self):
         return '%s %s (%s)' % (self.name, self.last_name, self.id_card_number)
 
+    def get_short_name(self):
+        return '%s. %s' % (self.name.split(' ')[0].capitalize()[0], self.last_name)
+
     def get_absolute_url(self):
         return reverse('person_detail', kwargs={'person_id_card_number': self.id_card_number})
 
@@ -130,11 +133,30 @@ class Defence(models.Model):
     was_grade_loaded = models.BooleanField()
     observations = models.TextField()
 
+    def get_students(self):
+        return self.thesis.proposal.student1, self.thesis.proposal.student2
+
+    def get_academic_tutor(self):
+        return self.thesis.proposal.academic_tutor
+
+    def get_jury_members(self):
+        """
+        Get the principal jury members for this defence, excluding the backup Judge.
+        """
+        return Jury.objects.filter(defence=self, is_backup_jury=False)
+
+    def get_backup_judge(self):
+        """
+        Get the backup judge for this defence.
+        """
+        backup_juries = Jury.objects.filter(defence=self, is_backup_jury=True)
+        if len(backup_juries) > 1:
+            print('More than one backup jury for defence %s.' % self.code)
+        return backup_juries[0]
+
 
 class Jury(models.Model):
     person = models.ForeignKey(PersonData, models.PROTECT)
     defence = models.ForeignKey(Defence, models.PROTECT)
     confirmed_assistance = models.BooleanField(default=False)
     is_backup_jury = models.BooleanField(default=False)
-    #  TODO: Field is_thesis_tutor which can be calculated with a query through the proposal's academic tutor (page 2-3)
-    #        Maybe it's only shown when seeing a defence details

@@ -16,6 +16,7 @@ urlpatterns = [
     path('personas/tipos/<int:pk>/editar', views.PersonTypeUpdate.as_view(), name='edit_person_type'),
     path('personas/<str:pk>', views.person_detail, name='person_detail'),
     path('personas/<str:pk>/editar', views.PersonDataUpdate.as_view(), name='edit_person'),
+    path('defensas/', views.defence_index, name='defence_index'),
     path('tg', views.thesis_index, name='thesis_index'),
     path('tg/<str:pk>', views.thesis_detail, name='thesis_detail'),
     path('tg/<str:pk>/editar', views.ThesisUpdate.as_view(), name='edit_thesis'),
