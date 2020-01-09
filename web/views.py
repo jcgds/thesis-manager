@@ -61,6 +61,7 @@ def person_index(request):
 class PersonDataCreate(SuccessMessageMixin, CreateView):
     model = PersonData
     form_class = forms.PersonDataForm
+    template_name = 'web/persons/persondata_form.html'
     success_message = "%(id_card_number)s creado correctamente."
 
     def get_success_url(self):
@@ -77,6 +78,7 @@ class PersonDataCreate(SuccessMessageMixin, CreateView):
 class PersonDataUpdate(SuccessMessageMixin, UpdateView):
     model = PersonData
     form_class = forms.PersonDataForm
+    template_name = 'web/persons/persondata_form.html'
     success_message = "%(id_card_number)s editado correctamente."
 
     def get_success_url(self):
@@ -118,6 +120,7 @@ def person_type_index(request):
 class PersonTypeCreate(SuccessMessageMixin, CreateView):
     model = PersonType
     form_class = forms.PersonTypeForm
+    template_name = 'web/person_types/persontype_form.html'
     success_message = "Tipo \"%(name)s\" creado correctamente."
 
     def get_success_url(self):
@@ -134,6 +137,7 @@ class PersonTypeCreate(SuccessMessageMixin, CreateView):
 class PersonTypeUpdate(SuccessMessageMixin, UpdateView):
     model = PersonType
     form_class = forms.PersonTypeForm
+    template_name = 'web/person_types/persontype_form.html'
     success_message = "Tipo \"%(name)s\" editado correctamente."
 
     def get_success_url(self):
@@ -388,14 +392,13 @@ def pending_defence_index(request):
 
 
 def proposal_index(request):
-
     search_param = request.GET.get('search')
     if search_param:
         # Append a query for each term received in the search parameters so that if we receive multiple
         # parameters, we crosscheck every single one with the colums id_card_number, name and last_name
         search_args = []
         for term in search_param.split():
-            for query in ('code__icontains','title__icontains',):
+            for query in ('code__icontains', 'title__icontains',):
                 search_args.append(Q(**{query: term}))
         proposal_list = Proposal.objects.filter(reduce(operator.or_, search_args))
     else:
