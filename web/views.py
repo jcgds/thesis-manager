@@ -352,16 +352,22 @@ def _generate_defence_index_context(defence_queryset, page_length, desired_page,
 
 
 def defence_index(request):
+    """
+    List of all the registered defences.
+    """
     search_param = request.GET.get('search')
     defence_list = _get_defence_queryset(False, search_param)
     page = request.GET.get('page')
     context = _generate_defence_index_context(defence_list, request.GET.get('page_length', 15), page, search_param)
-    return render(request, 'web/defence_list.html', context)
+    return render(request, 'web/defence/defence_list.html', context)
 
 
 def pending_defence_index(request):
+    """
+    List of defences that haven't been graded yet.
+    """
     search_param = request.GET.get('search')
     defence_list = _get_defence_queryset(True, search_param)
     page = request.GET.get('page')
     context = _generate_defence_index_context(defence_list, request.GET.get('page_length', 15), page, search_param)
-    return render(request, 'web/defence_list.html', context)
+    return render(request, 'web/defence/defence_list.html', context)
