@@ -519,7 +519,7 @@ def proposal_status_index(request):
     context = {
         'proposal_status_list': proposal_status_by_page
     }
-    return render(request, 'web/proposal_status_list.html', context)
+    return render(request, 'web/proposal/proposal_status_list.html', context)
 
 
 @method_decorator([login_required, manager_required], name='dispatch')
