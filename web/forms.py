@@ -154,7 +154,7 @@ class ThesisForm(forms.ModelForm):
         super(ThesisForm, self).__init__(*args, **kwargs)
         instance = getattr(self, 'instance', None)
         if instance and instance.pk:
-            self.fields['proposal'].widget.attrs['disabled'] = True
+            self.fields['proposal'].widget.attrs['disabled'] = False
 
     class Meta:
         model = models.Thesis
@@ -219,6 +219,17 @@ class ThesisForm(forms.ModelForm):
         required=False,
         widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Estudio Chaloupka'})
     )
+
+    def save(self, commit=True):
+        thesis = super().save(commit)
+        print(thesis)
+        status = models.ThesisStatus.objects.get(name=self.cleaned_data['status'])
+        print(status)
+        models.HistoricThesisStatus(
+            thesis=thesis,
+            status=status
+        ).save()
+        return thesis
 
 
 class ProposalForm(forms.ModelForm):

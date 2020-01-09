@@ -11,7 +11,7 @@ from django.urls import reverse
 from django.views.generic.edit import CreateView, UpdateView
 
 from . import forms
-from .models import PersonData, PersonType, ThesisStatus, Thesis, Proposal, Term, Defence, ProposalStatus
+from .models import PersonData, PersonType, ThesisStatus, Thesis, Proposal, Term, Defence, ProposalStatus, HistoricThesisStatus
 
 
 login_view = auth_views.LoginView.as_view(authentication_form=forms.UserLoginForm)
@@ -214,11 +214,12 @@ def thesis_index(request):
                           'proposal__industry_tutor__id_card_number__icontains', 'delivery_term__name__icontains',):
                 search_args.append(Q(**{query: term}))
             thesis_list = Thesis.objects.filter(reduce(operator.or_, search_args)).order_by(
-                'proposal__student1__id_card_number').exclude(status=ThesisStatus.objects.get(name='Aprobado'))
+                'proposal__student1__id_card_number').exclude(
+                code__in=HistoricThesisStatus.objects.filter(status__name='Aprobado'))
     else:
         # If we don't receive a search parameter, don't apply any filters
         thesis_list = Thesis.objects.all().order_by('proposal__student1__id_card_number').exclude(
-            status=ThesisStatus.objects.get(name='Aprobado'))
+                code__in=HistoricThesisStatus.objects.filter(status__name='Aprobado').values('thesis__code'))
 
     for thesis in thesis_list:
         thesis = add_full_names(thesis)
@@ -306,6 +307,7 @@ def thesis_detail(request, pk):
 
 
 def add_full_names(thesis):
+    thesis.status = HistoricThesisStatus.objects.filter(thesis__code=thesis.code).order_by('-date')[0].status
     thesis.proposal.academic_tutor.full_name = "{} {}".format(thesis.proposal.academic_tutor.name,
                                                               thesis.proposal.academic_tutor.last_name)
     if thesis.proposal.industry_tutor:
