@@ -1,8 +1,22 @@
 import re
+from datetime import datetime
 
+from dal import autocomplete
 from django import forms
+from django.contrib.auth.forms import AuthenticationForm
 
 from . import models
+
+
+class UserLoginForm(AuthenticationForm):
+    username = forms.CharField(
+        label='Nombre de usuario',
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingresa tu nombre de usuario'})
+    )
+    password = forms.CharField(
+        label='Contraseña',
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Contraseña'})
+    )
 
 
 class SearchForm(forms.Form):
@@ -34,6 +48,17 @@ class PersonTypeForm(forms.ModelForm):
     name = forms.CharField(
         label='Nombre del rol',
         widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Profesor'})
+    )
+
+
+class ThesisStatusForm(forms.ModelForm):
+    class Meta:
+        model = models.ThesisStatus
+        fields = ['name']
+
+    name = forms.CharField(
+        label='Nombre del estado',
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Por entregar'})
     )
 
 
@@ -90,12 +115,12 @@ class PersonDataForm(forms.ModelForm):
     )
     type = forms.ModelChoiceField(
         label='Tipo',
-        initial=0,
+        initial=1,
         queryset=models.PersonType.objects.all(),
         widget=forms.Select(attrs={'class': 'form-control m-b'}))
     observations = forms.CharField(
         label='Observaciones',
-        max_length=1_024,
+        max_length=1_048,
         required=False,
         widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 3})
     )
@@ -122,3 +147,75 @@ class PersonDataForm(forms.ModelForm):
         data = self.cleaned_data['secondary_phone_number']
         _validate_phone_number(data)
         return data
+
+
+class ThesisForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(ThesisForm, self).__init__(*args, **kwargs)
+        instance = getattr(self, 'instance', None)
+        if instance and instance.pk:
+            self.fields['proposal'].widget.attrs['disabled'] = True
+
+    class Meta:
+        model = models.Thesis
+        fields = [
+            'NRC',
+            'title',
+            'proposal',
+            'status',
+            'delivery_term',
+            'description',
+            'thematic_category',
+            'submission_date',
+            'company_name'
+        ]
+
+    NRC = forms.CharField(
+        label='NRC',
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': '25960'})
+    )
+    title = forms.CharField(
+        label='Título',
+        required=False,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'This Is It'})
+    )
+    proposal = forms.ModelChoiceField(
+        label='Propuesta',
+        initial=1,
+        queryset=models.Proposal.objects.all(),
+        widget=autocomplete.ModelSelect2(url='proposal-autocomplete')
+    )
+    status = forms.ModelChoiceField(
+        label='Estado',
+        initial=0,
+        queryset=models.ThesisStatus.objects.all(),
+        widget=forms.Select(attrs={'class': 'form-control m-b'})
+    )
+    delivery_term = forms.ModelChoiceField(
+        label='Semestre de Entrega',
+        initial=1,
+        queryset=models.Term.objects.all(),
+        widget=autocomplete.ModelSelect2(url='term-autocomplete')
+    )
+    description = forms.CharField(
+        label='Descripción',
+        max_length=1_024,
+        widget=forms.Textarea(
+            attrs={'class': 'form-control', 'placeholder': 'Software de registro de marcas', 'rows': 3})
+    )
+
+    thematic_category = forms.CharField(
+        label='Categoria temática',
+        required=False,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Inteligencia de negocios'})
+    )
+    submission_date = forms.DateField(
+        label='Fecha de Inicio',
+        widget=forms.SelectDateWidget(attrs={'twelve_hr': True}),
+        initial=datetime.now()
+    )
+    company_name = forms.CharField(
+        label='Compañia',
+        required=False,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Estudio Chaloupka'})
+    )

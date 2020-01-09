@@ -9,6 +9,7 @@
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
     <link href="{% static 'css/plugins/dataTables/datatables.min.css' %}" rel="stylesheet">
     <script src="{% static 'js/jquery-3.1.1.min.js' %}"></script>
+    {{ form.media }}
 </head>
 <body>
 <div id="wrapper">
@@ -17,9 +18,14 @@
             <ul class="nav metismenu" id="side-menu">
                 <li class="nav-header">
                     <div class="dropdown profile-element">
-                        {# TODO: Update by the currently logged user / guest #}
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                            <span class="block m-t-xs font-bold">Admin</span>
+                            <span class="block m-t-xs font-bold">
+                                {% if user.is_authenticated %}
+                                    {{ user.username }}
+                                {% else %}
+                                    Invitado
+                                {% endif %}
+                            </span>
                         </a>
                     </div>
                     <div class="profile-element">
@@ -41,9 +47,14 @@
                     </ul>
                 </li>
                 <li>
-                    <a href="#"><i class="fa fa-bar-chart-o"></i> <span class="nav-label">Graphs</span><span class="fa arrow"></span></a>
+                    <a href="#"><i class="fa fa-book"></i> <span class="nav-label">Trabajos de grado</span><span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level collapse">
-                        <li><a href="graph_flot.html">Flot Charts</a></li>
+                        <li class="{% if request.resolver_match.url_name == 'thesis_index' %}active{% endif %}">
+                            <a href="{% url 'thesis_index' %}">Datos de TG</a>
+                        </li>
+                        <li class="{% if request.resolver_match.url_name == 'thesis_status_index' %}active{% endif %}">
+                            <a href="{% url 'thesis_status_index' %}">Estatus de TG</a>
+                        </li>
                     </ul>
                 </li>
                 <li>
@@ -64,12 +75,20 @@
                         {# TODO: Make the title customizable? #}
                         <span class="m-r-sm text-muted welcome-message">Escuela de Ingeniería Informática</span>
                     </li>
-                    <li>
-                        {# TODO: Connect with Django correctly #}
-                        <a href="login.html">
-                            <i class="fa fa-sign-out"></i> Salir
-                        </a>
-                    </li>
+                    {% if request.resolver_match.url_name != 'login' %}
+                        <li>
+                            {% if user.is_authenticated %}
+                                <a href="{% url 'logout' %}">
+                                    <i class="fa fa-sign-out"></i> Salir
+                                </a>
+                            {% else %}
+                                <a href="{% url 'login' %}">
+                                    <i class="fa fa-sign-out"></i> Ingresar
+                                </a>
+                            {% endif %}
+
+                        </li>
+                    {% endif %}
                 </ul>
             </nav>
         </div>

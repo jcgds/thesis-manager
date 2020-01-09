@@ -1,0 +1,149 @@
+{% extends 'web/base.html' %}
+{% block page_content %}
+
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <h2>Datos de Trabajo de Grado</h2>
+            <ol class="breadcrumb">
+                {# TODO: Connect with Django correctly #}
+                <li class="breadcrumb-item">
+                    <a href="{% url 'index' %}">Home</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="{% url 'thesis_index' %}">TG</a>
+                </li>
+                <li class="breadcrumb-item active">
+                    <strong>{{ thesis_data.pk }}</strong>
+                </li>
+            </ol>
+        </div>
+        <div class="col-lg-2">
+        </div>
+    </div>
+    <div class="wrapper wrapper-content animated fadeIn">
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="widget lazur-bg no-padding">
+                    <div class="p-m">
+                        <h1 class="m-xs">{{ thesis_data.title }} {{ thesis_data.last_name }}</h1>
+                        {% if thesis_data.thematic_category %}
+                            <div class="m-t-md">
+                                <h4><strong>Descripcion: <br></strong>{{ thesis_data.description }}</h4>
+                            </div>
+                        {% endif %}
+                        <div class="m-t-md">
+                                <h4><strong>NRC: <br></strong>{{ thesis_data.NRC }}</h4>
+                            </div>
+                        <div class="m-t-lg">
+                            <h3 class="font-bold">
+                                {{ thesis_data.code }}
+                            </h3>
+                        </div>
+                        <div class="m-t-lg">
+                            <h3 class="font-bold">
+                                <strong>Fecha de inicio: <br></strong>
+                                {{ thesis_data.submission_date }}
+                            </h3>
+                        </div>
+                        <div class="m-t-lg">
+                            <h3 class="font-bold">
+                                <strong>Semestre de entrega: <br></strong>
+                                {{ thesis_data.delivery_term }}
+                            </h3>
+                        </div>
+                        <div class="m-t-sm">
+                            <strong>{{ thesis_data.status.name }}</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="widget style1 navy-bg">
+                    <div class="row">
+                        <div class="col-4 align-self-center">
+                            <i class="widget lazur-bg no-padding"></i>
+                        </div>
+                        <div class="col-8 align-self-center">
+                            <div class="row">
+                                <div class="col-12 text-right">
+                                    <span> Tutor Académico </span>
+                                    <br>
+                                    <a href="{% url 'person_detail' thesis_data.proposal.academic_tutor.id_card_number %}" >
+                                        <h4 class="font-bold">{{ thesis_data.proposal.academic_tutor.full_name }}</h4>
+                                    </a>
+                                </div>
+                            </div>
+                            {% if thesis_data.proposal.industry_tutor %}
+                                <br>
+                                <div class="row">
+                                    <div class="col-12 text-right">
+                                        <span> Tutor Empresarial </span>
+                                        <br>
+                                        <a href="{% url 'person_detail' thesis_data.proposal.industry_tutor.id_card_number %}" >
+                                            <h4 class="font-bold">{{ thesis_data.proposal.industry_tutor.full_name }}</h4>
+                                        </a>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div class="col-12 text-right">
+                                        <span> Compañia </span>
+                                        <br>
+                                        <h4 class="font-bold">{{ thesis_data.company_name }}</h4>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="widget style1 yellow-bg">
+                    <div class="row">
+                        <div class="col-4 align-self-center">
+                            <i class="widget lazur-bg no-padding"></i>
+                        </div>
+                        <div class="col-8 align-self-center">
+                            <div class="row">
+                                <div class="col-12 text-right">
+                                    <span> Tesista </span>
+                                    <br>
+                                    <a href="{% url 'person_detail' thesis_data.proposal.student1.id_card_number %}" >
+                                        <h4 class="font-bold">{{ thesis_data.proposal.student1.full_name }}</h4>
+                                    </a>
+                                </div>
+                            </div>
+                            {% if thesis_data.proposal.student2 %}
+                                <br>
+                                <div class="row">
+                                    <div class="col-12 text-right">
+                                        <span> 2do Tesista </span>
+                                        <br>
+                                        <a href="{% url 'person_detail' thesis_data.proposal.student1.id_card_number %}" >
+                                            <h4 class="font-bold">{{ thesis_data.proposal.student2.full_name}}</h4>
+                                        </a>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-11"></div>
+            <div class="col-lg-1">
+                <a href="{% url 'edit_thesis' thesis_data.pk %}" class="btn btn-info m-t-xl">Editar</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="float-right">
+            10GB of <strong>250GB</strong> Free.
+        </div>
+        <div>
+            <strong>Copyright</strong> Example Company &copy; 2014-2018
+        </div>
+    </div>
+{% endblock %}
