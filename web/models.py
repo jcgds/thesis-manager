@@ -95,10 +95,16 @@ class Thesis(models.Model):
     title = models.CharField(max_length=512)
     delivery_term = models.ForeignKey(Term, models.PROTECT)
     NRC = models.CharField(max_length=32)
-    description = models.CharField(max_length=50)
+    description = models.CharField(max_length=1_024)
     thematic_category = models.CharField(max_length=50)
     submission_date = models.DateField()
     company_name = models.CharField(max_length=128, null=True, blank=True)
+
+    def save(self, **kwargs):
+        self.code = 'TG{}'.format(self.proposal.code)
+        if not self.title:
+            self.title = self.proposal.title
+        super().save(*kwargs)
 
     class Meta:
         verbose_name_plural = 'Thesis'

@@ -23,7 +23,7 @@
                     <div class="ibox-content">
                         <div class="row border-bottom">
                             <div class="col-sm-5 m-b-xs">
-                                <a href="{% url 'create_person' %}" class="btn btn-primary">Agregar</a>
+                                <a href="{% url 'create_thesis' %}" class="btn btn-primary">Agregar</a>
                             </div>
                             <div class="col-sm-4 m-b-xs"></div>
                             <div class="col-sm-3">
@@ -61,7 +61,7 @@
                                     <tbody>
                                     {% for thesis in thesis_list %}
                                         <tr>
-                                            <td>{{ thesis.code }}</td>
+                                            <td><a href="{% url 'thesis_detail' thesis.pk %}">{{ thesis.code }}</a></td>
                                             <td>{{ thesis.NRC }}</td>
                                             <td>{{ thesis.title }}</td>
                                             <td>{{ thesis.status.name }}</td>
@@ -78,7 +78,8 @@
                                             <td>{{ thesis.submission_date}}</td>
                                             <td>{{ thesis.delivery_term.name }}</td>
                                             <td>
-                                                <a class="btn btn-sm btn-outline-warning">
+                                                <a href="{% url 'edit_thesis' thesis.code %}"
+                                                        class="btn btn-sm btn-outline-warning">
                                                     <span class="glyphicon glyphicon-pencil"></span>
                                                 </a>
                                             </td>
