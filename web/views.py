@@ -565,3 +565,55 @@ def stats_view(request):
             'term_form': forms.StatsForm(),
         }
         return render(request, 'web/stats/stats.html', context)
+
+
+@method_decorator([login_required, manager_required], name='dispatch')
+class ThesisAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        queryset = Thesis.objects.all()
+        if self.q:
+            queryset = queryset.filter(
+                title__icontains=self.q,
+                code__icontains=self.q,
+                proposal__code=self.q,
+                delivery_term__period__exact=self.q,
+                NRC__icontains=self.q,
+                thematic_category__icontains=self.q,
+                submission_date__exact=self.q,
+                company_name__icontains=self.q,
+            )
+        return queryset
+
+
+@method_decorator([login_required, manager_required], name='dispatch')
+class DefenceCreate(SuccessMessageMixin, CreateView):
+    model = Defence
+    form_class = forms.DefenceForm
+    template_name = 'web/defences/defence_form.html'
+    success_message = "Defensa \"%(code)s\" creada correctamente."
+
+    def get_success_url(self):
+        return reverse('create_defence')
+
+    def get_success_message(self, cleaned_data):
+        return self.success_message % dict(
+            cleaned_data,
+            code=self.object.code,
+        )
+
+
+@method_decorator([login_required, manager_required], name='dispatch')
+class DefenceUpdate(SuccessMessageMixin, UpdateView):
+    model = Defence
+    form_class = forms.DefenceForm
+    template_name = 'web/defences/defence_form.html'
+    success_message = "Defensa \"%(code)s\" editada correctamente."
+
+    def get_success_url(self):
+        return reverse('update_defence', args=(self.object.code,))
+
+    def get_success_message(self, cleaned_data):
+        return self.success_message % dict(
+            cleaned_data,
+            code=self.object.code,
+        )

@@ -4,6 +4,7 @@ from datetime import datetime
 from dal import autocomplete
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm
+from django.utils import timezone
 
 from . import models
 
@@ -117,7 +118,8 @@ class PersonDataForm(forms.ModelForm):
         label='Tipo',
         initial=1,
         queryset=models.PersonType.objects.all(),
-        widget=forms.Select(attrs={'class': 'form-control m-b'}))
+        widget=forms.Select(attrs={'class': 'form-control m-b'})
+    )
     observations = forms.CharField(
         label='Observaciones',
         max_length=1_048,
@@ -344,3 +346,64 @@ class StatsForm(forms.Form):
         queryset=models.Term.objects.all(),
         widget=forms.SelectMultiple(attrs={'class': 'form-control m-b'})
     )
+
+
+class DefenceForm(forms.ModelForm):
+    class Meta:
+        model = models.Defence
+        fields = [
+            'thesis',
+            'date_time',
+            'grade',
+            'is_publication_mention',
+            'is_honorific_mention',
+            'corrections_submission_date',
+            'observations',
+        ]
+
+    thesis = forms.ModelChoiceField(
+        label='Trabajo de grado',
+        initial=0,
+        queryset=models.Thesis.objects.all(),
+        widget=autocomplete.ModelSelect2(url='thesis-autocomplete')
+    )
+    date_time = forms.DateTimeField(
+        label='Fecha y hora de la presentación',
+        input_formats=['%Y-%m-%dT%H:%M'],
+        widget=forms.DateTimeInput(
+            attrs={
+                'type': 'datetime-local',
+                'class': 'form-control'
+            },
+            format='%Y-%m-%dT%H:%M'
+        )
+    )
+    grade = forms.IntegerField(
+        label='Calificación',
+        min_value=0,
+        max_value=20,
+        required=False,
+        widget=forms.NumberInput(attrs={'class': 'form-control'})
+    )
+    is_publication_mention = forms.BooleanField(
+        label='Mención publicación',
+        required=False,
+        widget=forms.CheckboxInput(attrs={'type': 'checkbox'})
+    )
+    is_honorific_mention = forms.BooleanField(
+        label='Mención honorífica',
+        required=False,
+        widget=forms.CheckboxInput(attrs={'type': 'checkbox'})
+    )
+    observations = forms.CharField(
+        label='Observaciones',
+        max_length=1_048,
+        required=False,
+        widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 3})
+    )
+
+    def clean_datetime(self):
+        form_datetime = self.cleaned_data['date_time']
+        if form_datetime < timezone.now():
+            raise forms.ValidationError("La fecha debe ser en el futuro.")
+        return form_datetime

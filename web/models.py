@@ -115,6 +115,9 @@ class Thesis(models.Model):
             self.title = self.proposal.title
         super().save(*kwargs)
 
+    def __str__(self):
+        return '%s (%s)' % (self.title, self.code)
+
     class Meta:
         verbose_name_plural = 'Thesis'
 
@@ -133,11 +136,15 @@ class Defence(models.Model):
     code = models.CharField(max_length=68, primary_key=True)
     date_time = models.DateTimeField()
     grade = models.PositiveSmallIntegerField(null=True, blank=True)
-    is_publication_mention = models.BooleanField()
-    is_honorific_mention = models.BooleanField()
+    is_publication_mention = models.BooleanField(default=False)
+    is_honorific_mention = models.BooleanField(default=False)
     corrections_submission_date = models.DateField(null=True, blank=True)
-    was_grade_loaded = models.BooleanField()
+    was_grade_loaded = models.BooleanField(default=False)
     observations = models.TextField(null=True, blank=True)
+
+    def save(self, **kwargs):
+        self.code = 'D{}'.format(self.thesis.code)
+        super().save(*kwargs)
 
     def get_students(self):
         return self.thesis.proposal.student1, self.thesis.proposal.student2
