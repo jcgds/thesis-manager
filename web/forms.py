@@ -167,19 +167,21 @@ class ProposalForm(forms.ModelForm):
     student2 = forms.ModelChoiceField(
         label='Segundo Estudiante',
         queryset=models.PersonData.objects.filter(type__name='Estudiante'),
-        widget=forms.Select(attrs={'class': 'form-control'})
+        widget=forms.Select(attrs={'class': 'form-control'}),
+        required=False
     )
 
     academic_tutor = forms.ModelChoiceField(
         label='Tutor Academico',
         queryset=models.PersonData.objects.filter(type__name='Profesor'),
-        widget=forms.Select(attrs={'class': 'form-control'})
+        widget=forms.Select(attrs={'class': 'form-control'}),
     )
 
     industry_tutor = forms.ModelChoiceField(
         label='Tutor Industrial',
         queryset=models.PersonData.objects.filter(type__name='Externo'),
-        widget=forms.Select(attrs={'class': 'form-control'})
+        widget=forms.Select(attrs={'class': 'form-control'}),
+        required=False
     )
 
     term = forms.ModelChoiceField(
@@ -206,4 +208,24 @@ class TermForm(forms.ModelForm):
     period = forms.IntegerField(
         label='Periodo',
         widget=forms.NumberInput(attrs={'class': 'form-control', 'min': '1', 'max': '999999'})
+    )
+
+
+class ProposalStatusForm(forms.ModelForm):
+
+    class Meta:
+        model = models.ProposalStatus
+        fields = [
+            'name',
+            'description',
+        ]
+
+    name = forms.CharField(
+        label='Nombre',
+        widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
+
+    description = forms.CharField(
+        label='Descripcion',
+        widget=forms.TextInput(attrs={'class': 'form-control'})
     )

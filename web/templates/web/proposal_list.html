@@ -41,29 +41,7 @@
                         {% if not proposal_list %}
                             <p style="margin-top: 2.5%">No hay datos disponibles.</p>
                         {% else %}
-                    <div class="ibox-title">
-                        <h5>Custom responsive table </h5>
-                    </div>
                     <div class="ibox-content">
-                        <div class="row">
-                            <div class="col-sm-5 m-b-xs"><select class="form-control-sm form-control input-s-sm inline">
-                                <option value="0">Option 1</option>
-                                <option value="1">Option 2</option>
-                                <option value="2">Option 3</option>
-                                <option value="3">Option 4</option>
-                            </select>
-                            </div>
-                            <div class="col-sm-4 m-b-xs"></div>
-                            <div class="col-sm-3">
-                                <div class="input-group">
-                                    <input placeholder="Search" type="text"
-                                           class="form-control form-control-sm">
-                                    <span class="input-group-append">
-                                        <button type="button" class="btn btn-sm btn-primary">Go!</button>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
                         <div class="table-responsive">
                             <table class="table table-striped">
                                 <thead>
@@ -76,6 +54,7 @@
                                     <th>Tutor Academico</th>
                                     <th>Tutor Empresarial</th>
                                     <th>TERM</th>
+                                    <th>Estatus</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -97,13 +76,14 @@
                                             <td>--</td>
                                         {% endif %}
                                         <th>{{ proposal.term.period }}</th>
+                                        <th>{{ proposal.term.name }}</th>
+                                        <th>{{ proposal.proposal_status.name }}</th>
                                         <td>
                                             <a href="{% url 'edit_proposal' proposal.code %}"
                                                class="btn btn-sm btn-outline-warning">
                                                 <span class="glyphicon glyphicon-pencil"></span>
                                             </a>
                                         </td>
-                                        <th>{{ proposal.term.name }}</th>
                                     </tr>
                                 {% endfor %}
                                 </tbody>
@@ -111,13 +91,13 @@
 
                             <div class="pagination float-right">
                                 <span class="step-links ">
-                                    {% if person_list.has_previous %}
+                                    {% if proposal_list.has_previous %}
                                         <a href="?page=1">&laquo; First</a>
-                                        <a href="?page={{ person_list.previous_page_number }}">previous</a>
+                                        <a href="?page={{ proposal_list.previous_page_number }}">previous</a>
                                     {% endif %}
                                     {% if person_list.has_next %}
-                                        <a href="?page={{ person_list.next_page_number }}">next</a>
-                                        <a href="?page={{ person_list.paginator.num_pages }}">last &raquo;</a>
+                                        <a href="?page={{ proposal_list.next_page_number }}">next</a>
+                                        <a href="?page={{ proposal_list.paginator.num_pages }}">last &raquo;</a>
                                     {% endif %}
                                 </span>
                                 <span class="current">
