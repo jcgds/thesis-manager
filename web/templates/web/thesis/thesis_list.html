@@ -4,7 +4,6 @@
         <div class="col-lg-10">
             <h2>Trabajos de Grado</h2>
             <ol class="breadcrumb">
-                {# TODO: Connect with Django correctly #}
                 <li class="breadcrumb-item">
                     <a href="{% url 'index' %}">Home</a>
                 </li>
@@ -23,7 +22,9 @@
                     <div class="ibox-content">
                         <div class="row border-bottom">
                             <div class="col-sm-5 m-b-xs">
-                                <a href="{% url 'create_thesis' %}" class="btn btn-primary">Agregar</a>
+                                {% if user.is_authenticated and user.is_manager_or_admin %}
+                                    <a href="{% url 'create_thesis' %}" class="btn btn-primary">Agregar</a>
+                                {% endif %}
                             </div>
                             <div class="col-sm-4 m-b-xs"></div>
                             <div class="col-sm-3">
@@ -68,19 +69,21 @@
                                             {% if not thesis.proposal.student2 %}
                                                 <td>{{ "-" }}</td>
                                             {% else %}
-                                                <td><a href="{% url 'person_detail' thesis.proposal.student2.id_card_number %}">{{ thesis.proposal.student2.full_name }} ({{ thesis.proposal.student2.id_card_number }})</a> </td>
+                                                <td><a href="{% url 'person_detail' thesis.proposal.student2.id_card_number %}">{{ thesis.proposal.student2.full_name }} ({{ thesis.proposal.student2.id_card_number }})</a></td>
                                             {% endif %}
-                                            <td><a href="{% url 'person_detail' thesis.proposal.academic_tutor.id_card_number %}">{{ thesis.proposal.academic_tutor.full_name }}</a> </td>
-                                            <td><a href="{% url 'person_detail' thesis.proposal.industry_tutor.id_card_number %}">{{ thesis.proposal.industry_tutor.full_name|default:"-"}}</a> </td>
-                                            <td>{{ thesis.company_name|default:"-"}}</td>
-                                            <td>{{ thesis.submission_date}}</td>
+                                            <td><a href="{% url 'person_detail' thesis.proposal.academic_tutor.id_card_number %}">{{ thesis.proposal.academic_tutor.full_name }}</a></td>
+                                            <td><a href="{% url 'person_detail' thesis.proposal.industry_tutor.id_card_number %}">{{ thesis.proposal.industry_tutor.full_name|default:"-" }}</a></td>
+                                            <td>{{ thesis.company_name|default:"-" }}</td>
+                                            <td>{{ thesis.submission_date }}</td>
                                             <td>{{ thesis.delivery_term.name }}</td>
-                                            <td>
-                                                <a href="{% url 'edit_thesis' thesis.code %}"
-                                                        class="btn btn-sm btn-outline-warning">
-                                                    <span class="glyphicon glyphicon-pencil"></span>
-                                                </a>
-                                            </td>
+                                            {% if user.is_authenticated and user.is_manager_or_admin %}
+                                                <td>
+                                                    <a href="{% url 'edit_thesis' thesis.code %}"
+                                                       class="btn btn-sm btn-outline-warning">
+                                                        <span class="glyphicon glyphicon-pencil"></span>
+                                                    </a>
+                                                </td>
+                                            {% endif %}
                                         </tr>
                                     {% endfor %}
                                     </tbody>
