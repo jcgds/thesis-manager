@@ -10,11 +10,15 @@ from django.urls import reverse
 from django.views.generic.edit import CreateView, UpdateView
 
 from . import forms
+from .models import PersonData, PersonType, ThesisStatus, Thesis, Proposal, Term, Defence
+
+login_view = auth_views.LoginView.as_view(authentication_form=forms.UserLoginForm)
+logout_view = auth_views.LogoutView.as_view()
 from .models import PersonData, PersonType, Proposal, Term, ProposalStatus
 
 
 def index(request):
-    return HttpResponse("Hello, world. You're at the web index.")
+    return render(request, 'web/landing.html')
 
 
 def person_detail(request, pk):
@@ -133,6 +137,240 @@ class PersonTypeUpdate(SuccessMessageMixin, UpdateView):
             cleaned_data,
             name=self.object.name,
         )
+
+
+# TODO: Fix name variables to fit the context
+def thesis_status_index(request):
+    search_param = request.GET.get('search')
+    if search_param:
+        # Setup to search in multiple fields, currently in only has one but in the future
+        # it could have more searchable fields.
+        search_args = []
+        for term in search_param.split():
+            for query in ('name__icontains',):
+                search_args.append(Q(**{query: term}))
+        thesis_status_list = ThesisStatus.objects.filter(reduce(operator.or_, search_args))
+    else:
+        # If we don't receive a search parameter, don't apply any filters
+        thesis_status_list = ThesisStatus.objects.all().order_by('name')
+
+    paginator = Paginator(thesis_status_list, request.GET.get('page_length', 15))
+    page = request.GET.get('page')
+    types_by_page = paginator.get_page(page)
+    context = {
+        'types': types_by_page,
+        'search_form': forms.SearchForm(previous_search=search_param),
+        'search_param': search_param,
+    }
+    return render(request, 'web/thesisstatus_list.html', context)
+
+
+class ThesisStatusCreate(SuccessMessageMixin, CreateView):
+    model = ThesisStatus
+    form_class = forms.ThesisStatusForm
+    success_message = "Estado \"%(name)s\" creado correctamente."
+
+    def get_success_url(self):
+        return reverse('thesis_status_index')
+
+    def get_success_message(self, cleaned_data):
+        return self.success_message % dict(
+            cleaned_data,
+            name=self.object.name,
+        )
+
+
+class ThesisStatusUpdate(SuccessMessageMixin, UpdateView):
+    model = ThesisStatus
+    form_class = forms.ThesisStatusForm
+    success_message = "Estado \"%(name)s\" editado correctamente."
+
+    def get_success_url(self):
+        return reverse('edit_thesis_status', args=(self.object.pk,))
+
+    def get_success_message(self, cleaned_data):
+        return self.success_message % dict(
+            cleaned_data,
+            name=self.object.name,
+        )
+
+
+def thesis_index(request):
+    search_param = request.GET.get('search')
+    if search_param:
+        # Append a query for each term received in the search parameters so that if we receive multiple
+        # parameters, we crosscheck every single one with the colums id_card_number, name and last_name
+        search_args = []
+        for term in search_param.split():
+            for query in ('code__icontains', 'NRC__icontains', 'title__icontains', 'status__name__icontains',
+                          'thematic_category__icontains', 'proposal__title__icontains',
+                          'proposal__student1__name__icontains', 'proposal__student1__last_name__icontains',
+                          'proposal__student1__id_card_number__icontains', 'proposal__student2__name__icontains',
+                          'proposal__student2__last_name__icontains', 'proposal__student2__id_card_number__icontains',
+                          'proposal__academic_tutor__name__icontains', 'proposal__academic_tutor__last_name__icontains',
+                          'proposal__academic_tutor__id_card_number__icontains',
+                          'proposal__industry_tutor__name__icontains', 'proposal__industry_tutor__last_name__icontains',
+                          'proposal__industry_tutor__id_card_number__icontains', 'delivery_term__name__icontains',):
+                search_args.append(Q(**{query: term}))
+            thesis_list = Thesis.objects.filter(reduce(operator.or_, search_args)).order_by(
+                'proposal__student1__id_card_number').exclude(status=ThesisStatus.objects.get(name='Aprobado'))
+    else:
+        # If we don't receive a search parameter, don't apply any filters
+        thesis_list = Thesis.objects.all().order_by('proposal__student1__id_card_number').exclude(
+            status=ThesisStatus.objects.get(name='Aprobado'))
+
+    for thesis in thesis_list:
+        thesis = add_full_names(thesis)
+
+    paginator = Paginator(thesis_list, request.GET.get('page_length', 15))
+    page = request.GET.get('page')
+    thesis_by_page = paginator.get_page(page)
+    context = {
+        'thesis_list': thesis_by_page,
+        'search_form': forms.SearchForm(previous_search=search_param),
+        'search_param': search_param
+    }
+
+    return render(request, 'web/thesis_list.html', context)
+
+
+class PersonTypeAutoComplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        qs = PersonType.objects.all()
+
+        if self.q:
+            qs = qs.filter(name__icontains=self.q)
+        return qs
+
+
+class ProposalAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        qs = Proposal.objects.all()
+
+        if self.q:
+            qs = qs.filter(title__icontains=self.q, code__icontains=self.q, student1__name__icontains=self.q,
+                           student1__last_name__icontains=self.q, student1__id_card_number__icontains=self.q,
+                           student2__name__icontains=self.q, student2__last_name__icontains=self.q,
+                           student2__id_card_number__icontains=self.q)
+        return qs
+
+
+class TermAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        qs = Term.objects.all()
+
+        if self.q:
+            qs = qs.filter(name__icontains=self.q)
+        return qs
+
+
+class ThesisCreate(SuccessMessageMixin, CreateView):
+    model = Thesis
+    form_class = forms.ThesisForm
+    success_message = "%(code)s creado correctamente."
+
+    def get_success_url(self):
+        return reverse('create_thesis')
+
+    def get_success_message(self, cleaned_data):
+        return self.success_message % dict(
+            cleaned_data,
+            code=self.object.code,
+        )
+
+
+class ThesisUpdate(SuccessMessageMixin, UpdateView):
+    model = Thesis
+    form_class = forms.ThesisForm
+    success_message = "%(code)s editado correctamente."
+
+    def get_success_url(self):
+        return reverse('edit_thesis', args=(self.object.code,))
+
+    def get_success_message(self, cleaned_data):
+        return self.success_message % dict(
+            cleaned_data,
+            code=self.object.code,
+        )
+
+
+def thesis_detail(request, pk):
+    thesis = get_object_or_404(Thesis, pk=pk)
+    thesis = add_full_names(thesis)
+
+    context = {
+        'thesis_data': thesis
+    }
+    return render(request, 'web/thesis_detail.html', context)
+
+
+def add_full_names(thesis):
+    thesis.proposal.academic_tutor.full_name = "{} {}".format(thesis.proposal.academic_tutor.name,
+                                                              thesis.proposal.academic_tutor.last_name)
+    if thesis.proposal.industry_tutor:
+        thesis.proposal.industry_tutor.full_name = "{} {}".format(thesis.proposal.industry_tutor.name,
+                                                                  thesis.proposal.industry_tutor.last_name)
+    thesis.proposal.student1.full_name = "{} {}".format(thesis.proposal.student1.name,
+                                                        thesis.proposal.student1.last_name)
+    if thesis.proposal.student2:
+        thesis.proposal.student2.full_name = "{} {}".format(thesis.proposal.student2.name,
+                                                            thesis.proposal.student2.last_name)
+    return thesis
+
+
+def _get_defence_queryset(filter_completed, search):
+    order_params = [
+        'thesis__proposal__student1__id_card_number',
+        'thesis__proposal__student2__id_card_number',
+    ]
+    if search:
+        # Append a query for each term received in the search parameters so that if we receive multiple
+        # parameters, we crosscheck every single one with the colums id_card_number, name and last_name
+        search_args = []
+        for term in search.split():
+            for query in ('code__icontains', 'grade__icontains', 'thesis__title__icontains'):
+                search_args.append(Q(**{query: term}))
+        queryset = Defence.objects.filter(reduce(operator.or_, search_args))
+    else:
+        # If we don't receive a search parameter, don't apply any filters
+        queryset = Defence.objects.all()
+
+    if filter_completed:
+        queryset = queryset.filter(grade__isnull=True)
+
+    return queryset.order_by(*order_params)
+
+
+def _generate_defence_index_context(defence_queryset, page_length, desired_page, search):
+    paginator = Paginator(defence_queryset, page_length)
+    defences_for_page = paginator.get_page(desired_page)
+    return {
+        'defences': defences_for_page,
+        'search_form': forms.SearchForm(previous_search=search),
+        'search_param': search
+    }
+
+
+def defence_index(request):
+    """
+    List of all the registered defences.
+    """
+    search_param = request.GET.get('search')
+    defence_list = _get_defence_queryset(False, search_param)
+    page = request.GET.get('page')
+    context = _generate_defence_index_context(defence_list, request.GET.get('page_length', 15), page, search_param)
+    return render(request, 'web/defences/defence_list.html', context)
+
+
+def pending_defence_index(request):
+    """
+    List of defences that haven't been graded yet.
+    """
+    search_param = request.GET.get('search')
+    defence_list = _get_defence_queryset(True, search_param)
+    page = request.GET.get('page')
+    context = _generate_defence_index_context(defence_list, request.GET.get('page_length', 15), page, search_param)
+    return render(request, 'web/defences/defence_list.html', context)
 
 
 def proposal_index(request):

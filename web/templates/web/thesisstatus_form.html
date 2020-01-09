@@ -3,16 +3,16 @@
     <div class="row wrapper border-bottom white-bg page-heading">
         <div class="col-lg-10">
             {% if form.instance and form.instance.pk %}
-                <h2>Editar persona</h2>
+                <h2>Editar estado de Trabajo de Grado</h2>
             {% else %}
-                <h2>Agregar persona</h2>
+                <h2>Agregar estado de Trabajo de Grado</h2>
             {% endif %}
             <ol class="breadcrumb">
                 <li class="breadcrumb-item">
                     <a href="{% url 'index' %}">Home</a>
                 </li>
                 <li class="breadcrumb-item">
-                    <a href="{% url 'person_type_index' %}">Tipos de persona</a>
+                    <a href="{% url 'thesis_status_index' %}">Estados de TG</a>
                 </li>
                 {% if form.instance and form.instance.pk %}
                     <li class="breadcrumb-item">

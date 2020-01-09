@@ -1,0 +1,188 @@
+{% extends 'web/base.html' %}
+{% block page_content %}
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <h2>Defensas {% if request.resolver_match.url_name == 'pending_defence_index' %}no realizadas{% endif %}</h2>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="{% url 'index' %}">Home</a>
+                </li>
+                <li class="breadcrumb-item active">
+                    <strong>Defensas {% if request.resolver_match.url_name == 'pending_defence_index' %}no realizadas{% endif %}</strong>
+                </li>
+            </ol>
+        </div>
+        <div class="col-lg-2">
+        </div>
+    </div>
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox ">
+                    <div class="ibox-content">
+                        <div class="row border-bottom">
+                            <div class="col-sm-5 m-b-xs">
+                                <a class="btn btn-primary" href="{% url 'create_person_type' %}">Agregar</a>
+                            </div>
+                            <div class="col-sm-4 m-b-xs"></div>
+                            <div class="col-sm-3">
+                                <form class="input-group" style="margin-bottom: 14px">
+                                    {{ search_form }}
+                                    <span class="input-group-append">
+                                        <button type="submit" class="btn btn-sm btn-primary">
+                                            <span class="glyphicon glyphicon-search"></span>
+                                        </button>
+                                    </span>
+                                </form>
+                            </div>
+                        </div>
+                        {% if not defences %}
+                            <p style="margin-top: 2.5%">No hay datos disponibles.</p>
+                        {% else %}
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th class="text-center">Código</th>
+                                        <th class="text-center">Tésis</th>
+                                        <th class="text-center">TERM</th>
+                                        <th class="text-center">Estudiantes</th>
+                                        <th class="text-center">Tutor Académico</th>
+                                        <th class="text-center">Jurado</th>
+                                        <th class="text-center">Jurado Suplente</th>
+                                        <th class="text-center">Calificación</th>
+                                        <th class="text-center">Mención publicación</th>
+                                        <th class="text-center">Mención honorífica</th>
+                                        <th class="text-center">Entregó correcciones</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for defence in defences %}
+                                        <tr>
+                                            {# TODO: Add href to the defence detail view #}
+                                            <td class="text-center" style="width: 7%;">
+                                                <a>{{ defence.code }}</a>
+                                            </td>
+                                            <td style="width: 15%;">
+                                                <a href="{% url 'thesis_detail' defence.thesis.code %}">{{ defence.thesis.title }}</a>
+                                            </td>
+                                            <td class="text-center" style="width: 4%;">
+                                                {{ defence.thesis.delivery_term }}
+                                            </td>
+                                            <td style="width: 30%;">
+                                                <a href="{% url 'person_detail' defence.get_students.0.pk %}">
+                                                    {{ defence.get_students.0.last_name }} {{ defence.get_students.0.name }}
+                                                    <br>
+                                                    ({{ defence.get_students.0.id_card_number }})
+                                                </a>
+                                                <br>
+                                                <br>
+                                                {% if defence.get_students.1 %}
+                                                    <a href="{% url 'person_detail' defence.get_students.1.pk %}">
+                                                        {{ defence.get_students.1.last_name }} {{ defence.get_students.1.name }}
+                                                        <br>
+                                                        ({{ defence.get_students.1.id_card_number }})
+                                                    </a>
+                                                {% endif %}
+                                            </td>
+                                            <td class="text-center" style="width: 15%;">
+                                                <a href="{% url 'person_detail' defence.get_academic_tutor.pk %}">
+                                                    {{ defence.get_academic_tutor.get_short_name }}
+                                                </a>
+                                            </td>
+                                            <td style="width: 15%;">
+                                                {% for judge in defence.get_jury_members %}
+                                                    <span>
+                                                        <a href="{% url 'person_detail' judge.person.pk %}">
+                                                            {{ judge.person.get_short_name }}
+                                                        </a>
+                                                        <br>
+                                                        {% if judge.confirmed_assistance %}
+                                                            <h5 class="text-info">[Confirmado]</h5>
+                                                        {% else %}
+                                                            <h5 class="text-warning">[Por confirmar]</h5>
+                                                        {% endif %}
+                                                    </span>
+                                                    <br>
+                                                {% endfor %}
+                                            </td>
+                                            <td class="text-center" style="width: 15%;">
+                                                <span>
+                                                    <a href="{% url 'person_detail' defence.get_backup_judge.person.pk %}">
+                                                        {{ defence.get_backup_judge.person.get_short_name }}
+                                                    </a>
+                                                    <br>
+                                                    {% if defence.get_backup_judge.confirmed_assistance %}
+                                                        <h5 class="text-info">[Confirmado]</h5>
+                                                    {% else %}
+                                                        <h5 class="text-warning">[Por confirmar]</h5>
+                                                    {% endif %}
+                                                </span>
+                                            </td>
+                                            <td class="text-center" style="width: 3.5%;">
+                                                {{ defence.grade|default_if_none:"-" }}
+                                            </td>
+                                            <td class="text-center" style="width: 3.5%;">
+                                                {% if defence.is_publication_mention %}
+                                                    <i class="fa fa-check-circle text-success"></i>
+                                                {% else %}
+                                                    <i class="fa fa-times-circle text-danger"></i>
+                                                {% endif %}
+                                            </td>
+                                            <td class="text-center" style="width: 3.5%;">
+                                                {% if defence.is_honorific_mention %}
+                                                    <i class="fa fa-check-circle text-success"></i>
+                                                {% else %}
+                                                    <i class="fa fa-times-circle text-danger"></i>
+                                                {% endif %}
+                                            </td>
+                                            <td class="text-center" style="width: 3.5%;">
+                                                {% if defence.corrections_submission_date %}
+                                                    <i class="fa fa-check-circle text-success"></i>
+                                                {% else %}
+                                                    <i class="fa fa-times-circle text-danger"></i>
+                                                {% endif %}
+                                            </td>
+                                            <td class="text-right" style="width: 3.5%;">
+                                                <a href=""
+                                                   class="btn btn-sm btn-outline-warning">
+                                                    <span class="glyphicon glyphicon-pencil"></span>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                                <div class="pagination float-right">
+                                    <span class="step-links ">
+                                        {# If the search_param attribute is not None, append it to the URL to maintain pagination in a filtered search #}
+                                        {% if defences.has_previous %}
+                                            <a href="?page=1{% if search_param %}&search={{ search_param }}{% endif %}">&laquo; First</a>
+                                            <a href="?page={{ defences.previous_page_number }}{% if search_param %}&search={{ search_param }}{% endif %}">previous</a>
+                                        {% endif %}
+                                        {% if defences.has_next %}
+                                            <a href="?page={{ defences.next_page_number }}{% if search_param %}&search={{ search_param }}{% endif %}">next</a>
+                                            <a href="?page={{ defences.paginator.num_pages }}{% if search_param %}&search={{ search_param }}{% endif %}">last &raquo;</a>
+                                        {% endif %}
+                                    </span>
+                                    <span class="current">
+                                        Page {{ defences.number }} of {{ defences.paginator.num_pages }}.
+                                    </span>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <div class="float-right">
+            10GB of <strong>250GB</strong> Free.
+        </div>
+        <div>
+            <strong>Copyright</strong> Example Company &copy; 2014-2018
+        </div>
+    </div>
+{% endblock %}

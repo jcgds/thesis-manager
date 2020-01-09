@@ -28,6 +28,9 @@ class PersonData(models.Model):
     def __str__(self):
         return '%s %s (%s)' % (self.name, self.last_name, self.id_card_number)
 
+    def get_short_name(self):
+        return '%s. %s' % (self.name.split(' ')[0].capitalize()[0], self.last_name)
+
     def get_absolute_url(self):
         return reverse('person_detail', kwargs={'person_id_card_number': self.id_card_number})
 
@@ -84,7 +87,6 @@ class HistoricProposalStatus(models.Model):
 
 class ThesisStatus(models.Model):
     name = models.CharField(max_length=64)
-    description = models.CharField(max_length=512, null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -96,13 +98,20 @@ class ThesisStatus(models.Model):
 class Thesis(models.Model):
     proposal = models.ForeignKey(Proposal, models.PROTECT)
     code = models.CharField(max_length=66, primary_key=True)
+    status = models.ForeignKey(ThesisStatus, models.PROTECT, default=ThesisStatus.objects.get(name='Por entregar').id)
     title = models.CharField(max_length=512)
     delivery_term = models.ForeignKey(Term, models.PROTECT)
     NRC = models.CharField(max_length=32)
-    description = models.CharField(max_length=50)
+    description = models.CharField(max_length=1_024)
     thematic_category = models.CharField(max_length=50)
     submission_date = models.DateField()
     company_name = models.CharField(max_length=128, null=True, blank=True)
+
+    def save(self, **kwargs):
+        self.code = 'TG{}'.format(self.proposal.code)
+        if not self.title:
+            self.title = self.proposal.title
+        super().save(*kwargs)
 
     class Meta:
         verbose_name_plural = 'Thesis'
@@ -121,12 +130,36 @@ class Defence(models.Model):
     thesis = models.ForeignKey(Thesis, models.PROTECT)
     code = models.CharField(max_length=68, primary_key=True)
     date_time = models.DateTimeField()
-    grade = models.PositiveSmallIntegerField()
+    grade = models.PositiveSmallIntegerField(null=True, blank=True)
     is_publication_mention = models.BooleanField()
     is_honorific_mention = models.BooleanField()
     corrections_submission_date = models.DateField(null=True, blank=True)
     was_grade_loaded = models.BooleanField()
-    observations = models.TextField()
+    observations = models.TextField(null=True, blank=True)
+
+    def get_students(self):
+        return self.thesis.proposal.student1, self.thesis.proposal.student2
+
+    def get_academic_tutor(self):
+        return self.thesis.proposal.academic_tutor
+
+    def get_jury_members(self):
+        """
+        Get the principal jury members for this defence, excluding the backup Judge.
+        """
+        return Jury.objects.filter(defence=self, is_backup_jury=False)
+
+    def get_backup_judge(self):
+        """
+        Get the backup judge for this defence.
+        """
+        backup_juries = Jury.objects.filter(defence=self, is_backup_jury=True)
+        if len(backup_juries) > 1:
+            print('More than one backup jury for defence %s.' % self.code)
+        return backup_juries[0]
+
+    def current_status(self):
+        return HistoricThesisStatus.objects.filter(thesis=self.thesis).order_by('-date').first()
 
 
 class Jury(models.Model):
@@ -134,5 +167,3 @@ class Jury(models.Model):
     defence = models.ForeignKey(Defence, models.PROTECT)
     confirmed_assistance = models.BooleanField(default=False)
     is_backup_jury = models.BooleanField(default=False)
-    #  TODO: Field is_thesis_tutor which can be calculated with a query through the proposal's academic tutor (page 2-3)
-    #        Maybe it's only shown when seeing a defence details
