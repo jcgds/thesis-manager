@@ -95,7 +95,7 @@
                                             Media aritmética
                                         </td>
                                         <td class="text-center">
-                                            {{ grade_mean }}
+                                            {{ grade_mean|floatformat:2 }}
                                         </td>
                                     </tr>
                                     <tr>
@@ -119,7 +119,7 @@
                                             Desviación estándar
                                         </td>
                                         <td class="text-center">
-                                            {{ standard_deviation }}
+                                            {{ standard_deviation|floatformat:3 }}
                                         </td>
                                     </tr>
                                     </tbody>

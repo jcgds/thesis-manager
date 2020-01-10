@@ -650,13 +650,17 @@ def stats_view(request):
             thesis_for_terms = Thesis.objects.filter(delivery_term__in=term_list)
             defences_for_thesis = Defence.objects.filter(thesis__in=thesis_for_terms).filter(grade__isnull=False)
             grades = list(map(lambda defence: defence.grade, defences_for_thesis))
+            try:
+                mode = statistics.mode(grades)
+            except:
+                mode = '-'
             context = {
                 'term_form': forms.StatsForm(),
                 'term_list': term_list,
                 'defence_list': defences_for_thesis,
                 'grade_mean': statistics.mean(grades) if len(grades) > 0 else '-',
                 'median_grade': statistics.median(grades) if len(grades) > 0 else '-',
-                'mode': statistics.mode(grades) if len(grades) > 0 else '-',
+                'mode': mode,
                 'standard_deviation': statistics.stdev(grades) if len(grades) > 1 else '-',
             }
             return render(request, 'web/stats/stats.html', context)
