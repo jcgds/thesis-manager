@@ -586,7 +586,7 @@ class ProposalStatusUpdate(SuccessMessageMixin, UpdateView):
 
 
 def proposal_not_approved_list(request):
-    proposal_list = Proposal.objects.select_related().exclude(proposal_status__name="Aprobado").order_by('student1__id_card_number')
+    proposal_list = Proposal.objects.exclude(proposal_status__name="Aprobada").select_related().order_by('student1__id_card_number')
     paginator = Paginator(proposal_list, request.GET.get('page_length', 15))
     page = request.GET.get('page')
     proposal_by_page = paginator.get_page(page)
@@ -715,7 +715,7 @@ class JuryDelete(DeleteView):
 
 class ProposalNotApprovedPdf(View):
     def get(self, request, *args, **kwargs):
-        proposal_list = Proposal.objects.select_related().exclude(proposal_status__name="Aprobado").order_by('student1__id_card_number')
+        proposal_list = Proposal.objects.exclude(proposal_status__name="Aprobada").select_related().order_by('student1__id_card_number')
         context = {
             "proposal_list": proposal_list,
         }
