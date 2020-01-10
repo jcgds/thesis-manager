@@ -78,7 +78,7 @@
                                             <td><a href="{% url 'person_detail' thesis.proposal.industry_tutor.id_card_number %}">{{ thesis.proposal.industry_tutor.full_name|default:"-" }}</a></td>
                                             <td>{{ thesis.company_name|default:"-" }}</td>
                                             <td>{{ thesis.submission_date }}</td>
-                                            <td>{{ thesis.delivery_term.name }}</td>
+                                            <td>{{ thesis.delivery_term.period }}</td>
                                             {% if user.is_authenticated and user.is_manager_or_admin %}
                                                 <td>
                                                     <a href="{% url 'edit_thesis' thesis.code %}"

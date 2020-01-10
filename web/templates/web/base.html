@@ -77,21 +77,22 @@
                         <li class="{% if request.resolver_match.url_name == 'pending_defence_index' %}active{% endif %}">
                             <a href="{% url 'pending_defence_index' %}">Defensas no realizadas</a>
                         </li>
+                        <li class="{% if request.resolver_match.url_name == 'create_jury' %}active{% endif %}">
+                            <a href="{% url 'create_jury' %}">Agregar Jurado</a>
+                        </li>
                     </ul>
                 </li>
                 <li class="{% if request.resolver_match.url_name == 'term_index' %}active{% endif %}">
                     <a href="{% url 'term_index' %}"><i class="fa fa-book"></i> <span class="nav-label">TERM</span></a>
                 </li>
                 <li>
+                    <a href="{% url 'stats_view' %}"><i class="fa fa-pie-chart"></i> <span class="nav-label">Estadísticas</span> </a>
                     <a href="#"><i class="fa fa-book"></i> <span class="nav-label">Consultas</span><span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level collapse">
                         <li class="{% if request.resolver_match.url_name == 'proposal_not_approved_list' %}active{% endif %}">
                             <a href="{% url 'proposal_not_approved_list' %}">Propuestas no aprobadas</a>
                         </li>
                     </ul>
-                </li>
-                <li>
-                    <a href="metrics.html"><i class="fa fa-pie-chart"></i> <span class="nav-label">Metrics</span> </a>
                 </li>
             </ul>
         </div>
