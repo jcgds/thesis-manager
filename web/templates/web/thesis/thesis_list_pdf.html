@@ -1,0 +1,109 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Trabajos de Grado</title>
+    <style type="text/css">
+        @page {
+            size: A4;
+            margin: 1cm;
+        }
+
+        .table {
+            width: 100%;
+            max-width: 100%;
+            margin-bottom: 5px;
+            background-color: #fff;
+        }
+
+        .table th,
+        .table td {
+            padding: 5px;
+            vertical-align: top;
+            border-top: 1px solid #000;
+            text-align: center;
+        }
+
+        .table thead th {
+            vertical-align: bottom;
+            border-bottom: 2px solid #000;
+        }
+
+        .table tbody + tbody {
+            border-top: 2px solid #000;
+        }
+
+        .table .table {
+            background-color: #fff;
+        }
+
+        .list-group {
+            display: block;
+            width: 100%;
+            list-style: none;
+            margin-top: 15px;
+            margin-bottom: 15px;
+        }
+
+        .list-group p {
+            width: 100%;
+            height: 20px;
+            line-height: 20px;
+            list-style: none;
+            font-size: 1.1em;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="card">
+        {% if not thesis_list %}
+                            <p style="margin-top: 2.5%">No hay datos disponibles.</p>
+                        {% else %}
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                    <tr>
+                                       <th>Codigo</th>
+                                        <th>NRC</th>
+                                        <th>Titulo</th>
+                                        <th>Estatus</th>
+                                        <th>Tesista</th>
+                                        <th>Segundo Tesista</th>
+                                        <th>Tutor Académico</th>
+                                        <th>Tutor Empresarial</th>
+                                        <th>Compañia</th>
+                                        <th>Fecha Inicio</th>
+                                        <th>Semestre de Entrega</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for thesis in thesis_list %}
+                                        <tr>
+                                            <td>{{ thesis.code }}</td>
+                                            <td>{{ thesis.NRC }}</td>
+                                            <td>{{ thesis.title }}</td>
+                                            <td>{{ thesis.status.name }}</td>
+                                            <td>{{ thesis.proposal.student1.full_name }} ({{ thesis.proposal.student1.id_card_number }})</td>
+                                            {% if not thesis.proposal.student2 %}
+                                                <td>{{ "-" }}</td>
+                                            {% else %}
+                                                <td>{{ thesis.proposal.student2.full_name }} ({{ thesis.proposal.student2.id_card_number }})</td>
+                                            {% endif %}
+                                            <td>{{ thesis.proposal.academic_tutor.full_name }}</td>
+                                            <td>{{ thesis.proposal.industry_tutor.full_name|default:"-" }}</td>
+                                            <td>{{ thesis.company_name|default:"-" }}</td>
+                                            <td>{{ thesis.submission_date }}</td>
+                                            <td>{{ thesis.delivery_term.period }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+        {% endif %}
+    </div>
+</div>
+
+</body>
+</html>
