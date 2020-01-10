@@ -24,7 +24,8 @@ Este sistema tiene el proposito de llevar un registro de los trabajos de grado, 
    - Estado de los TG
 - Histórico de todos los TG que se han realizado.
 - Estádisticas de los TG que se han realizado por semestre
-- Exportación a pdf de la información presente en las distintas tablas
+- Presentación en tablas que permiten visualizar la información de los TG, propuestas, personas, estados de tg, entre otros.
+- Exportación a pdf de la información presente en las distintas tablas y gráficas.
 
 Instalación
 -----------
