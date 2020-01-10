@@ -159,7 +159,7 @@
                                 {% if form.instance and form.instance.pk %}
                                     <h4><strong>Jurado:</strong>
                                         {% for judge in form.instance.get_complete_jury %}
-                                            <a href="{% url 'person_detail' judge.person.pk %}">
+                                            <a href="{% url 'update_jury' judge.pk %}">
                                                 {{ judge.person.get_short_name }}{% if not forloop.last %},{% endif %}
                                             </a>
                                         {% endfor %}

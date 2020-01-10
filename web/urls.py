@@ -22,6 +22,7 @@ urlpatterns = [
     path('defensas/agregar', views.DefenceCreate.as_view(), name='create_defence'),
     path('jurado/agregar', views.JuryCreate.as_view(), name='create_jury'),
     path('jurado/<int:pk>/editar', views.JuryUpdate.as_view(), name='update_jury'),
+    path('jurado/<int:pk>/eliminar', views.JuryDelete.as_view(), name='delete_jury'),
     path('defensas/<str:pk>/editar', views.DefenceUpdate.as_view(), name='update_defence'),
     path('tg', views.thesis_index, name='thesis_index'),
     path('tg/<str:pk>', views.thesis_detail, name='thesis_detail'),

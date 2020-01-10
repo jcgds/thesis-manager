@@ -9,9 +9,9 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.shortcuts import render, get_object_or_404
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
-from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 from . import forms
 from .decorators import manager_required
@@ -678,3 +678,9 @@ class JuryUpdate(SuccessMessageMixin, UpdateView):
             cleaned_data,
             pk=self.object.pk,
         )
+
+
+@method_decorator([login_required, manager_required], name='dispatch')
+class JuryDelete(DeleteView):
+    model = Jury
+    success_url = reverse_lazy('defence_index')
