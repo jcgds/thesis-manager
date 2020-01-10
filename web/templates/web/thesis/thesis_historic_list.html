@@ -22,9 +22,6 @@
                     <div class="ibox-content">
                         <div class="row border-bottom">
                             <div class="col-sm-5 m-b-xs">
-                                {% if user.is_authenticated and user.is_manager_or_admin %}
-                                    <a href="{% url 'create_thesis' %}" class="btn btn-primary">Agregar</a>
-                                {% endif %}
                             </div>
                             <div class="col-sm-4 m-b-xs"></div>
                             <div class="col-sm-3">
