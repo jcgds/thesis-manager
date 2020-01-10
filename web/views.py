@@ -285,6 +285,20 @@ class TermAutocomplete(autocomplete.Select2QuerySetView):
         return qs
 
 
+class TeacherAutoComplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        teacher_type = PersonType.objects.get(name='Profesor')
+        qs = PersonData.objects.filter(type=teacher_type)
+        search_args = []
+        for term in self.q.split():
+            for query in ('id_card_number__icontains', 'name__icontains', 'last_name__icontains'):
+                search_args.append(Q(**{query: term}))
+
+        if search_args:
+            qs = qs.filter(reduce(operator.or_, search_args))
+        return qs
+
+
 @method_decorator([login_required, manager_required], name='dispatch')
 class ThesisCreate(SuccessMessageMixin, CreateView):
     model = Thesis

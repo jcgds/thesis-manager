@@ -29,6 +29,7 @@ urlpatterns = [
     path('proposal-autocomplete', views.ProposalAutocomplete.as_view(), name='proposal-autocomplete'),
     path('term-autocomplete', views.TermAutocomplete.as_view(), name='term-autocomplete'),
     path('thesis-autocomplete', views.ThesisAutocomplete.as_view(), name='thesis-autocomplete'),
+    path('teacher-autocomplete', views.TeacherAutoComplete.as_view(), name='teacher-autocomplete'),
     path('personas/<str:person_id_card_number>', views.person_detail, name='person_detail'),
     path('propuestas', views.proposal_index, name='proposal_index'),
     path('propuestas/agregar', views.ProposalCreate.as_view(), name='create_proposal'),

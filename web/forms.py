@@ -401,9 +401,30 @@ class DefenceForm(forms.ModelForm):
         required=False,
         widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 3})
     )
+    jury = forms.ModelMultipleChoiceField(
+        label='Jurado',
+        required=False,
+        queryset=models.PersonData.objects.all(),  # This query is ignored
+        widget=autocomplete.Select2Multiple(url='teacher-autocomplete', attrs={'class': 'form-control'})
+    )
 
-    def clean_datetime(self):
+    def clean_date_time(self):
         form_datetime = self.cleaned_data['date_time']
         if form_datetime < timezone.now():
             raise forms.ValidationError("La fecha debe ser en el futuro.")
         return form_datetime
+
+    def clean_jury(self):
+        form_jury = self.cleaned_data['jury']
+        if len(form_jury) > 2:
+            raise forms.ValidationError("Deben seleccionarse maximo dos jueces.")
+        return form_jury
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        form_jury = self.cleaned_data['jury']
+        for judge in form_jury:
+            models.Jury(person=judge, defence=instance).save()
+        if commit:
+            instance.save()
+        return instance
