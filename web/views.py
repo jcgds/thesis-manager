@@ -252,6 +252,42 @@ def thesis_index(request):
 
     return render(request, 'web/thesis/thesis_list.html', context)
 
+def thesis_historic_index(request):
+    search_param = request.GET.get('search')
+    if search_param:
+        # Append a query for each term received in the search parameters so that if we receive multiple
+        # parameters, we crosscheck every single one with the colums id_card_number, name and last_name
+        search_args = []
+        for term in search_param.split():
+            for query in ('code__icontains', 'NRC__icontains', 'title__icontains', 'status__name__icontains',
+                          'thematic_category__icontains', 'proposal__title__icontains',
+                          'proposal__student1__name__icontains', 'proposal__student1__last_name__icontains',
+                          'proposal__student1__id_card_number__icontains', 'proposal__student2__name__icontains',
+                          'proposal__student2__last_name__icontains', 'proposal__student2__id_card_number__icontains',
+                          'proposal__academic_tutor__name__icontains', 'proposal__academic_tutor__last_name__icontains',
+                          'proposal__academic_tutor__id_card_number__icontains',
+                          'proposal__industry_tutor__name__icontains', 'proposal__industry_tutor__last_name__icontains',
+                          'proposal__industry_tutor__id_card_number__icontains', 'delivery_term__name__icontains',):
+                search_args.append(Q(**{query: term}))
+            thesis_list = Thesis.objects.filter(reduce(operator.or_, search_args)).order_by(
+                'proposal__student1__id_card_number')
+    else:
+        # If we don't receive a search parameter, don't apply any filters
+        thesis_list = Thesis.objects.all().order_by('proposal__student1__id_card_number')
+
+    for thesis in thesis_list:
+        thesis = add_full_names(thesis)
+
+    paginator = Paginator(thesis_list, request.GET.get('page_length', 15))
+    page = request.GET.get('page')
+    thesis_by_page = paginator.get_page(page)
+    context = {
+        'thesis_list': thesis_by_page,
+        'search_form': forms.SearchForm(previous_search=search_param),
+        'search_param': search_param
+    }
+
+    return render(request, 'web/thesis/thesis_historic_list.html', context)
 
 @method_decorator([login_required, manager_required], name='dispatch')
 class PersonTypeAutoComplete(autocomplete.Select2QuerySetView):
@@ -356,6 +392,16 @@ def thesis_detail(request, pk):
         'thesis_data': thesis
     }
     return render(request, 'web/thesis/thesis_detail.html', context)
+
+
+def thesis_historic_detail(request, pk):
+    thesis = get_object_or_404(Thesis, pk=pk)
+    thesis = add_full_names(thesis)
+
+    context = {
+        'thesis_data': thesis
+    }
+    return render(request, 'web/thesis/thesis_historic_detail.html', context)
 
 
 def add_full_names(thesis):

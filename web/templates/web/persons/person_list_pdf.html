@@ -5,7 +5,7 @@
     <title>Sales Report</title>
     <style type="text/css">
         @page {
-            size: A4;
+            size: A2;
             margin: 1cm;
         }
 
@@ -80,7 +80,7 @@
                                     <tbody>
                                     {% for person in person_list %}
                                         <tr>
-                                            <td>{{ person.pk }}</a></td>
+                                            <td>{{ person.pk }}</td>
                                             <td>{{ person.name }}</td>
                                             <td>{{ person.last_name }}</td>
                                             <td>{{ person.type.name }}</td>

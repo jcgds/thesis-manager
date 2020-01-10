@@ -19,7 +19,6 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="ibox ">
-                    <div class="ibox-content">
                         <div class="ibox-content">
                         <div class="row border-bottom">
                             <div class="col-sm-4 m-b-xs">
@@ -74,6 +73,14 @@
                                             <td>--</td>
                                         {% endif %}
                                         <th>{{ proposal.term.period }}</th>
+                                        {% if user.is_authenticated and user.is_manager_or_admin %}
+                                                <td>
+                                                    <a href="{% url 'edit_proposal' proposal.pk %}"
+                                                       class="btn btn-sm btn-outline-warning">
+                                                        <span class="glyphicon glyphicon-pencil"></span>
+                                                    </a>
+                                                </td>
+                                        {% endif %}
                                     </tr>
                                 {% endfor %}
                                 </tbody>
@@ -99,6 +106,7 @@
                 </div>
 
             </div>
+        </div>
         </div>
     </div>
     <div class="footer">
