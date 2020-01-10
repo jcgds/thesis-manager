@@ -89,11 +89,13 @@
                     <a href="{% url 'term_index' %}"><i class="fa fa-book"></i> <span class="nav-label">TERM</span></a>
                 </li>
                 <li>
-                    <a href="{% url 'stats_view' %}"><i class="fa fa-pie-chart"></i> <span class="nav-label">Estadísticas</span> </a>
                     <a href="#"><i class="fa fa-book"></i> <span class="nav-label">Consultas</span><span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level collapse">
                         <li class="{% if request.resolver_match.url_name == 'proposal_not_approved_list' %}active{% endif %}">
                             <a href="{% url 'proposal_not_approved_list' %}">Propuestas no aprobadas</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'stats_view' %}"><span class="nav-label">Estadísticas</span> </a>
                         </li>
                     </ul>
                 </li>
