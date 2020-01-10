@@ -432,7 +432,8 @@ class DefenceForm(forms.ModelForm):
         instance = super().save(commit=False)
         form_jury = self.cleaned_data['jury']
         for judge in form_jury:
-            models.Jury(person=judge, defence=instance).save()
+            if judge != instance.get_academic_tutor():
+                models.Jury(person=judge, defence=instance).save()
         if commit:
             instance.save()
         return instance
