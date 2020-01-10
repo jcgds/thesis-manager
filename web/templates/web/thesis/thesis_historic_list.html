@@ -1,0 +1,115 @@
+{% extends 'web/base.html' %}
+{% block page_content %}
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <h2>Trabajos de Grado</h2>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="{% url 'index' %}">Home</a>
+                </li>
+                <li class="breadcrumb-item active">
+                    <strong><a href="{% url 'thesis_index' %}"> TG</a></strong>
+                </li>
+            </ol>
+        </div>
+        <div class="col-lg-2">
+        </div>
+    </div>
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox ">
+                    <div class="ibox-content">
+                        <div class="row border-bottom">
+                            <div class="col-sm-5 m-b-xs">
+                                {% if user.is_authenticated and user.is_manager_or_admin %}
+                                    <a href="{% url 'create_thesis' %}" class="btn btn-primary">Agregar</a>
+                                {% endif %}
+                            </div>
+                            <div class="col-sm-4 m-b-xs"></div>
+                            <div class="col-sm-3">
+                                <form class="input-group" style="margin-bottom: 14px">
+                                    {{ search_form }}
+                                    <span class="input-group-append">
+                                        <button type="submit" class="btn btn-sm btn-primary">
+                                            <span class="glyphicon glyphicon-search"></span>
+                                        </button>
+                                    </span>
+                                </form>
+                            </div>
+                        </div>
+                        {% if not thesis_list %}
+                            <p style="margin-top: 2.5%">No hay datos disponibles.</p>
+                        {% else %}
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th>Codigo</th>
+                                        <th>NRC</th>
+                                        <th>Titulo</th>
+                                        <th>Estatus</th>
+                                        <th>Tesista</th>
+                                        <th>Segundo Tesista</th>
+                                        <th>Tutor Académico</th>
+                                        <th>Tutor Empresarial</th>
+                                        <th>Compañia</th>
+                                        <th>Fecha Inicio</th>
+                                        <th>Semestre de Entrega</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for thesis in thesis_list %}
+                                        <tr>
+                                            <td><a href="{% url 'thesis_detail' thesis.pk %}">{{ thesis.code }}</a></td>
+                                            <td>{{ thesis.NRC }}</td>
+                                            <td>{{ thesis.title }}</td>
+                                            <td>{{ thesis.status.name }}</td>
+                                            <td><a href="{% url 'person_detail' thesis.proposal.student1.id_card_number %}">{{ thesis.proposal.student1.full_name }} ({{ thesis.proposal.student1.id_card_number }})</a></td>
+                                            {% if not thesis.proposal.student2 %}
+                                                <td>{{ "-" }}</td>
+                                            {% else %}
+                                                <td><a href="{% url 'person_detail' thesis.proposal.student2.id_card_number %}">{{ thesis.proposal.student2.full_name }} ({{ thesis.proposal.student2.id_card_number }})</a></td>
+                                            {% endif %}
+                                            <td><a href="{% url 'person_detail' thesis.proposal.academic_tutor.id_card_number %}">{{ thesis.proposal.academic_tutor.full_name }}</a></td>
+                                            <td><a href="{% url 'person_detail' thesis.proposal.industry_tutor.id_card_number %}">{{ thesis.proposal.industry_tutor.full_name|default:"-" }}</a></td>
+                                            <td>{{ thesis.company_name|default:"-" }}</td>
+                                            <td>{{ thesis.submission_date }}</td>
+                                            <td>{{ thesis.delivery_term.period }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                                <div class="pagination float-right">
+                                    <span class="step-links ">
+                                        {# If the search_param attribute is not None, append it to the URL to maintain pagination in a filtered search #}
+                                        {% if thesis_list.has_previous %}
+                                            <a href="?page=1{% if search_param %}&search={{ search_param }}{% endif %}">&laquo; First</a>
+                                            <a href="?page={{ thesis_list.previous_page_number }}{% if search_param %}&search={{ search_param }}{% endif %}">previous</a>
+                                        {% endif %}
+                                        {% if thesis_list.has_next %}
+                                            <a href="?page={{ thesis_list.next_page_number }}{% if search_param %}&search={{ search_param }}{% endif %}">next</a>
+                                            <a href="?page={{ thesis_list.paginator.num_pages }}{% if search_param %}&search={{ search_param }}{% endif %}">last &raquo;</a>
+                                        {% endif %}
+                                    </span>
+                                    <span class="current">
+                                        Page {{ thesis_list.number }} of {{ thesis_list.paginator.num_pages }}.
+                                    </span>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <div class="float-right">
+            10GB of <strong>250GB</strong> Free.
+        </div>
+        <div>
+            <strong>Copyright</strong> Example Company &copy; 2014-2018
+        </div>
+    </div>
+{% endblock %}
