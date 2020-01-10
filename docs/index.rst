@@ -6,32 +6,49 @@
 Bienvenido a la documentación del Administrador de Trabajos de Grado!
 =====================================================================
 
-Features
---------
+Funcionalidades
+---------------
+Este sistema tiene el proposito de llevar un registro de los trabajos de grado, así como también de sus propuestas y toda la información referente a las mismas. Entre sus funcionalidades se encuentran:
 
-- Be awesome
-- Make things faster
+- Inicio de sesión para usuarios administradores y aquellos que desean consultar datos.
+- Registro de trabajos de grado con la siguiente información:
+   - Titulo del TG
+   - NRC
+   - Estudiantes que lo realizan y toda su información
+   - Tutores (Académico y Empresarial si aplica)
+   - Compañia (Si aplica)
+   - Fecha de inicio y de propuesta
+   - Semestre de entrega
+   - Propuesta de TG con toda su información
+   - Estado de los TG
+- Histórico de todos los TG que se han realizado.
+- Estádisticas de los TG que se han realizado por semestre
+- Exportación a pdf de la información presente en las distintas tablas
 
-Installation
-------------
+Instalación
+-----------
 
-Install $project by running:
+Para instalar el proyecto debe tener instalado lo siguiente:
 
-    install project
+- Python 3.8
+- pip
+- virtualenv
 
-Contribute
-----------
+Para correr el proyecto:
 
-- Issue Tracker: github.com/$project/$project/issues
-- Source Code: github.com/$project/$project
+- Clonar el proyecto del repositorio
+- Crear e inicializar el ambiente virtual
+- Correr el comando pip install
+- Con todas las dependencias instaladas ejecutar el siguiente comando:
 
-Support
--------
+   python manage.py runserver
 
-If you are having issues, please let us know.
-We have a mailing list located at: project@google-groups.com
+Repositorio
+-----------
+
+Codigo Fuente: https://github.com/juan-goncalves/thesis-manager.git
 
 License
 -------
 
-The project is licensed under the BSD license.
+El projecto esta licensiado bajo la bsd
