@@ -177,6 +177,9 @@ class Defence(models.Model):
     def current_status(self):
         return HistoricThesisStatus.objects.filter(thesis=self.thesis).order_by('-date').first()
 
+    def __str__(self):
+        return self.code
+
 
 class Jury(models.Model):
     person = models.ForeignKey(PersonData, models.PROTECT)

@@ -436,3 +436,32 @@ class DefenceForm(forms.ModelForm):
         if commit:
             instance.save()
         return instance
+
+
+class JudgeForm(forms.ModelForm):
+    class Meta:
+        model = models.Jury
+        fields = ['person', 'defence', 'is_backup_jury', 'confirmed_assistance']
+
+    person = forms.ModelChoiceField(
+        label='Profesor',
+        initial=0,
+        queryset=models.PersonData.objects.all(),  # Ignored
+        widget=autocomplete.ModelSelect2(url='teacher-autocomplete')
+    )
+    defence = forms.ModelChoiceField(
+        label='Profesor',
+        initial=0,
+        queryset=models.Defence.objects.all(),
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+    is_backup_jury = forms.BooleanField(
+        label='Suplente',
+        required=False,
+        widget=forms.CheckboxInput(attrs={'type': 'checkbox'})
+    )
+    confirmed_assistance = forms.BooleanField(
+        label='Va a asistir',
+        required=False,
+        widget=forms.CheckboxInput(attrs={'type': 'checkbox'})
+    )

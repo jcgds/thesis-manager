@@ -15,7 +15,7 @@ from django.views.generic.edit import CreateView, UpdateView
 
 from . import forms
 from .decorators import manager_required
-from .models import PersonData, PersonType, ThesisStatus, Thesis, Proposal, Term, Defence, ProposalStatus, HistoricThesisStatus
+from .models import PersonData, PersonType, ThesisStatus, Thesis, Proposal, Term, Defence, ProposalStatus, HistoricThesisStatus, Jury
 
 login_view = auth_views.LoginView.as_view(authentication_form=forms.UserLoginForm)
 logout_view = auth_views.LogoutView.as_view()
@@ -285,18 +285,31 @@ class TermAutocomplete(autocomplete.Select2QuerySetView):
         return qs
 
 
-class TeacherAutoComplete(autocomplete.Select2QuerySetView):
+class PersonAutoComplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
-        teacher_type = PersonType.objects.get(name='Profesor')
-        qs = PersonData.objects.filter(type=teacher_type)
+        persons = PersonData.objects.all()
         search_args = []
         for term in self.q.split():
             for query in ('id_card_number__icontains', 'name__icontains', 'last_name__icontains'):
                 search_args.append(Q(**{query: term}))
 
         if search_args:
-            qs = qs.filter(reduce(operator.or_, search_args))
-        return qs
+            persons = persons.filter(reduce(operator.or_, search_args))
+        return persons
+
+
+class TeacherAutoComplete(PersonAutoComplete):
+    def get_queryset(self):
+        qs = super().get_queryset()
+        teacher_type = PersonType.objects.get(name='Profesor')
+        return qs.filter(type=teacher_type)
+
+
+class StudentAutoComplete(PersonAutoComplete):
+    def get_queryset(self):
+        qs = super().get_queryset()
+        student_type = PersonType.objects.get(name='Estudiante')
+        return qs.filter(type=student_type)
 
 
 @method_decorator([login_required, manager_required], name='dispatch')
@@ -630,4 +643,38 @@ class DefenceUpdate(SuccessMessageMixin, UpdateView):
         return self.success_message % dict(
             cleaned_data,
             code=self.object.code,
+        )
+
+
+@method_decorator([login_required, manager_required], name='dispatch')
+class JuryCreate(SuccessMessageMixin, CreateView):
+    model = Jury
+    form_class = forms.JudgeForm
+    template_name = 'web/defences/judge_form.html'
+    success_message = "Juez \"%(pk)s\" creada correctamente."
+
+    def get_success_url(self):
+        return reverse('create_jury')
+
+    def get_success_message(self, cleaned_data):
+        return self.success_message % dict(
+            cleaned_data,
+            pk=self.object.pk,
+        )
+
+
+@method_decorator([login_required, manager_required], name='dispatch')
+class JuryUpdate(SuccessMessageMixin, UpdateView):
+    model = Jury
+    form_class = forms.JudgeForm
+    template_name = 'web/defences/judge_form.html'
+    success_message = "Juez \"%(pk)s\" actualizado correctamente."
+
+    def get_success_url(self):
+        return reverse('update_jury', args=(self.object.pk,))
+
+    def get_success_message(self, cleaned_data):
+        return self.success_message % dict(
+            cleaned_data,
+            pk=self.object.pk,
         )
