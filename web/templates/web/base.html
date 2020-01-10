@@ -77,6 +77,9 @@
                         <li class="{% if request.resolver_match.url_name == 'pending_defence_index' %}active{% endif %}">
                             <a href="{% url 'pending_defence_index' %}">Defensas no realizadas</a>
                         </li>
+                        <li class="{% if request.resolver_match.url_name == 'create_jury' %}active{% endif %}">
+                            <a href="{% url 'create_jury' %}">Agregar Jurado</a>
+                        </li>
                     </ul>
                 </li>
                 <li class="{% if request.resolver_match.url_name == 'term_index' %}active{% endif %}">

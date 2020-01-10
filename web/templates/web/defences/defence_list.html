@@ -22,7 +22,7 @@
                     <div class="ibox-content">
                         <div class="row border-bottom">
                             <div class="col-sm-5 m-b-xs">
-                                <a class="btn btn-primary" href="{% url 'create_person_type' %}">Agregar</a>
+                                <a class="btn btn-primary" href="{% url 'create_defence' %}">Agregar</a>
                             </div>
                             <div class="col-sm-4 m-b-xs"></div>
                             <div class="col-sm-3">
@@ -93,7 +93,7 @@
                                             <td style="width: 15%;">
                                                 {% for judge in defence.get_jury_members %}
                                                     <span>
-                                                        <a href="{% url 'person_detail' judge.person.pk %}">
+                                                        <a href="{% url 'update_jury' judge.pk %}">
                                                             {{ judge.person.get_short_name }}
                                                         </a>
                                                         <br>
@@ -109,7 +109,7 @@
                                             <td class="text-center" style="width: 15%;">
                                                 <span>
                                                 {% if defence.get_backup_judge %}
-                                                    <a href="{% url 'person_detail' defence.get_backup_judge.person.pk %}">
+                                                    <a href="{% url 'update_jury' defence.get_backup_judge.pk %}">
                                                         {{ defence.get_backup_judge.person.get_short_name }}
                                                     </a>
                                                     <br>
@@ -148,8 +148,7 @@
                                                 {% endif %}
                                             </td>
                                             <td class="text-right" style="width: 3.5%;">
-                                                <a href=""
-                                                   class="btn btn-sm btn-outline-warning">
+                                                <a href="{% url 'update_defence' defence.code %}" class="btn btn-sm btn-outline-warning">
                                                     <span class="glyphicon glyphicon-pencil"></span>
                                                 </a>
                                             </td>

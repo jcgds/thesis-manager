@@ -9,13 +9,13 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.shortcuts import render, get_object_or_404
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
-from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 from . import forms
 from .decorators import manager_required
-from .models import PersonData, PersonType, ThesisStatus, Thesis, Proposal, Term, Defence, ProposalStatus, HistoricThesisStatus
+from .models import PersonData, PersonType, ThesisStatus, Thesis, Proposal, Term, Defence, ProposalStatus, HistoricThesisStatus, Jury
 
 login_view = auth_views.LoginView.as_view(authentication_form=forms.UserLoginForm)
 logout_view = auth_views.LogoutView.as_view()
@@ -283,6 +283,33 @@ class TermAutocomplete(autocomplete.Select2QuerySetView):
         if self.q:
             qs = qs.filter(name__icontains=self.q)
         return qs
+
+
+class PersonAutoComplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        persons = PersonData.objects.all()
+        search_args = []
+        for term in self.q.split():
+            for query in ('id_card_number__icontains', 'name__icontains', 'last_name__icontains'):
+                search_args.append(Q(**{query: term}))
+
+        if search_args:
+            persons = persons.filter(reduce(operator.or_, search_args))
+        return persons
+
+
+class TeacherAutoComplete(PersonAutoComplete):
+    def get_queryset(self):
+        qs = super().get_queryset()
+        teacher_type = PersonType.objects.get(name='Profesor')
+        return qs.filter(type=teacher_type)
+
+
+class StudentAutoComplete(PersonAutoComplete):
+    def get_queryset(self):
+        qs = super().get_queryset()
+        student_type = PersonType.objects.get(name='Estudiante')
+        return qs.filter(type=student_type)
 
 
 @method_decorator([login_required, manager_required], name='dispatch')
@@ -565,3 +592,95 @@ def stats_view(request):
             'term_form': forms.StatsForm(),
         }
         return render(request, 'web/stats/stats.html', context)
+
+
+@method_decorator([login_required, manager_required], name='dispatch')
+class ThesisAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        queryset = Thesis.objects.all()
+        if self.q:
+            queryset = queryset.filter(
+                title__icontains=self.q,
+                code__icontains=self.q,
+                proposal__code=self.q,
+                delivery_term__period__exact=self.q,
+                NRC__icontains=self.q,
+                thematic_category__icontains=self.q,
+                submission_date__exact=self.q,
+                company_name__icontains=self.q,
+            )
+        return queryset
+
+
+@method_decorator([login_required, manager_required], name='dispatch')
+class DefenceCreate(SuccessMessageMixin, CreateView):
+    model = Defence
+    form_class = forms.DefenceForm
+    template_name = 'web/defences/defence_form.html'
+    success_message = "Defensa \"%(code)s\" creada correctamente."
+
+    def get_success_url(self):
+        return reverse('create_defence')
+
+    def get_success_message(self, cleaned_data):
+        return self.success_message % dict(
+            cleaned_data,
+            code=self.object.code,
+        )
+
+
+@method_decorator([login_required, manager_required], name='dispatch')
+class DefenceUpdate(SuccessMessageMixin, UpdateView):
+    model = Defence
+    form_class = forms.DefenceForm
+    template_name = 'web/defences/defence_form.html'
+    success_message = "Defensa \"%(code)s\" editada correctamente."
+
+    def get_success_url(self):
+        return reverse('update_defence', args=(self.object.code,))
+
+    def get_success_message(self, cleaned_data):
+        return self.success_message % dict(
+            cleaned_data,
+            code=self.object.code,
+        )
+
+
+@method_decorator([login_required, manager_required], name='dispatch')
+class JuryCreate(SuccessMessageMixin, CreateView):
+    model = Jury
+    form_class = forms.JudgeForm
+    template_name = 'web/defences/judge_form.html'
+    success_message = "Juez \"%(pk)s\" creada correctamente."
+
+    def get_success_url(self):
+        return reverse('create_jury')
+
+    def get_success_message(self, cleaned_data):
+        return self.success_message % dict(
+            cleaned_data,
+            pk=self.object.pk,
+        )
+
+
+@method_decorator([login_required, manager_required], name='dispatch')
+class JuryUpdate(SuccessMessageMixin, UpdateView):
+    model = Jury
+    form_class = forms.JudgeForm
+    template_name = 'web/defences/judge_form.html'
+    success_message = "Juez \"%(pk)s\" actualizado correctamente."
+
+    def get_success_url(self):
+        return reverse('update_jury', args=(self.object.pk,))
+
+    def get_success_message(self, cleaned_data):
+        return self.success_message % dict(
+            cleaned_data,
+            pk=self.object.pk,
+        )
+
+
+@method_decorator([login_required, manager_required], name='dispatch')
+class JuryDelete(DeleteView):
+    model = Jury
+    success_url = reverse_lazy('defence_index')
