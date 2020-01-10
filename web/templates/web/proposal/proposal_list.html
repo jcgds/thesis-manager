@@ -74,6 +74,14 @@
                                             <td>--</td>
                                         {% endif %}
                                         <th>{{ proposal.term.period }}</th>
+                                        {% if user.is_authenticated and user.is_manager_or_admin %}
+                                                <td>
+                                                    <a href="{% url 'edit_proposal' proposal.pk %}"
+                                                       class="btn btn-sm btn-outline-warning">
+                                                        <span class="glyphicon glyphicon-pencil"></span>
+                                                    </a>
+                                                </td>
+                                        {% endif %}
                                     </tr>
                                 {% endfor %}
                                 </tbody>
