@@ -232,7 +232,7 @@ def thesis_index(request):
                 search_args.append(Q(**{query: term}))
             thesis_list = Thesis.objects.filter(reduce(operator.or_, search_args)).order_by(
                 'proposal__student1__id_card_number').exclude(
-                code__in=HistoricThesisStatus.objects.filter(status__name='Aprobado').values('thesis_code'))
+                code__in=HistoricThesisStatus.objects.filter(status__name='Aprobado'))
     else:
         # If we don't receive a search parameter, don't apply any filters
         thesis_list = Thesis.objects.all().order_by('proposal__student1__id_card_number').exclude(
