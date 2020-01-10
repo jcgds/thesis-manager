@@ -3,7 +3,6 @@ import statistics
 from functools import reduce
 
 from django.http import HttpResponse
-from django.template.loader import get_template
 from django.views.generic import View
 from .render import render_to_pdf
 from dal import autocomplete
@@ -596,6 +595,25 @@ def stats_view(request):
         return render(request, 'web/stats/stats.html', context)
 
 
+class ProposalNotApprovedPdf(View):
+    def get(self, request, *args, **kwargs):
+        proposal_list = Proposal.objects.select_related().exclude(proposal_status__name="Aprobado").order_by('student1__id_card_number')
+        context = {
+            "proposal_list": proposal_list,
+        }
+        pdf = render_to_pdf('web/proposal/proposal_not_approved_pdf.html', context)
+        if pdf:
+            response = HttpResponse(pdf, content_type='application/pdf')
+            filename = "ProposalsNotApproved.pdf"
+            content = "inline; filename='%s'" %(filename)
+            download = request.GET.get("download")
+            if download:
+                content = "attachment; filename='%s'" %(filename)
+            response['Content-Disposition'] = content
+            return response
+        return HttpResponse("Not found")
+
+
 class ProposalPdf(View):
     def get(self, request, *args, **kwargs):
         proposal_list = Proposal.objects.all().select_related()
@@ -605,7 +623,26 @@ class ProposalPdf(View):
         pdf = render_to_pdf('web/proposal/proposal_pdf.html', context)
         if pdf:
             response = HttpResponse(pdf, content_type='application/pdf')
-            filename = "Invoice_%s.pdf" %("12341231")
+            filename = "Proposals.pdf"
+            content = "inline; filename='%s'" %(filename)
+            download = request.GET.get("download")
+            if download:
+                content = "attachment; filename='%s'" %(filename)
+            response['Content-Disposition'] = content
+            return response
+        return HttpResponse("Not found")
+
+
+class PersonsListPdf(View):
+    def get(self, request, *args, **kwargs):
+        person_list = PersonData.objects.all().order_by('id_card_number', 'name')
+        context = {
+            "person_list": person_list,
+        }
+        pdf = render_to_pdf('web/persons/person_list_pdf.html', context)
+        if pdf:
+            response = HttpResponse(pdf, content_type='application/pdf')
+            filename = "Persons_list.pdf"
             content = "inline; filename='%s'" %(filename)
             download = request.GET.get("download")
             if download:

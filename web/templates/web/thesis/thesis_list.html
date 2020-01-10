@@ -26,8 +26,8 @@
                                     <a href="{% url 'create_thesis' %}" class="btn btn-primary">Agregar</a>
                                 {% endif %}
                             </div>
-                            <div class="col-sm-4 m-b-xs"></div>
-                            <div class="col-sm-3">
+                            <div class="col-sm-2 m-b-xs"></div>
+                            <div class="col-sm-2">
                                 <form class="input-group" style="margin-bottom: 14px">
                                     {{ search_form }}
                                     <span class="input-group-append">
@@ -36,6 +36,9 @@
                                         </button>
                                     </span>
                                 </form>
+                            </div>
+                            <div class="col-sm-3 m-b-xs">
+                                    <a href="{% url 'person_pdf' %}" class="btn btn-primary">Exportar en PDF</a>
                             </div>
                         </div>
                         {% if not thesis_list %}

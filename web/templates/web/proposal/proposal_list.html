@@ -22,10 +22,10 @@
                     <div class="ibox-content">
                         <div class="ibox-content">
                         <div class="row border-bottom">
-                            <div class="col-sm-5 m-b-xs">
+                            <div class="col-sm-4 m-b-xs">
                                 <a href="{% url 'create_proposal' %}" class="btn btn-primary">Agregar</a>
                             </div>
-                            <div class="col-sm-4 m-b-xs"></div>
+                            <div class="col-sm-2 m-b-xs"></div>
                             <div class="col-sm-3">
                                 <form class="input-group" style="margin-bottom: 14px">
                                     {{ search_form }}
@@ -35,6 +35,9 @@
                                         </button>
                                     </span>
                                 </form>
+                            </div>
+                            <div class="col-sm-3 m-b-xs">
+                                    <a href="{% url 'proposal_pdf' %}" class="btn btn-primary">Exportar en PDF</a>
                             </div>
                         </div>
                         {% if not proposal_list %}
@@ -46,47 +49,35 @@
                                 <thead>
                                 <tr>
                                     <th>Codigo</th>
-                                    <th>Fecha de entrega</th>
+                                    <th>Estatus</th>
                                     <th>Titulo</th>
                                     <th>Estudiante</th>
+                                    <th>Cedula</th>
                                     <th>Estudiante</th>
-                                    <th>Tutor Academico</th>
-                                    <th>Tutor Empresarial</th>
+                                    <th>Cedula</th>
                                     <th>TERM</th>
-                                    <th>Estatus</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {% for proposal in proposal_list %}
+                                        {% for proposal in proposal_list %}
                                     <tr>
                                         <td>{{ proposal.code }}</td>
-                                        <td>{{ proposal.submission_date }}</td>
+                                        <td>{{ proposal.proposal_status.name }}</td>
                                         <td><a href="{% url 'proposal_detail' proposal.pk %}">{{ proposal.title }}</a></td>
                                         <td><a href="{% url 'person_detail' proposal.student1.pk %}">{{ proposal.student1.name|add:" "|add:proposal.student1.last_name }}</a></td>
+                                        <td>{{ proposal.student1.pk }}</td>
                                         {% if proposal.student2 %}
                                             <td><a href="{% url 'person_detail' proposal.student2.pk %}">{{ proposal.student2.name|add:" "|add:proposal.student2.last_name }}</a></td>
+                                            <td>{{ proposal.student2.pk }}</td>
                                         {% else %}
                                             <td>--</td>
-                                        {% endif %}
-                                        <td>{{ proposal.academic_tutor.name|add:" "|add:proposal.academic_tutor.last_name}}</td>
-                                        {% if proposal.industry_tutor %}
-                                            <td>{{ proposal.industry_tutor.name|add:" "|add:proposal.industry_tutor.last_name}}</td>
-                                        {% else %}
                                             <td>--</td>
                                         {% endif %}
                                         <th>{{ proposal.term.period }}</th>
-                                        <th>{{ proposal.proposal_status.name }}</th>
-                                        <td>
-                                            <a href="{% url 'edit_proposal' proposal.code %}"
-                                               class="btn btn-sm btn-outline-warning">
-                                                <span class="glyphicon glyphicon-pencil"></span>
-                                            </a>
-                                        </td>
                                     </tr>
                                 {% endfor %}
                                 </tbody>
                             </table>
-
                             <div class="pagination float-right">
                                 <span class="step-links ">
                                     {% if proposal_list.has_previous %}

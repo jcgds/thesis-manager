@@ -24,8 +24,8 @@
                             <div class="col-sm-5 m-b-xs">
                                 <a class="btn btn-primary" href="{% url 'create_person_type' %}">Agregar</a>
                             </div>
-                            <div class="col-sm-4 m-b-xs"></div>
-                            <div class="col-sm-3">
+                            <div class="col-sm-2 m-b-xs"></div>
+                            <div class="col-sm-2">
                                 <form class="input-group" style="margin-bottom: 14px">
                                     {{ search_form }}
                                     <span class="input-group-append">
@@ -34,6 +34,9 @@
                                         </button>
                                     </span>
                                 </form>
+                            </div>
+                            <div class="col-sm-3 m-b-xs">
+                                    <a href="{% url 'person_pdf' %}" class="btn btn-primary">Exportar en PDF</a>
                             </div>
                         </div>
                         {% if not defences %}

@@ -1,0 +1,105 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Sales Report</title>
+    <style type="text/css">
+        @page {
+            size: A4;
+            margin: 1cm;
+        }
+
+        .table {
+            width: 100%;
+            max-width: 100%;
+            margin-bottom: 5px;
+            background-color: #fff;
+        }
+
+        .table th,
+        .table td {
+            padding: 5px;
+            vertical-align: top;
+            border-top: 1px solid #000;
+            text-align: center;
+        }
+
+        .table thead th {
+            vertical-align: bottom;
+            border-bottom: 2px solid #000;
+        }
+
+        .table tbody + tbody {
+            border-top: 2px solid #000;
+        }
+
+        .table .table {
+            background-color: #fff;
+        }
+
+        .list-group {
+            display: block;
+            width: 100%;
+            list-style: none;
+            margin-top: 15px;
+            margin-bottom: 15px;
+        }
+
+        .list-group p {
+            width: 100%;
+            height: 20px;
+            line-height: 20px;
+            list-style: none;
+            font-size: 1.1em;
+        }
+
+    </style>
+</head>
+<body>
+{% if not proposal_list %}
+<div>
+    <p style="margin-top: 2.5%">No hay datos disponibles.</p>
+</div>
+
+{% else %}
+<div class="container">
+    <div class="card">
+      <table class="table table-striped">
+                                <thead>
+                                <tr>
+                                    <th>Codigo</th>
+                                    <th>Estatus</th>
+                                    <th>Titulo</th>
+                                    <th>Estudiante</th>
+                                    <th>Cedula</th>
+                                    <th>Estudiante</th>
+                                    <th>Cedula</th>
+                                    <th>TERM</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for proposal in proposal_list %}
+                                    <tr>
+                                        <td>{{ proposal.code }}</td>
+                                        <td>{{ proposal.proposal_status.name }}</td>
+                                        <td>{{ proposal.title }}</td>
+                                        <td>{{ proposal.student1.name|add:" "|add:proposal.student1.last_name }}</td>
+                                        <th>{{ proposal.student1.id_card_number }}</th>
+                                        {% if proposal.student2 %}
+                                            <td>{{ proposal.student2.name|add:" "|add:proposal.student2.last_name}}</td>
+                                            <td>{{ proposal.student2.id_card_number }}</td>
+                                        {% else %}
+                                            <td>--</td>
+                                            <td>--</td>
+                                        {% endif %}
+                                        <th>{{ proposal.term.period }}</th>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+
+    </div>
+</div>
+{% endif %}
+</body>
+</html>

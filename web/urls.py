@@ -39,5 +39,7 @@ urlpatterns = [
     path('estadisticas', views.stats_view, name='stats_view'),
     path('propuestas_no_aprobadas', views.proposal_not_approved_list, name='proposal_not_approved_list'),
     path('propuestas/<str:pk>', views.proposal_detail, name='proposal_detail'),
-    path('pdf',views.ProposalPdf.as_view()),
+    path('propuestas-pdf', views.ProposalPdf.as_view(), name='proposal_pdf'),
+    path('propuestas-no-aprobadas-pdf', views.ProposalNotApprovedPdf.as_view(), name='proposal_not_approved_pdf'),
+    path('personas-pdf', views.PersonsListPdf.as_view(), name='person_pdf'),
 ]
