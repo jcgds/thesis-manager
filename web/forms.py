@@ -156,7 +156,8 @@ class ThesisForm(forms.ModelForm):
         super(ThesisForm, self).__init__(*args, **kwargs)
         instance = getattr(self, 'instance', None)
         if instance and instance.pk:
-            self.fields['proposal'].widget.attrs['disabled'] = False
+            self.fields['proposal'].disabled = True
+            self.fields['submission_date'].disabled = True
 
     class Meta:
         model = models.Thesis
