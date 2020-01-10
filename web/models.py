@@ -147,7 +147,7 @@ class Defence(models.Model):
         self.code = 'D{}'.format(self.thesis.code)
         super().save(*kwargs)
         try:
-            self.get_jury_members().get(person=self.get_academic_tutor())
+            self.get_jury_members().get(person=self.get_academic_tutor(), defence=self)
         except Jury.DoesNotExist:
             Jury(person=self.get_academic_tutor(), defence=self).save()
 
