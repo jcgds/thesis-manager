@@ -416,8 +416,16 @@ class DefenceForm(forms.ModelForm):
 
     def clean_jury(self):
         form_jury = self.cleaned_data['jury']
-        if len(form_jury) > 2:
-            raise forms.ValidationError("Deben seleccionarse maximo dos jueces.")
+        if len(form_jury) > models.Defence.MAX_JUDGES:
+            raise forms.ValidationError("Límite de jueces superado (Máximo %d)." % models.Defence.MAX_JUDGES)
+
+        # If we are updating an instance
+        instance = getattr(self, 'instance', None)
+        if instance and instance.pk:
+            registered_judges = instance.get_complete_jury()
+            if len(registered_judges) + len(form_jury) > models.Defence.MAX_JUDGES:
+                raise forms.ValidationError("Límite de jueces superado (Máximo %d)." % models.Defence.MAX_JUDGES)
+
         return form_jury
 
     def save(self, commit=True):

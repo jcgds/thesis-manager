@@ -132,6 +132,7 @@ class HistoricThesisStatus(models.Model):
 
 
 class Defence(models.Model):
+    MAX_JUDGES = 3
     thesis = models.ForeignKey(Thesis, models.PROTECT)
     code = models.CharField(max_length=68, primary_key=True)
     date_time = models.DateTimeField()
@@ -151,6 +152,9 @@ class Defence(models.Model):
 
     def get_academic_tutor(self):
         return self.thesis.proposal.academic_tutor
+
+    def get_complete_jury(self):
+        return Jury.objects.filter(defence=self)
 
     def get_jury_members(self):
         """

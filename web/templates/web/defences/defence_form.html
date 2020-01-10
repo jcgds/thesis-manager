@@ -153,25 +153,19 @@
                                 {% endfor %}
                             </div>
                         </div>
-
-                        {#                        <div class="form-group row text-right">#}
-                        {#                            <div class="col-sm-4 {% if form.jury.errors %} has-error{% endif %}">#}
-                        {#                                <label class="col-sm-4 col-form-label" for="{{ form.jury.name }}">#}
-                        {#                                    {{ form.jury.label }}#}
-                        {#                                </label>#}
-                        {#                                {{ form.jury }}#}
-                        {##}
-                        {#                                {% for error in form.jury.errors %}#}
-                        {#                                    <span class="form-text m-b-none text-danger">#}
-                        {#                                        {{ error|escape }}#}
-                        {#                                    </span>#}
-                        {#                                {% endfor %}#}
-                        {#                            </div>#}
-                        {#                        </div>#}
-
                         <div class="hr-line-dashed"></div>
                         <div class="form-group row">
-                            <div class="col-sm-11"></div>
+                            <div class="col-sm-11">
+                                {% if form.instance and form.instance.pk %}
+                                    <h4><strong>Jurado:</strong>
+                                        {% for judge in form.instance.get_complete_jury %}
+                                            <a href="{% url 'person_detail' judge.person.pk %}">
+                                                {{ judge.person.get_short_name }}{% if not forloop.last %},{% endif %}
+                                            </a>
+                                        {% endfor %}
+                                    </h4>
+                                {% endif %}
+                            </div>
                             <div class="col-sm-1">
                                 <button class="btn btn-primary btn-sm" type="submit">Guardar</button>
                             </div>
