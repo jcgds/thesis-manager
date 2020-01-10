@@ -1,0 +1,64 @@
+
+{% load static %}
+<html>
+    <head>
+
+        <title>{% block page_title %}{% endblock %}</title>
+        <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+        <link href="{% static 'font-awesome/css/font-awesome.css' %}" rel="stylesheet">
+        <link href="{% static 'css/animate.css' %}" rel="stylesheet">
+        <link href="{% static 'css/style.css' %}" rel="stylesheet">
+        <link href="{% static 'css/plugins/dataTables/datatables.min.css' %}" rel="stylesheet">
+        <script src="{% static 'js/jquery-3.1.1.min.js' %}"></script>
+    </head>
+    <body>
+   <div class="ibox-content">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                <tr>
+                                    <th>Codigo</th>
+                                    <th>Fecha de entrega</th>
+                                    <th>Titulo</th>
+                                    <th>Estudiante</th>
+                                    <th>Estudiante</th>
+                                    <th>Tutor Academico</th>
+                                    <th>Tutor Empresarial</th>
+                                    <th>TERM</th>
+                                    <th>Estatus</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for proposal in proposal_list %}
+                                    <tr>
+                                        <td>{{ proposal.code }}</td>
+                                        <td>{{ proposal.submission_date }}</td>
+                                        <td>{{ proposal.title }}</td>
+                                        <td>{{ proposal.student1.name|add:" "|add:proposal.student1.last_name }}</td>
+                                        {% if proposal.student2 %}
+                                            <td>{{ proposal.student2.name|add:" "|add:proposal.student2.last_name }}</td>
+                                        {% else %}
+                                            <td>--</td>
+                                        {% endif %}
+                                        <td>{{ proposal.academic_tutor.name|add:" "|add:proposal.academic_tutor.last_name}}</td>
+                                        {% if proposal.industry_tutor %}
+                                            <td>{{ proposal.industry_tutor.name|add:" "|add:proposal.industry_tutor.last_name}}</td>
+                                        {% else %}
+                                            <td>--</td>
+                                        {% endif %}
+                                        <th>{{ proposal.term.period }}</th>
+                                        <th>{{ proposal.proposal_status.name }}</th>
+                                        <td>
+                                            <a href="{% url 'edit_proposal' proposal.code %}"
+                                               class="btn btn-sm btn-outline-warning">
+                                                <span class="glyphicon glyphicon-pencil"></span>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+    </body>
+</html>

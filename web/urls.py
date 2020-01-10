@@ -39,4 +39,5 @@ urlpatterns = [
     path('estadisticas', views.stats_view, name='stats_view'),
     path('propuestas_no_aprobadas', views.proposal_not_approved_list, name='proposal_not_approved_list'),
     path('propuestas/<str:pk>', views.proposal_detail, name='proposal_detail'),
+    path('pdf',views.ProposalPdf.as_view()),
 ]

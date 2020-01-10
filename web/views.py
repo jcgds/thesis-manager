@@ -2,6 +2,10 @@ import operator
 import statistics
 from functools import reduce
 
+from django.http import HttpResponse
+from django.template.loader import get_template
+from django.views.generic import View
+from .render import render_to_pdf
 from dal import autocomplete
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.decorators import login_required
@@ -567,7 +571,6 @@ def proposal_not_approved_list(request):
     return render(request, 'web/proposal/proposal_not_approved_list.html', context)
 
 
-
 def stats_view(request):
     if request.method == 'POST':
         form = forms.StatsForm(request.POST)
@@ -591,3 +594,23 @@ def stats_view(request):
             'term_form': forms.StatsForm(),
         }
         return render(request, 'web/stats/stats.html', context)
+
+
+class ProposalPdf(View):
+    def get(self, request, *args, **kwargs):
+        proposal_list = Proposal.objects.all().select_related()
+        context = {
+            "proposal_list": proposal_list,
+        }
+        pdf = render_to_pdf('web/proposal/proposal_pdf.html', context)
+        if pdf:
+            response = HttpResponse(pdf, content_type='application/pdf')
+            filename = "Invoice_%s.pdf" %("12341231")
+            content = "inline; filename='%s'" %(filename)
+            download = request.GET.get("download")
+            if download:
+                content = "attachment; filename='%s'" %(filename)
+            response['Content-Disposition'] = content
+            return response
+        return HttpResponse("Not found")
+
