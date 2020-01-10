@@ -1,9 +1,9 @@
 import re
-from datetime import datetime
-
 from dal import autocomplete
+from datetime import datetime
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm
+from django.utils import timezone
 
 from . import models
 
@@ -117,7 +117,8 @@ class PersonDataForm(forms.ModelForm):
         label='Tipo',
         initial=1,
         queryset=models.PersonType.objects.all(),
-        widget=forms.Select(attrs={'class': 'form-control m-b'}))
+        widget=forms.Select(attrs={'class': 'form-control m-b'})
+    )
     observations = forms.CharField(
         label='Observaciones',
         max_length=1_048,
@@ -154,7 +155,8 @@ class ThesisForm(forms.ModelForm):
         super(ThesisForm, self).__init__(*args, **kwargs)
         instance = getattr(self, 'instance', None)
         if instance and instance.pk:
-            self.fields['proposal'].widget.attrs['disabled'] = False
+            self.fields['proposal'].disabled = True
+            self.fields['submission_date'].disabled = True
 
     class Meta:
         model = models.Thesis
@@ -343,4 +345,125 @@ class StatsForm(forms.Form):
         label='',
         queryset=models.Term.objects.all(),
         widget=forms.SelectMultiple(attrs={'class': 'form-control m-b'})
+    )
+
+
+class DefenceForm(forms.ModelForm):
+    class Meta:
+        model = models.Defence
+        fields = [
+            'thesis',
+            'date_time',
+            'grade',
+            'is_publication_mention',
+            'is_honorific_mention',
+            'corrections_submission_date',
+            'observations',
+        ]
+
+    thesis = forms.ModelChoiceField(
+        label='Trabajo de grado',
+        initial=0,
+        queryset=models.Thesis.objects.all(),
+        widget=autocomplete.ModelSelect2(url='thesis-autocomplete')
+    )
+    date_time = forms.DateTimeField(
+        label='Fecha y hora de la presentación',
+        input_formats=['%Y-%m-%dT%H:%M'],
+        widget=forms.DateTimeInput(
+            attrs={
+                'type': 'datetime-local',
+                'class': 'form-control'
+            },
+            format='%Y-%m-%dT%H:%M'
+        )
+    )
+    grade = forms.IntegerField(
+        label='Calificación',
+        min_value=0,
+        max_value=20,
+        required=False,
+        widget=forms.NumberInput(attrs={'class': 'form-control'})
+    )
+    is_publication_mention = forms.BooleanField(
+        label='Mención publicación',
+        required=False,
+        widget=forms.CheckboxInput(attrs={'type': 'checkbox'})
+    )
+    is_honorific_mention = forms.BooleanField(
+        label='Mención honorífica',
+        required=False,
+        widget=forms.CheckboxInput(attrs={'type': 'checkbox'})
+    )
+    observations = forms.CharField(
+        label='Observaciones',
+        max_length=1_048,
+        required=False,
+        widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 3})
+    )
+    jury = forms.ModelMultipleChoiceField(
+        label='Jurado',
+        required=False,
+        queryset=models.PersonData.objects.all(),  # This query is ignored
+        widget=autocomplete.Select2Multiple(url='teacher-autocomplete', attrs={'class': 'form-control'})
+    )
+
+    def clean_date_time(self):
+        form_datetime = self.cleaned_data['date_time']
+        if form_datetime < timezone.now():
+            raise forms.ValidationError("La fecha debe ser en el futuro.")
+        return form_datetime
+
+    def clean_jury(self):
+        form_jury = self.cleaned_data['jury']
+        if len(form_jury) > models.Defence.MAX_JUDGES:
+            raise forms.ValidationError("Límite de jueces superado (Máximo %d)." % models.Defence.MAX_JUDGES)
+
+        # If we are updating an instance
+        instance = getattr(self, 'instance', None)
+        if instance and instance.pk:
+            registered_judges = instance.get_complete_jury()
+            if len(registered_judges) + len(form_jury) > models.Defence.MAX_JUDGES:
+                raise forms.ValidationError("Límite de jueces superado (Máximo %d)." % models.Defence.MAX_JUDGES)
+
+        return form_jury
+
+    def save(self, commit=True):
+        instance = super().save(commit=commit)
+        form_jury = self.cleaned_data['jury']
+        for judge in form_jury:
+            try:
+                models.Jury.objects.get(person=judge, defence=instance)
+            except:
+                models.Jury(person=judge, defence=instance).save()
+
+        return instance
+
+
+class JudgeForm(forms.ModelForm):
+    class Meta:
+        model = models.Jury
+        fields = ['person', 'defence', 'is_backup_jury', 'confirmed_assistance']
+
+    person = forms.ModelChoiceField(
+        label='Profesor',
+        initial=0,
+        queryset=models.PersonData.objects.all(),  # Ignored
+        widget=autocomplete.ModelSelect2(url='teacher-autocomplete')
+    )
+    defence = forms.ModelChoiceField(
+        label='Defensa',
+        initial=0,
+        queryset=models.Defence.objects.all(),
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+    is_backup_jury = forms.BooleanField(
+        label='Suplente',
+        required=False,
+        widget=forms.CheckboxInput(attrs={'type': 'checkbox'})
+    )
+    confirmed_assistance = forms.BooleanField(
+        label='Va a asistir',
+        required=False,
+        widget=forms.CheckboxInput(attrs={'type': 'checkbox'})
     )
