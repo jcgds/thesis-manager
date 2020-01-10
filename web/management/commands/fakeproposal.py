@@ -17,7 +17,7 @@ class Command(BaseCommand):
         terms = Term.objects.all()
         if not terms:
             Term(
-                period='marzo-julio'
+                period='201615'
             ).save()
         for i in range(6):
 

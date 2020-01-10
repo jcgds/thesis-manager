@@ -80,7 +80,7 @@ class Proposal(models.Model):
 
 
 class HistoricProposalStatus(models.Model):
-    date = models.DateField(auto_now=True)
+    date = models.DateTimeField(auto_now=True)
     proposal = models.ForeignKey(Proposal, models.CASCADE)
     status = models.ForeignKey(ProposalStatus, models.PROTECT)
 
@@ -123,7 +123,7 @@ class Thesis(models.Model):
 
 
 class HistoricThesisStatus(models.Model):
-    date = models.DateField(auto_now=True)
+    date = models.DateTimeField(auto_now=True)
     thesis = models.ForeignKey(Thesis, models.CASCADE)
     status = models.ForeignKey(ThesisStatus, models.PROTECT)
 

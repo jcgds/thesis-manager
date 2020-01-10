@@ -213,7 +213,7 @@ class ThesisForm(forms.ModelForm):
         required=False,
         widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Inteligencia de negocios'})
     )
-    submission_date = forms.DateField(
+    submission_date = forms.DateTimeField(
         label='Fecha de Inicio',
         widget=forms.SelectDateWidget(attrs={'twelve_hr': True}),
         initial=datetime.now()
