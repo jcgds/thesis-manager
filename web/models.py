@@ -146,6 +146,10 @@ class Defence(models.Model):
     def save(self, **kwargs):
         self.code = 'D{}'.format(self.thesis.code)
         super().save(*kwargs)
+        try:
+            self.get_jury_members().get(person=self.get_academic_tutor())
+        except Jury.DoesNotExist:
+            Jury(person=self.get_academic_tutor(), defence=self).save()
 
     def get_students(self):
         return self.thesis.proposal.student1, self.thesis.proposal.student2
