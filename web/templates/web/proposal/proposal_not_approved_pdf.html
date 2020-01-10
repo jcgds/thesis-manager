@@ -75,6 +75,7 @@
                                     <th>Estudiante</th>
                                     <th>Cedula</th>
                                     <th>TERM</th>
+                                    <th>Estatus</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -93,6 +94,7 @@
                                             <td>--</td>
                                         {% endif %}
                                         <th>{{ proposal.term.period }}</th>
+                                        <th>{{ proposal.proposal_status.name }}</th>
                                     </tr>
                                 {% endfor %}
                                 </tbody>

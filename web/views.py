@@ -765,7 +765,7 @@ class JuryDelete(DeleteView):
 
 class ProposalNotApprovedPdf(View):
     def get(self, request, *args, **kwargs):
-        proposal_list = Proposal.objects.select_related().exclude(proposal_status__name="Aprobada").order_by('student1__id_card_number')
+        proposal_list = Proposal.objects.all().exclude(proposal_status__name="Aprobada").order_by('student1__id_card_number')
         context = {
             "proposal_list": proposal_list,
         }
