@@ -15,7 +15,8 @@ class Command(BaseCommand):
         faker = Faker()
         thesis_statuses = ThesisStatus.objects.all()
         for i in range(6):
-            proposal = faker.random.choice(Proposal.objects.all())
+            proposal = faker.random.choice(
+                Proposal.objects.exclude(code__in=Thesis.objects.all().values('proposal__code')))
             thesis = Thesis(
                 # If the types are modified in the PersonData model, it should be updated here too
                 title=proposal.title,
