@@ -450,7 +450,7 @@ class JudgeForm(forms.ModelForm):
         widget=autocomplete.ModelSelect2(url='teacher-autocomplete')
     )
     defence = forms.ModelChoiceField(
-        label='Profesor',
+        label='Defensa',
         initial=0,
         queryset=models.Defence.objects.all(),
         widget=forms.Select(attrs={'class': 'form-control'})
