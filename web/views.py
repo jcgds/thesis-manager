@@ -232,7 +232,7 @@ def thesis_index(request):
                 search_args.append(Q(**{query: term}))
             thesis_list = Thesis.objects.filter(reduce(operator.or_, search_args)).order_by(
                 'proposal__student1__id_card_number').exclude(
-                code__in=HistoricThesisStatus.objects.filter(status__name='Aprobado'))
+                code__in=HistoricThesisStatus.objects.filter(status__name='Aprobado').values('thesis_code'))
     else:
         # If we don't receive a search parameter, don't apply any filters
         thesis_list = Thesis.objects.all().order_by('proposal__student1__id_card_number').exclude(
@@ -811,6 +811,56 @@ class PersonsListPdf(View):
         if pdf:
             response = HttpResponse(pdf, content_type='application/pdf')
             filename = "Persons_list.pdf"
+            content = "inline; filename='%s'" %(filename)
+            download = request.GET.get("download")
+            if download:
+                content = "attachment; filename='%s'" %(filename)
+            response['Content-Disposition'] = content
+            return response
+        return HttpResponse("Not found")
+
+
+class ThesisListPdf(View):
+
+    def get(self, request, *args, **kwargs):
+        thesis_list = Thesis.objects.all().order_by('id_card_number', 'name').order_by(
+                'proposal__student1__id_card_number').exclude(
+                code__in=HistoricThesisStatus.objects.filter(status__name='Aprobado').values('thesis__code'))
+        for thesis in thesis_list:
+            thesis = add_full_names(thesis)
+
+        context = {
+            "thesis_list": thesis_list,
+        }
+        pdf = render_to_pdf('web/thesis/thesis_list_pdf.html', context)
+        if pdf:
+            response = HttpResponse(pdf, content_type='application/pdf')
+            filename = "Thesis_list.pdf"
+            content = "inline; filename='%s'" %(filename)
+            download = request.GET.get("download")
+            if download:
+                content = "attachment; filename='%s'" %(filename)
+            response['Content-Disposition'] = content
+            return response
+        return HttpResponse("Not found")
+
+
+class ThesisHistoricListPdf(View):
+
+    def get(self, request, *args, **kwargs):
+        thesis_list = Thesis.objects.all().order_by('id_card_number', 'name').order_by(
+                'proposal__student1__id_card_number')
+
+        for thesis in thesis_list:
+            thesis = add_full_names(thesis)
+
+        context = {
+            "thesis_list": thesis_list,
+        }
+        pdf = render_to_pdf('web/thesis/thesis_list_pdf.html', context)
+        if pdf:
+            response = HttpResponse(pdf, content_type='application/pdf')
+            filename = "Thesis_list.pdf"
             content = "inline; filename='%s'" %(filename)
             download = request.GET.get("download")
             if download:

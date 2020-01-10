@@ -52,4 +52,6 @@ urlpatterns = [
     path('propuestas-pdf', views.ProposalPdf.as_view(), name='proposal_pdf'),
     path('propuestas-no-aprobadas-pdf', views.ProposalNotApprovedPdf.as_view(), name='proposal_not_approved_pdf'),
     path('personas-pdf', views.PersonsListPdf.as_view(), name='person_pdf'),
+    path('TG-pdf', views.ThesisListPdf.as_view(), name='thesis_pdf'),
+    path('TG-historico-pdf', views.ThesisHistoricListPdf.as_view(), name='thesis_historic_pdf'),
 ]
