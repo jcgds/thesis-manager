@@ -45,6 +45,18 @@ Para correr el proyecto:
 
    python manage.py runserver
 
+Utilidades
+----------
+
+Desarrollamos tres comandos ejecutables a traves del ``manage.py`` para generar data de prueba
+la cual fue generada a través de la librería ``faker`` que proporciona información realista.
+
+1. ``fakepersons`` - Este comando genera 20 datos de personas (Profesores, Estudiantes, Externos)
+2. ``fakeproposal`` - Este comando genera 6 propuestas
+3. ``fakethesis`` - Este comando genera 6 tesis (trabajos de grado)
+
+
+
 Repositorio
 -----------
 
