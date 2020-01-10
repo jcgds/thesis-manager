@@ -26,6 +26,7 @@ urlpatterns = [
     path('defensas/<str:pk>/editar', views.DefenceUpdate.as_view(), name='update_defence'),
     path('tg', views.thesis_index, name='thesis_index'),
     path('tg/historico', views.thesis_historic_index, name='thesis_historic_index'),
+    path('tg/historico/<str:pk>', views.thesis_historic_detail, name='thesis_historic_detail'),
     path('tg/<str:pk>', views.thesis_detail, name='thesis_detail'),
     path('tg/<str:pk>/editar', views.ThesisUpdate.as_view(), name='edit_thesis'),
     path('tg/estados/<int:pk>/editar', views.ThesisStatusUpdate.as_view(), name='edit_thesis_status'),

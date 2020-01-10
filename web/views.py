@@ -289,7 +289,6 @@ def thesis_historic_index(request):
 
     return render(request, 'web/thesis/thesis_historic_list.html', context)
 
-
 @method_decorator([login_required, manager_required], name='dispatch')
 class PersonTypeAutoComplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
@@ -393,6 +392,16 @@ def thesis_detail(request, pk):
         'thesis_data': thesis
     }
     return render(request, 'web/thesis/thesis_detail.html', context)
+
+
+def thesis_historic_detail(request, pk):
+    thesis = get_object_or_404(Thesis, pk=pk)
+    thesis = add_full_names(thesis)
+
+    context = {
+        'thesis_data': thesis
+    }
+    return render(request, 'web/thesis/thesis_historic_detail.html', context)
 
 
 def add_full_names(thesis):

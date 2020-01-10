@@ -8,7 +8,7 @@
                     <a href="{% url 'index' %}">Home</a>
                 </li>
                 <li class="breadcrumb-item active">
-                    <strong><a href="{% url 'thesis_index' %}"> TG</a></strong>
+                    <strong><a href="{% url 'thesis_historic_index' %}"> Historico TG</a></strong>
                 </li>
             </ol>
         </div>
@@ -61,7 +61,7 @@
                                     <tbody>
                                     {% for thesis in thesis_list %}
                                         <tr>
-                                            <td><a href="{% url 'thesis_detail' thesis.pk %}">{{ thesis.code }}</a></td>
+                                            <td><a href="{% url 'thesis_historic_detail' thesis.pk %}">{{ thesis.code }}</a></td>
                                             <td>{{ thesis.NRC }}</td>
                                             <td>{{ thesis.title }}</td>
                                             <td>{{ thesis.status.name }}</td>
