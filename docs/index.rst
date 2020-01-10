@@ -10,7 +10,8 @@ Funcionalidades
 ---------------
 Este sistema tiene el proposito de llevar un registro de los trabajos de grado, así como también de sus propuestas y toda la información referente a las mismas. Entre sus funcionalidades se encuentran:
 
-- Inicio de sesión para usuarios administradores y aquellos que desean consultar datos.
+- Inicio de sesión para usuarios administradores gestores.
+- Registro de personas involucradas en trabajos de grado, ya sean estudiantes, profesores o externos
 - Registro de trabajos de grado con la siguiente información:
    - Titulo del TG
    - NRC
